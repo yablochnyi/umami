@@ -207,6 +207,17 @@
         © 2026 Umami Sushi & Food Toruń.
     </footer>
 
+    <section class="cookie-consent" id="cookieConsent" aria-labelledby="cookieConsentTitle" hidden>
+        <div>
+            <h2 id="cookieConsentTitle">{{ $cookieConsent['title'] }}</h2>
+            <p>{{ $cookieConsent['text'] }}</p>
+        </div>
+        <div class="cookie-actions">
+            <button type="button" class="cookie-button secondary" id="cookieDecline">{{ $cookieConsent['decline'] }}</button>
+            <button type="button" class="cookie-button primary" id="cookieAccept">{{ $cookieConsent['accept'] }}</button>
+        </div>
+    </section>
+
     <div class="modal" id="modal" aria-hidden="true">
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
             <button class="close" type="button" aria-label="{{ $copy['close'] }}" id="modalClose">×</button>

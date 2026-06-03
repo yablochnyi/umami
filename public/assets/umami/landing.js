@@ -1,8 +1,33 @@
 const desktopBackground = document.body.dataset.backgroundDesktop;
 const mobileBackground = document.body.dataset.backgroundMobile;
 const googleAnalyticsId = document.body.dataset.googleAnalyticsId;
+const cookieConsentKey = 'umami_cookie_consent';
 
-if (/^G-[A-Z0-9]+$/i.test(googleAnalyticsId || '')) {
+function getStoredCookieConsent() {
+    try {
+        return window.localStorage.getItem(cookieConsentKey);
+    } catch (error) {
+        const cookieValue = document.cookie
+            .split('; ')
+            .find((item) => item.startsWith(cookieConsentKey + '='))
+            ?.split('=')[1];
+
+        return cookieValue ? decodeURIComponent(cookieValue) : null;
+    }
+}
+
+function storeCookieConsent(value) {
+    try {
+        window.localStorage.setItem(cookieConsentKey, value);
+    } catch (error) {
+        document.cookie = cookieConsentKey + '=' + encodeURIComponent(value) + '; path=/; max-age=31536000; SameSite=Lax';
+    }
+}
+
+function loadGoogleAnalytics() {
+    if (!/^G-[A-Z0-9]+$/i.test(googleAnalyticsId || '') || window.umamiAnalyticsLoaded) return;
+
+    window.umamiAnalyticsLoaded = true;
     window.dataLayer = window.dataLayer || [];
     window.gtag = function gtag() {
         window.dataLayer.push(arguments);
@@ -16,6 +41,25 @@ if (/^G-[A-Z0-9]+$/i.test(googleAnalyticsId || '')) {
     googleAnalyticsScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(googleAnalyticsId);
     document.head.appendChild(googleAnalyticsScript);
 }
+
+function setCookieConsent(value) {
+    storeCookieConsent(value);
+    const consentBanner = document.getElementById('cookieConsent');
+    if (consentBanner) consentBanner.hidden = true;
+    if (value === 'accepted') loadGoogleAnalytics();
+}
+
+const savedCookieConsent = getStoredCookieConsent();
+
+if (savedCookieConsent === 'accepted') {
+    loadGoogleAnalytics();
+} else if (!savedCookieConsent) {
+    const consentBanner = document.getElementById('cookieConsent');
+    if (consentBanner) consentBanner.hidden = false;
+}
+
+document.getElementById('cookieAccept')?.addEventListener('click', () => setCookieConsent('accepted'));
+document.getElementById('cookieDecline')?.addEventListener('click', () => setCookieConsent('declined'));
 
 if (desktopBackground) {
     document.body.style.setProperty('--umami-bg-desktop', `url('${desktopBackground}')`);

@@ -251,6 +251,7 @@ class HomeController extends Controller
             'bestsellers' => $bestsellerCards,
             'galleryImages' => $gallery,
             'socialLinks' => $socialLinks,
+            'cookieConsent' => $this->cookieConsentCopy($locale),
             'seo' => [
                 'canonicalUrl' => $canonicalUrl,
                 'localizedUrls' => $localizedUrls,
@@ -267,6 +268,36 @@ class HomeController extends Controller
         return $locale === 'pl'
             ? $siteUrl.'/'
             : $siteUrl.'/'.$locale;
+    }
+
+    /**
+     * Cookie consent copy is intentionally kept outside the content seeder so the banner
+     * stays available even before optional site content is imported.
+     */
+    private function cookieConsentCopy(string $locale): array
+    {
+        $copy = [
+            'pl' => [
+                'title' => 'Prywatność i cookies',
+                'text' => 'Używamy niezbędnych plików cookie do działania strony. Analitykę Google włączymy tylko wtedy, gdy wyrazisz zgodę.',
+                'accept' => 'Akceptuję analitykę',
+                'decline' => 'Tylko niezbędne',
+            ],
+            'uk' => [
+                'title' => 'Приватність і cookies',
+                'text' => 'Ми використовуємо необхідні cookie для роботи сайту. Google Analytics увімкнемо лише після вашої згоди.',
+                'accept' => 'Дозволити аналітику',
+                'decline' => 'Лише необхідні',
+            ],
+            'en' => [
+                'title' => 'Privacy and cookies',
+                'text' => 'We use essential cookies to keep the website working. Google Analytics will run only if you give consent.',
+                'accept' => 'Accept analytics',
+                'decline' => 'Essential only',
+            ],
+        ];
+
+        return $copy[$locale] ?? $copy['pl'];
     }
 
     private function mediaUrl(?string $path): string

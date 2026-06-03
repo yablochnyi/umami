@@ -24,6 +24,9 @@ class ExampleTest extends TestCase
         $response->assertSee('<link rel="alternate" hreflang="uk" href="https://www.umamisushifood.pl/uk">', false);
         $response->assertSee('<meta property="og:title"', false);
         $response->assertSee('<meta name="twitter:card" content="summary_large_image">', false);
+        $response->assertSee('id="cookieConsent"', false);
+        $response->assertSee('Prywatność i cookies', false);
+        $response->assertSee('Akceptuję analitykę', false);
     }
 
     public function test_localized_pages_use_clean_urls(): void
@@ -31,12 +34,14 @@ class ExampleTest extends TestCase
         $this->get('/uk')
             ->assertStatus(200)
             ->assertSee('<html lang="uk">', false)
-            ->assertSee('<link rel="canonical" href="https://www.umamisushifood.pl/uk">', false);
+            ->assertSee('<link rel="canonical" href="https://www.umamisushifood.pl/uk">', false)
+            ->assertSee('Приватність і cookies', false);
 
         $this->get('/en')
             ->assertStatus(200)
             ->assertSee('<html lang="en">', false)
-            ->assertSee('<link rel="canonical" href="https://www.umamisushifood.pl/en">', false);
+            ->assertSee('<link rel="canonical" href="https://www.umamisushifood.pl/en">', false)
+            ->assertSee('Privacy and cookies', false);
     }
 
     public function test_old_query_language_urls_redirect_to_clean_urls(): void
