@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LegalPageController;
 use App\Http\Controllers\SitemapController;
 use App\Models\SiteSetting;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,13 @@ Route::get('/robots.txt', function () {
         'Content-Type' => 'text/plain; charset=UTF-8',
     ]);
 })->name('robots');
+Route::get('/{slug}', LegalPageController::class)
+    ->whereIn('slug', ['polityka-prywatnosci', 'polityka-plikow-cookie', 'regulamin'])
+    ->name('legal');
+Route::get('/{locale}/{slug}', LegalPageController::class)
+    ->whereIn('locale', ['uk', 'en'])
+    ->whereIn('slug', ['polityka-konfidentsiynosti', 'polityka-cookie', 'pravila-korystuvannya', 'privacy-policy', 'cookie-policy', 'terms'])
+    ->name('legal.localized');
 Route::get('/', HomeController::class)->name('home');
 Route::get('/{locale}', HomeController::class)
     ->whereIn('locale', ['uk', 'en'])

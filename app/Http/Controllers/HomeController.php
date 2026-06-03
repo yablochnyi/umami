@@ -252,6 +252,7 @@ class HomeController extends Controller
             'galleryImages' => $gallery,
             'socialLinks' => $socialLinks,
             'cookieConsent' => $this->cookieConsentCopy($locale),
+            'legalLinks' => $this->legalLinks($viewSettings['siteUrl'], $locale),
             'seo' => [
                 'canonicalUrl' => $canonicalUrl,
                 'localizedUrls' => $localizedUrls,
@@ -279,25 +280,53 @@ class HomeController extends Controller
         $copy = [
             'pl' => [
                 'title' => 'Prywatność i cookies',
-                'text' => 'Używamy niezbędnych plików cookie do działania strony. Analitykę Google włączymy tylko wtedy, gdy wyrazisz zgodę.',
-                'accept' => 'Akceptuję analitykę',
+                'text' => 'Dbamy o komfort korzystania ze strony. Niezbędne pliki cookie pomagają jej działać poprawnie, a za Twoją zgodą możemy korzystać z analityki, aby lepiej rozumieć zainteresowanie naszym menu.',
+                'accept' => 'Zgadzam się',
                 'decline' => 'Tylko niezbędne',
             ],
             'uk' => [
                 'title' => 'Приватність і cookies',
-                'text' => 'Ми використовуємо необхідні cookie для роботи сайту. Google Analytics увімкнемо лише після вашої згоди.',
-                'accept' => 'Дозволити аналітику',
+                'text' => 'Ми дбаємо про зручність користування сайтом. Необхідні cookie допомагають йому працювати правильно, а за вашою згодою ми можемо використовувати аналітику, щоб краще розуміти інтерес до нашого меню.',
+                'accept' => 'Погоджуюся',
                 'decline' => 'Лише необхідні',
             ],
             'en' => [
                 'title' => 'Privacy and cookies',
-                'text' => 'We use essential cookies to keep the website working. Google Analytics will run only if you give consent.',
-                'accept' => 'Accept analytics',
+                'text' => 'We care about a smooth website experience. Essential cookies help the site work properly, and with your consent we may use analytics to better understand interest in our menu.',
+                'accept' => 'I agree',
                 'decline' => 'Essential only',
             ],
         ];
 
         return $copy[$locale] ?? $copy['pl'];
+    }
+
+    private function legalLinks(string $siteUrl, string $locale): array
+    {
+        $links = [
+            'pl' => [
+                ['label' => 'Polityka prywatności', 'path' => '/polityka-prywatnosci'],
+                ['label' => 'Polityka plików cookie', 'path' => '/polityka-plikow-cookie'],
+                ['label' => 'Regulamin', 'path' => '/regulamin'],
+            ],
+            'uk' => [
+                ['label' => 'Політика конфіденційності', 'path' => '/uk/polityka-konfidentsiynosti'],
+                ['label' => 'Політика cookie', 'path' => '/uk/polityka-cookie'],
+                ['label' => 'Правила користування', 'path' => '/uk/pravila-korystuvannya'],
+            ],
+            'en' => [
+                ['label' => 'Privacy policy', 'path' => '/en/privacy-policy'],
+                ['label' => 'Cookie policy', 'path' => '/en/cookie-policy'],
+                ['label' => 'Terms', 'path' => '/en/terms'],
+            ],
+        ];
+
+        return collect($links[$locale] ?? $links['pl'])
+            ->map(fn (array $link) => [
+                'label' => $link['label'],
+                'url' => rtrim($siteUrl, '/').$link['path'],
+            ])
+            ->all();
     }
 
     private function mediaUrl(?string $path): string

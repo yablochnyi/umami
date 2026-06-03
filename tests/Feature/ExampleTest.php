@@ -26,7 +26,10 @@ class ExampleTest extends TestCase
         $response->assertSee('<meta name="twitter:card" content="summary_large_image">', false);
         $response->assertSee('id="cookieConsent"', false);
         $response->assertSee('Prywatność i cookies', false);
-        $response->assertSee('Akceptuję analitykę', false);
+        $response->assertSee('Zgadzam się', false);
+        $response->assertSee('Polityka prywatności', false);
+        $response->assertSee('Polityka plików cookie', false);
+        $response->assertSee('Regulamin', false);
     }
 
     public function test_localized_pages_use_clean_urls(): void
@@ -60,8 +63,33 @@ class ExampleTest extends TestCase
         $response->assertSee('<loc>https://www.umamisushifood.pl/</loc>', false);
         $response->assertSee('<loc>https://www.umamisushifood.pl/uk</loc>', false);
         $response->assertSee('<loc>https://www.umamisushifood.pl/en</loc>', false);
+        $response->assertSee('<loc>https://www.umamisushifood.pl/polityka-prywatnosci</loc>', false);
+        $response->assertSee('<loc>https://www.umamisushifood.pl/uk/polityka-konfidentsiynosti</loc>', false);
+        $response->assertSee('<loc>https://www.umamisushifood.pl/en/privacy-policy</loc>', false);
         $response->assertSee('xmlns:xhtml="http://www.w3.org/1999/xhtml"', false);
         $response->assertSee('hreflang="x-default"', false);
+    }
+
+    public function test_static_legal_pages_are_localized_and_indexable(): void
+    {
+        $this->get('/polityka-prywatnosci')
+            ->assertStatus(200)
+            ->assertSee('<html lang="pl">', false)
+            ->assertSee('<link rel="canonical" href="https://www.umamisushifood.pl/polityka-prywatnosci">', false)
+            ->assertSee('Polityka prywatności', false)
+            ->assertSee('Administratorem danych', false);
+
+        $this->get('/uk/polityka-cookie')
+            ->assertStatus(200)
+            ->assertSee('<html lang="uk">', false)
+            ->assertSee('<link rel="canonical" href="https://www.umamisushifood.pl/uk/polityka-cookie">', false)
+            ->assertSee('Політика cookie', false);
+
+        $this->get('/en/terms')
+            ->assertStatus(200)
+            ->assertSee('<html lang="en">', false)
+            ->assertSee('<link rel="canonical" href="https://www.umamisushifood.pl/en/terms">', false)
+            ->assertSee('Terms of website use', false);
     }
 
     public function test_the_robots_file_points_to_the_sitemap(): void

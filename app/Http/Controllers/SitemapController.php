@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SiteSetting;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use XMLWriter;
 
 class SitemapController extends Controller
@@ -15,11 +16,23 @@ class SitemapController extends Controller
             '/'
         );
 
-        $urls = [
-            'pl' => ['loc' => $siteUrl.'/', 'priority' => '1.0'],
-            'uk' => ['loc' => $siteUrl.'/uk', 'priority' => '0.8'],
-            'en' => ['loc' => $siteUrl.'/en', 'priority' => '0.8'],
-        ];
+        $urlGroups = collect([
+            [
+                'priority' => '1.0',
+                'urls' => [
+                    'pl' => $siteUrl.'/',
+                    'uk' => $siteUrl.'/uk',
+                    'en' => $siteUrl.'/en',
+                ],
+            ],
+        ])->merge(
+            collect(LegalPageController::pageUrls($siteUrl))
+                ->map(fn (array $urls) => [
+                    'priority' => '0.4',
+                    'urls' => $urls,
+                ])
+                ->values()
+        );
 
         $xml = new XMLWriter;
         $xml->openMemory();
@@ -28,28 +41,7 @@ class SitemapController extends Controller
         $xml->writeAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
         $xml->writeAttribute('xmlns:xhtml', 'http://www.w3.org/1999/xhtml');
 
-        foreach ($urls as $locale => $url) {
-            $xml->startElement('url');
-            $xml->writeElement('loc', $url['loc']);
-
-            foreach ($urls as $alternateLocale => $alternateUrl) {
-                $xml->startElement('xhtml:link');
-                $xml->writeAttribute('rel', 'alternate');
-                $xml->writeAttribute('hreflang', $alternateLocale);
-                $xml->writeAttribute('href', $alternateUrl['loc']);
-                $xml->endElement();
-            }
-
-            $xml->startElement('xhtml:link');
-            $xml->writeAttribute('rel', 'alternate');
-            $xml->writeAttribute('hreflang', 'x-default');
-            $xml->writeAttribute('href', $urls['pl']['loc']);
-            $xml->endElement();
-
-            $xml->writeElement('changefreq', 'weekly');
-            $xml->writeElement('priority', $url['priority']);
-            $xml->endElement();
-        }
+        $urlGroups->each(fn (array $group) => $this->writeLocalizedGroup($xml, collect($group['urls']), $group['priority']));
 
         $xml->endElement();
         $xml->endDocument();
@@ -57,5 +49,31 @@ class SitemapController extends Controller
         return response($xml->outputMemory(), 200, [
             'Content-Type' => 'application/xml; charset=UTF-8',
         ]);
+    }
+
+    private function writeLocalizedGroup(XMLWriter $xml, Collection $urls, string $priority): void
+    {
+        $urls->each(function (string $loc) use ($xml, $priority, $urls): void {
+            $xml->startElement('url');
+            $xml->writeElement('loc', $loc);
+
+            $urls->each(function (string $alternateUrl, string $alternateLocale) use ($xml): void {
+                $xml->startElement('xhtml:link');
+                $xml->writeAttribute('rel', 'alternate');
+                $xml->writeAttribute('hreflang', $alternateLocale);
+                $xml->writeAttribute('href', $alternateUrl);
+                $xml->endElement();
+            });
+
+            $xml->startElement('xhtml:link');
+            $xml->writeAttribute('rel', 'alternate');
+            $xml->writeAttribute('hreflang', 'x-default');
+            $xml->writeAttribute('href', $urls['pl']);
+            $xml->endElement();
+
+            $xml->writeElement('changefreq', 'weekly');
+            $xml->writeElement('priority', $priority);
+            $xml->endElement();
+        });
     }
 }
