@@ -544,6 +544,14 @@ class UmamiContentSeeder extends Seeder
       "value": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2393.013512019404!2d18.6111919!3d52.9905789!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470335d32c9f46d3%3A0x64fd6bff6758d0c6!2sUmami%20Sushi%20%26%20Food%20Toru%C5%84!5e0!3m2!1spl!2spl!4v1733770000000",
       "type": "url",
       "sort_order": 11
+    },
+    {
+      "group": "seo",
+      "key": "google_analytics_id",
+      "label": "Google Analytics Measurement ID",
+      "value": "",
+      "type": "text",
+      "sort_order": 12
     }
   ],
   "categories": [

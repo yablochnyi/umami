@@ -1,5 +1,21 @@
 const desktopBackground = document.body.dataset.backgroundDesktop;
 const mobileBackground = document.body.dataset.backgroundMobile;
+const googleAnalyticsId = document.body.dataset.googleAnalyticsId;
+
+if (/^G-[A-Z0-9]+$/i.test(googleAnalyticsId || '')) {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function gtag() {
+        window.dataLayer.push(arguments);
+    };
+
+    window.gtag('js', new Date());
+    window.gtag('config', googleAnalyticsId);
+
+    const googleAnalyticsScript = document.createElement('script');
+    googleAnalyticsScript.async = true;
+    googleAnalyticsScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(googleAnalyticsId);
+    document.head.appendChild(googleAnalyticsScript);
+}
 
 if (desktopBackground) {
     document.body.style.setProperty('--umami-bg-desktop', `url('${desktopBackground}')`);

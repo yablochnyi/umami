@@ -130,6 +130,7 @@ class HomeController extends Controller
             'aboutImage' => $this->mediaUrl($settings['about_image'] ?? 'umami/res8.png'),
             'mapEmbedUrl' => $settings['map_embed_url'] ?? '',
             'address' => $settings['address'] ?? '',
+            'googleAnalyticsId' => $settings['google_analytics_id'] ?? '',
         ];
 
         $localizedUrls = collect($supportedLocales)

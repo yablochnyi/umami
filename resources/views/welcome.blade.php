@@ -31,6 +31,7 @@
     data-background-desktop="{{ $settings['backgroundDesktop'] }}"
     data-background-mobile="{{ $settings['backgroundMobile'] }}"
     data-show-photo-label="{{ $copy['showPhoto'] }}"
+    data-google-analytics-id="{{ $settings['googleAnalyticsId'] }}"
 >
     <header class="topbar">
         <a class="brand" href="{{ route('home', ['lang' => $locale]) }}#top" aria-label="Umami Sushi & Food">
