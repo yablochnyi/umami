@@ -23,6 +23,8 @@
     <meta name="twitter:description" content="{{ $copy['metaDescription'] }}">
     <meta name="twitter:image" content="{{ $seo['ogImage'] }}">
     <link rel="icon" href="{{ $settings['logo'] }}">
+    <link rel="preload" as="image" href="{{ $settings['heroPoster'] }}" fetchpriority="high">
+    <link rel="preload" as="image" href="{{ $settings['backgroundMobile'] }}" media="(max-width: 900px)">
     <link rel="stylesheet" href="/assets/umami/landing.css?v={{ filemtime(public_path('assets/umami/landing.css')) }}">
     <script src="/assets/umami/landing.js?v={{ filemtime(public_path('assets/umami/landing.js')) }}" defer></script>
     <script type="application/ld+json">{!! $restaurantSchemaJson !!}</script>
@@ -50,13 +52,13 @@
             @foreach($socialLinks as $link)
                 <a class="social-link" href="{{ $link->url }}" target="_blank" rel="noopener" aria-label="{{ $link->label }}">
                     @if($link->icon)
-                        <img src="{{ $link->icon }}" alt="">
+                        <img src="{{ $link->icon }}" alt="" width="18" height="18">
                     @endif
                 </a>
             @endforeach
             <div class="language-switcher" aria-label="Language switcher">
                 @foreach($supportedLocales as $lang)
-                    <a href="{{ $seo['localizedUrls'][$lang] }}" class="{{ $locale === $lang ? 'active' : '' }}" aria-pressed="{{ $locale === $lang ? 'true' : 'false' }}">{{ $localeLabels[$lang] }}</a>
+                    <a href="{{ $seo['localizedUrls'][$lang] }}" class="{{ $locale === $lang ? 'active' : '' }}" @if($locale === $lang) aria-current="page" @endif>{{ $localeLabels[$lang] }}</a>
                 @endforeach
             </div>
             <a class="pill" href="{{ $settings['phoneHref'] }}">{{ $settings['phone'] }}</a>
@@ -142,7 +144,7 @@
                     <h2>{{ $copy['aboutTitle'] }}</h2>
                 </div>
                 <div>
-                    <img src="{{ $settings['aboutImage'] }}" alt="Sushi w Umami">
+                    <img src="{{ $settings['aboutImage'] }}" alt="Sushi w Umami" loading="lazy" decoding="async">
                     <p>{{ $copy['aboutText'] }}</p>
                 </div>
             </div>
@@ -184,7 +186,7 @@
                         @foreach($socialLinks as $link)
                             <a class="social-link" href="{{ $link->url }}" target="_blank" rel="noopener" aria-label="{{ $link->label }}">
                                 @if($link->icon)
-                                    <img src="{{ $link->icon }}" alt="">
+                                    <img src="{{ $link->icon }}" alt="" width="18" height="18">
                                 @endif
                             </a>
                         @endforeach

@@ -30,7 +30,7 @@
         <div class="top-actions">
             <div class="language-switcher" aria-label="Language switcher">
                 @foreach($localizedUrls as $lang => $url)
-                    <a href="{{ $url }}" class="{{ $locale === $lang ? 'active' : '' }}" aria-pressed="{{ $locale === $lang ? 'true' : 'false' }}">{{ $localeLabels[$lang] }}</a>
+                    <a href="{{ $url }}" class="{{ $locale === $lang ? 'active' : '' }}" @if($locale === $lang) aria-current="page" @endif>{{ $localeLabels[$lang] }}</a>
                 @endforeach
             </div>
             <a class="pill" href="{{ $menuUrl }}">Menu</a>

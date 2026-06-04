@@ -368,6 +368,11 @@ class HomeController extends Controller
             return $path;
         }
 
+        $optimizedPath = preg_replace('/\.(jpe?g|png)$/i', '.webp', $path);
+        if ($optimizedPath !== $path && Storage::disk('public')->exists($optimizedPath)) {
+            return Storage::disk('public')->url($optimizedPath);
+        }
+
         return Storage::disk('public')->url($path);
     }
 

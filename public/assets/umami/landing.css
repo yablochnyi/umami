@@ -5,8 +5,8 @@
     --line: rgba(21, 19, 18, .12);
     --paper: rgba(255, 252, 247, .86);
     --paper-solid: #fffaf3;
-    --accent: #d9453f;
-    --accent-dark: #9e2f2a;
+    --accent: #b82421;
+    --accent-dark: #861b18;
     --wasabi: #7f9b6a;
     --charcoal: #171411;
     --shadow: 0 18px 60px rgba(38, 28, 21, .14);
@@ -29,7 +29,7 @@ body::before {
     z-index: 0;
     background:
         linear-gradient(rgba(255, 250, 243, .84), rgba(255, 250, 243, .84)),
-        var(--umami-bg-desktop, url('/storage/umami/tlo3.png')) right center / auto min(100vh, 980px) no-repeat;
+        var(--umami-bg-desktop, url('/storage/umami/tlo3.webp')) right center / auto min(100vh, 980px) no-repeat;
     pointer-events: none;
     transform: translateZ(0);
     will-change: transform;
@@ -182,7 +182,7 @@ button {
     align-items: flex-end;
     overflow: hidden;
     color: white;
-    background: #151312 var(--umami-hero-poster, url('/storage/umami/res1.png')) center / cover no-repeat;
+    background: #151312 var(--umami-hero-poster, url('/storage/umami/res1.webp')) center / cover no-repeat;
 }
 
 .hero.video-ready {
@@ -520,18 +520,31 @@ h2 {
 }
 
 .slider-dots button {
-    width: 8px;
-    height: 8px;
+    position: relative;
+    width: 44px;
+    height: 44px;
     padding: 0;
     border: 0;
     border-radius: 999px;
-    background: rgba(255,255,255,.55);
+    background: transparent;
     cursor: pointer;
-    transition: width .2s ease, background .2s ease;
 }
 
-.slider-dots button.active {
+.slider-dots button::before {
+    content: "";
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.62);
+    transition: width .2s ease, background .2s ease, transform .2s ease;
+}
+
+.slider-dots button.active::before {
     width: 24px;
+    transform: translateX(-8px);
     background: white;
 }
 
@@ -914,7 +927,7 @@ footer {
     body::before {
         background:
             linear-gradient(rgba(255, 250, 243, .64), rgba(255, 250, 243, .64)),
-            var(--umami-bg-mobile, url('/storage/umami/tlo4.png')) right top / auto 100svh no-repeat;
+            var(--umami-bg-mobile, url('/storage/umami/tlo4.webp')) right top / auto 100svh no-repeat;
         min-height: 100vh;
         min-height: 100svh;
     }
@@ -944,6 +957,7 @@ footer {
         height: 430px;
         min-height: 430px;
     }
+    .slider-dots { display: none; }
     .dish-card img { height: 204px; }
     .best-grid .dish-card img { height: 260px; }
     .cookie-consent {
