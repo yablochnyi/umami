@@ -781,7 +781,7 @@ class UmamiContentSeeder extends Seeder
             "en": "Tempura mix"
           },
           "description": {
-            "pl": "Łosoś , krewetki, kalmar oraz warzywa w chrupiącym cieście",
+            "pl": "Łosoś, krewetki, kalmar oraz warzywa w chrupiącym cieście",
             "uk": "Лосось, креветки, кальмар і овочі в хрусткому тісті.",
             "en": "Salmon, prawns, squid and vegetables in crispy batter."
           },
@@ -1052,7 +1052,7 @@ class UmamiContentSeeder extends Seeder
             "en": "Udon with beef"
           },
           "description": {
-            "pl": "Pszenny makaron udon z wołowiną, fasolką szparagową , warzywami i sosem z fermentowanej soi",
+            "pl": "Pszenny makaron udon z wołowiną, fasolką szparagową, warzywami i sosem z fermentowanej soi",
             "uk": "Пшенична локшина удон із яловичиною, стручковою квасолею, овочами та соусом із ферментованої сої.",
             "en": "Wheat udon noodles with beef, green beans, vegetables and fermented soy sauce."
           },
@@ -1947,7 +1947,7 @@ class UmamiContentSeeder extends Seeder
             "en": "Rainbow uramaki"
           },
           "description": {
-            "pl": "krewetki w mixie nasion, awokado, łosoś, tuńczyk, seriola, maślana",
+            "pl": "krewetki w miksie nasion, awokado, łosoś, tuńczyk, seriola, maślana",
             "uk": "Креветки в міксі насіння, авокадо, лосось, тунець, серіола, масляна риба.",
             "en": "Prawns in a seed mix, avocado, salmon, tuna, yellowtail and butterfish."
           },
@@ -2162,7 +2162,7 @@ class UmamiContentSeeder extends Seeder
             "en": "Master Roll"
           },
           "description": {
-            "pl": "Futomaki łosoś\n6 kawałków\nFutomaki tuńczyk \n6 kawałków\nFutomaki tilapia w panko\n6 kawałków\nFutomaki kalmar W tempurze\n6 kawałków\nUramaki krewetka w tempurze & tatar z łososia\n4 kawałki\nUramaki krewetka w panko & grillowany węgorz \n4 kawałki\nUramaki śwież",
+            "pl": "Futomaki łosoś\n6 kawałków\nFutomaki tuńczyk\n6 kawałków\nFutomaki tilapia w panko\n6 kawałków\nFutomaki kalmar w tempurze\n6 kawałków\nUramaki krewetka w tempurze & tatar z łososia\n4 kawałki\nUramaki krewetka w panko & grillowany węgorz\n4 kawałki\nUramaki ze świeżymi składnikami",
             "uk": "Футомакі з лососем\n6 шматочків\nФутомакі з тунцем\n6 шматочків\nФутомакі з тілапією в панко\n6 шматочків\nФутомакі з кальмаром у темпурі\n6 шматочків\nУрамакі з креветкою в темпурі та тартаром із лосося\n4 шматочки\nУрамакі з креветкою в панко та грильованим вугром\n4 шматочки\nУрамакі зі свіжими інгредієнтами",
             "en": "Salmon futomaki\n6 pieces\nTuna futomaki\n6 pieces\nPanko tilapia futomaki\n6 pieces\nTempura squid futomaki\n6 pieces\nTempura prawn and salmon tartare uramaki\n4 pieces\nPanko prawn and grilled eel uramaki\n4 pieces\nUramaki with fresh ingredients"
           },
@@ -2179,7 +2179,7 @@ class UmamiContentSeeder extends Seeder
             "en": "Sakura Mini"
           },
           "description": {
-            "pl": "Futomaki łosoś \n6 kawałków\nFutomaki tilapia w tempurze\n6 kawałków\nUramaki pikantny siekany tuńczyk \n4 kawałki\nUramaki warzywa w tempurze & tatar z łososia\n4 kawałki",
+            "pl": "Futomaki łosoś\n6 kawałków\nFutomaki tilapia w tempurze\n6 kawałków\nUramaki pikantny siekany tuńczyk\n4 kawałki\nUramaki warzywa w tempurze & tatar z łososia\n4 kawałki",
             "uk": "Футомакі з лососем\n6 шматочків\nФутомакі з тілапією в темпурі\n6 шматочків\nУрамакі з гострим рубленим тунцем\n4 шматочки\nУрамакі з овочами в темпурі та тартаром із лосося\n4 шматочки",
             "en": "Salmon futomaki\n6 pieces\nTempura tilapia futomaki\n6 pieces\nSpicy chopped tuna uramaki\n4 pieces\nTempura vegetable and salmon tartare uramaki\n4 pieces"
           },
@@ -2213,7 +2213,7 @@ class UmamiContentSeeder extends Seeder
             "en": "Umami"
           },
           "description": {
-            "pl": "Futomaki Łosoś grillowany\n6 kawałków\nFutomaki tuńczyk\n6 kawałków\nFutomaki łosoś\n6 kawałków\nFutomaki maślana w sezamie\n6 kawałków\nFutomaki węgorz w migdałach\n6 kawałków\nUramaki warzywa w tempurze & tatar z łososia\n8 kawałków\nUramaki tilapia w panko & rain",
+            "pl": "Futomaki łosoś grillowany\n6 kawałków\nFutomaki tuńczyk\n6 kawałków\nFutomaki łosoś\n6 kawałków\nFutomaki maślana w sezamie\n6 kawałków\nFutomaki węgorz w migdałach\n6 kawałków\nUramaki warzywa w tempurze & tatar z łososia\n8 kawałków\nUramaki tilapia w panko",
             "uk": "Футомакі з грильованим лососем\n6 шматочків\nФутомакі з тунцем\n6 шматочків\nФутомакі з лососем\n6 шматочків\nФутомакі з масляною рибою в кунжуті\n6 шматочків\nФутомакі з вугром у мигдалі\n6 шматочків\nУрамакі з овочами в темпурі та тартаром із лосося\n8 шматочків\nУрамакі з тілапією у панко",
             "en": "Grilled salmon futomaki\n6 pieces\nTuna futomaki\n6 pieces\nSalmon futomaki\n6 pieces\nSesame butterfish futomaki\n6 pieces\nAlmond eel futomaki\n6 pieces\nTempura vegetable and salmon tartare uramaki\n8 pieces\nPanko tilapia uramaki"
           },
@@ -2230,7 +2230,7 @@ class UmamiContentSeeder extends Seeder
             "en": "Vege Mini"
           },
           "description": {
-            "pl": "Futomaki vege\n6 kawałków\nHosomaki w migdałach  z kampyo\n8 kawałków\nUramaki vege & guacamole\n4 kawałki\nUramaki vege awokado\n4 kawałki",
+            "pl": "Futomaki vege\n6 kawałków\nHosomaki w migdałach z kampyo\n8 kawałków\nUramaki vege & guacamole\n4 kawałki\nUramaki vege awokado\n4 kawałki",
             "uk": "Овочеві футомакі\n6 шматочків\nХосомакі з кампьо в мигдалі\n8 шматочків\nОвочеві урамакі з гуакамоле\n4 шматочки\nОвочеві урамакі з авокадо\n4 шматочки",
             "en": "Vegetable futomaki\n6 pieces\nAlmond kampyo hosomaki\n8 pieces\nVegetable guacamole uramaki\n4 pieces\nVegetable avocado uramaki\n4 pieces"
           },
@@ -2334,7 +2334,7 @@ class UmamiContentSeeder extends Seeder
             "en": "Pepsi 0.33"
           },
           "description": {
-            "pl": "W cenę jest wliczona kaucja 0,50 groszy za puszkę",
+            "pl": "W cenę jest wliczona kaucja 0,50 zł za puszkę",
             "uk": "У ціну включено заставу 0,50 PLN за банку.",
             "en": "The price includes a 0.50 PLN can deposit."
           },
@@ -2375,7 +2375,7 @@ class UmamiContentSeeder extends Seeder
             "en": "Asparagus in butter emulsion"
           },
           "description": {
-            "pl": "miso holendez, tosoś glawrax, jajko w panko",
+            "pl": "miso holendez, łosoś glawrax, jajko w panko",
             "uk": "Місо-голандез, лосось gravlax, яйце в панко.",
             "en": "Miso hollandaise, gravlax salmon and panko egg."
           },
