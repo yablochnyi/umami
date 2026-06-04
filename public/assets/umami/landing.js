@@ -1,5 +1,6 @@
 const desktopBackground = document.body.dataset.backgroundDesktop;
 const mobileBackground = document.body.dataset.backgroundMobile;
+const heroPoster = document.body.dataset.heroPoster;
 const googleAnalyticsId = document.body.dataset.googleAnalyticsId;
 const cookieConsentKey = 'umami_cookie_consent';
 
@@ -67,6 +68,43 @@ if (desktopBackground) {
 
 if (mobileBackground) {
     document.body.style.setProperty('--umami-bg-mobile', `url('${mobileBackground}')`);
+}
+
+if (heroPoster) {
+    document.body.style.setProperty('--umami-hero-poster', `url('${heroPoster}')`);
+}
+
+const heroVideo = document.querySelector('.bg-video');
+if (heroVideo) {
+    const hero = heroVideo.closest('.hero');
+
+    heroVideo.muted = true;
+    heroVideo.playsInline = true;
+    heroVideo.setAttribute('muted', '');
+    heroVideo.setAttribute('playsinline', '');
+    heroVideo.setAttribute('webkit-playsinline', '');
+
+    const markHeroVideoReady = () => {
+        if (heroVideo.readyState >= 2) {
+            hero?.classList.add('video-ready');
+        }
+    };
+
+    const startHeroVideo = () => {
+        const playPromise = heroVideo.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {});
+        }
+    };
+
+    heroVideo.addEventListener('loadeddata', markHeroVideoReady);
+    heroVideo.addEventListener('playing', markHeroVideoReady);
+    heroVideo.addEventListener('error', () => hero?.classList.remove('video-ready'));
+
+    markHeroVideoReady();
+    startHeroVideo();
+    window.addEventListener('pageshow', startHeroVideo, { once: true });
+    document.addEventListener('touchstart', startHeroVideo, { once: true, passive: true });
 }
 
 const modal = document.getElementById('modal');

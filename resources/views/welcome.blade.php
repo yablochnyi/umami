@@ -23,13 +23,14 @@
     <meta name="twitter:description" content="{{ $copy['metaDescription'] }}">
     <meta name="twitter:image" content="{{ $seo['ogImage'] }}">
     <link rel="icon" href="{{ $settings['logo'] }}">
-    <link rel="stylesheet" href="/assets/umami/landing.css">
-    <script src="/assets/umami/landing.js" defer></script>
+    <link rel="stylesheet" href="/assets/umami/landing.css?v={{ filemtime(public_path('assets/umami/landing.css')) }}">
+    <script src="/assets/umami/landing.js?v={{ filemtime(public_path('assets/umami/landing.js')) }}" defer></script>
     <script type="application/ld+json">{!! $restaurantSchemaJson !!}</script>
 </head>
 <body
     data-background-desktop="{{ $settings['backgroundDesktop'] }}"
     data-background-mobile="{{ $settings['backgroundMobile'] }}"
+    data-hero-poster="{{ $settings['heroPoster'] }}"
     data-show-photo-label="{{ $copy['showPhoto'] }}"
     data-google-analytics-id="{{ $settings['googleAnalyticsId'] }}"
 >
