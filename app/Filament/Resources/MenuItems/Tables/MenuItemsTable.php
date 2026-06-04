@@ -23,6 +23,10 @@ class MenuItemsTable
                     ->label('Name')
                     ->getStateUsing(fn ($record) => $record->getTranslation('name', 'pl'))
                     ->searchable(),
+                TextColumn::make('slug')
+                    ->label('Slug')
+                    ->searchable()
+                    ->toggleable(),
                 TextColumn::make('category')
                     ->label('Category')
                     ->getStateUsing(fn ($record) => $record->category?->getTranslation('name', 'pl')),

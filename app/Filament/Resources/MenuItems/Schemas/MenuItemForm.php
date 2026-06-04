@@ -43,6 +43,11 @@ class MenuItemForm
                             TextInput::make('name.uk')->label('UA')->required(),
                             TextInput::make('name.en')->label('EN')->required(),
                         ]),
+                        TextInput::make('slug')
+                            ->label('SEO slug')
+                            ->required()
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true),
                     ]),
                 Section::make('Description')
                     ->schema([
@@ -50,6 +55,14 @@ class MenuItemForm
                             Textarea::make('description.pl')->label('PL')->rows(5),
                             Textarea::make('description.uk')->label('UA')->rows(5),
                             Textarea::make('description.en')->label('EN')->rows(5),
+                        ]),
+                    ]),
+                Section::make('Appetizing SEO description')
+                    ->schema([
+                        Grid::make(3)->schema([
+                            Textarea::make('marketing_description.pl')->label('PL')->rows(6),
+                            Textarea::make('marketing_description.uk')->label('UA')->rows(6),
+                            Textarea::make('marketing_description.en')->label('EN')->rows(6),
                         ]),
                     ]),
                 Section::make('Images')

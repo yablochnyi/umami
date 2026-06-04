@@ -85,7 +85,7 @@
             </div>
             <div class="best-grid">
                 @foreach($bestsellers as $dish)
-                    <button type="button" class="dish-card" data-modal-card data-name="{{ $dish['name'] }}" data-category="{{ $dish['category'] }}" data-price="{{ $dish['price'] }}" data-desc="{{ $dish['description'] }}" data-image="{{ $dish['image'] }}">
+                    <button type="button" class="dish-card" data-modal-card data-name="{{ $dish['name'] }}" data-category="{{ $dish['category'] }}" data-price="{{ $dish['price'] }}" data-desc="{{ $dish['description'] }}" data-image="{{ $dish['image'] }}" data-url="{{ $dish['url'] }}">
                         @if($dish['image'])
                             <img src="{{ $dish['image'] }}" alt="{{ $dish['name'] }}" loading="lazy">
                         @endif
@@ -115,7 +115,7 @@
                     @foreach($categories as $category)
                         <div class="menu-grid" data-menu-panel="category-{{ $category['id'] }}" @if(! $loop->first) hidden @endif>
                             @foreach($category['items'] as $dish)
-                                <button type="button" class="dish-card menu-item" data-modal-card data-name="{{ $dish['name'] }}" data-category="{{ $dish['category'] }}" data-price="{{ $dish['price'] }}" data-desc="{{ $dish['description'] }}" data-image="{{ $dish['image'] }}">
+                                <button type="button" class="dish-card menu-item" data-modal-card data-name="{{ $dish['name'] }}" data-category="{{ $dish['category'] }}" data-price="{{ $dish['price'] }}" data-desc="{{ $dish['description'] }}" data-image="{{ $dish['image'] }}" data-url="{{ $dish['url'] }}">
                                     @if($dish['image'])
                                         <img src="{{ $dish['image'] }}" alt="{{ $dish['name'] }}" loading="lazy">
                                     @endif
@@ -234,6 +234,7 @@
                 </div>
                 <h3 id="modalTitle"></h3>
                 <p id="modalDescription"></p>
+                <a class="pill modal-details-link" href="#" id="modalDetailsLink">{{ $menuDetailsLabel }}</a>
             </div>
         </div>
     </div>

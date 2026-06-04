@@ -12,6 +12,8 @@ class MenuCategory extends Model
 
     protected $fillable = [
         'name',
+        'intro_text',
+        'seo_text',
         'slug',
         'sort_order',
         'is_active',
@@ -21,7 +23,7 @@ class MenuCategory extends Model
         'is_active' => 'boolean',
     ];
 
-    public array $translatable = ['name'];
+    public array $translatable = ['name', 'intro_text', 'seo_text'];
 
     public function items(): HasMany
     {

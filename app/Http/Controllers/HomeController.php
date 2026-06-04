@@ -19,7 +19,7 @@ class HomeController extends Controller
     public function __invoke(Request $request, ?string $locale = null)
     {
         $supportedLocales = ['pl', 'uk', 'en'];
-        $siteUrl = rtrim(SiteSetting::query()->where('key', 'site_url')->value('value') ?: 'https://www.umamisushifood.pl', '/');
+        $siteUrl = rtrim(SiteSetting::query()->where('key', 'site_url')->value('value') ?: 'https://umamisushifood.pl', '/');
 
         if (in_array($request->query('lang'), $supportedLocales, true)) {
             return redirect()->to($this->localizedUrl($siteUrl, $request->query('lang')), 301);
@@ -217,17 +217,20 @@ class HomeController extends Controller
             'category' => $dish->category ? $translated($dish->category, 'name') : '',
             'price' => $dish->price,
             'image' => $this->mediaUrl($dish->image),
+            'url' => $dish->category ? $this->menuItemUrl($viewSettings['siteUrl'], $locale, $dish->category, $dish) : '',
         ]);
 
         $categoryGroups = $categories->map(fn (MenuCategory $category) => [
             'id' => $category->id,
             'name' => $translated($category, 'name'),
+            'url' => $this->menuCategoryUrl($viewSettings['siteUrl'], $locale, $category),
             'items' => $category->items->map(fn (MenuItem $dish) => [
                 'name' => $translated($dish, 'name'),
                 'description' => $translated($dish, 'description', $copy['detailsFallback']),
                 'category' => $translated($category, 'name'),
                 'price' => $dish->price,
                 'image' => $this->mediaUrl($dish->image),
+                'url' => $this->menuItemUrl($viewSettings['siteUrl'], $locale, $category, $dish),
             ]),
         ]);
 
@@ -253,6 +256,7 @@ class HomeController extends Controller
             'socialLinks' => $socialLinks,
             'cookieConsent' => $this->cookieConsentCopy($locale),
             'legalLinks' => $this->legalLinks($viewSettings['siteUrl'], $locale),
+            'menuDetailsLabel' => $this->menuDetailsLabel($locale),
             'seo' => [
                 'canonicalUrl' => $canonicalUrl,
                 'localizedUrls' => $localizedUrls,
@@ -324,9 +328,30 @@ class HomeController extends Controller
         return collect($links[$locale] ?? $links['pl'])
             ->map(fn (array $link) => [
                 'label' => $link['label'],
-                'url' => rtrim($siteUrl, '/').$link['path'],
+                'url' => $link['path'],
             ])
             ->all();
+    }
+
+    private function menuCategoryUrl(string $siteUrl, string $locale, MenuCategory $category): string
+    {
+        $prefix = $locale === 'pl' ? '' : '/'.$locale;
+
+        return $prefix.'/menu/'.$category->slug;
+    }
+
+    private function menuItemUrl(string $siteUrl, string $locale, MenuCategory $category, MenuItem $item): string
+    {
+        return $this->menuCategoryUrl($siteUrl, $locale, $category).'/'.$item->slug;
+    }
+
+    private function menuDetailsLabel(string $locale): string
+    {
+        return [
+            'pl' => 'Zobacz szczegóły',
+            'uk' => 'Детальніше',
+            'en' => 'View details',
+        ][$locale] ?? 'Zobacz szczegóły';
     }
 
     private function mediaUrl(?string $path): string

@@ -9,6 +9,7 @@ use App\Models\SiteSetting;
 use App\Models\SiteText;
 use App\Models\SocialLink;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class UmamiContentSeeder extends Seeder
 {
@@ -461,7 +462,7 @@ class UmamiContentSeeder extends Seeder
       "group": "branding",
       "key": "site_url",
       "label": "Site URL",
-      "value": "https://www.umamisushifood.pl",
+      "value": "https://umamisushifood.pl",
       "type": "url",
       "sort_order": 1
     },
@@ -559,7 +560,7 @@ class UmamiContentSeeder extends Seeder
       "slug": "przystawki-zimne",
       "sort_order": 1,
       "name": {
-        "pl": "PRZYSTAWKI ZIMNE",
+        "pl": "Przystawki zimne",
         "uk": "Холодні закуски",
         "en": "Cold starters"
       },
@@ -643,7 +644,7 @@ class UmamiContentSeeder extends Seeder
       "slug": "przystawki-ciep-e",
       "sort_order": 2,
       "name": {
-        "pl": "PRZYSTAWKI CIEPŁE",
+        "pl": "Przystawki ciepłe",
         "uk": "Гарячі закуски",
         "en": "Warm starters"
       },
@@ -812,7 +813,7 @@ class UmamiContentSeeder extends Seeder
       "slug": "zupy",
       "sort_order": 3,
       "name": {
-        "pl": "ZUPY",
+        "pl": "Zupy",
         "uk": "Супи",
         "en": "Soups"
       },
@@ -891,7 +892,7 @@ class UmamiContentSeeder extends Seeder
       "slug": "rameny",
       "sort_order": 4,
       "name": {
-        "pl": "RAMENY",
+        "pl": "Rameny",
         "uk": "Рамен",
         "en": "Ramen"
       },
@@ -987,7 +988,7 @@ class UmamiContentSeeder extends Seeder
       "slug": "dania-g-owne",
       "sort_order": 5,
       "name": {
-        "pl": "DANIA GŁÓWNE",
+        "pl": "Dania główne",
         "uk": "Основні страви",
         "en": "Main dishes"
       },
@@ -1083,7 +1084,7 @@ class UmamiContentSeeder extends Seeder
       "slug": "sashimi",
       "sort_order": 6,
       "name": {
-        "pl": "SASHIMI",
+        "pl": "Sashimi",
         "uk": "Сашимі",
         "en": "Sashimi"
       },
@@ -1145,7 +1146,7 @@ class UmamiContentSeeder extends Seeder
       "slug": "nigiri",
       "sort_order": 7,
       "name": {
-        "pl": "NIGIRI",
+        "pl": "Nigiri",
         "uk": "Нігірі",
         "en": "Nigiri"
       },
@@ -1221,7 +1222,7 @@ class UmamiContentSeeder extends Seeder
       "slug": "hosomaki",
       "sort_order": 8,
       "name": {
-        "pl": "HOSOMAKI",
+        "pl": "Hosomaki",
         "uk": "Хосомакі",
         "en": "Hosomaki"
       },
@@ -1382,7 +1383,7 @@ class UmamiContentSeeder extends Seeder
       "slug": "gunkanmaki",
       "sort_order": 9,
       "name": {
-        "pl": "GUNKANMAKI",
+        "pl": "Gunkanmaki",
         "uk": "Гунканмакі",
         "en": "Gunkanmaki"
       },
@@ -1457,7 +1458,7 @@ class UmamiContentSeeder extends Seeder
       "slug": "futomaki",
       "sort_order": 10,
       "name": {
-        "pl": "FUTOMAKI",
+        "pl": "Futomaki",
         "uk": "Футомакі",
         "en": "Futomaki"
       },
@@ -1672,7 +1673,7 @@ class UmamiContentSeeder extends Seeder
       "slug": "rolki-smazone",
       "sort_order": 11,
       "name": {
-        "pl": "ROLKI SMAŻONE",
+        "pl": "Rolki smażone",
         "uk": "Смажені роли",
         "en": "Fried rolls"
       },
@@ -1752,7 +1753,7 @@ class UmamiContentSeeder extends Seeder
       "slug": "freshmaki",
       "sort_order": 12,
       "name": {
-        "pl": "FRESHMAKI",
+        "pl": "Freshmaki",
         "uk": "Фрешмакі",
         "en": "Freshmaki"
       },
@@ -1848,7 +1849,7 @@ class UmamiContentSeeder extends Seeder
       "slug": "uramaki",
       "sort_order": 13,
       "name": {
-        "pl": "URAMAKI",
+        "pl": "Uramaki",
         "uk": "Урамакі",
         "en": "Uramaki"
       },
@@ -2097,7 +2098,7 @@ class UmamiContentSeeder extends Seeder
       "slug": "zestawy-sushi",
       "sort_order": 14,
       "name": {
-        "pl": "ZESTAWY SUSHI",
+        "pl": "Zestawy sushi",
         "uk": "Суші-сети",
         "en": "Sushi sets"
       },
@@ -2244,7 +2245,7 @@ class UmamiContentSeeder extends Seeder
       "slug": "dodatki",
       "sort_order": 15,
       "name": {
-        "pl": "DODATKI",
+        "pl": "Dodatki",
         "uk": "Додатки",
         "en": "Add-ons"
       },
@@ -2320,7 +2321,7 @@ class UmamiContentSeeder extends Seeder
       "slug": "napoje",
       "sort_order": 16,
       "name": {
-        "pl": "NAPOJE",
+        "pl": "Napoje",
         "uk": "Напої",
         "en": "Drinks"
       },
@@ -2419,7 +2420,7 @@ class UmamiContentSeeder extends Seeder
       "slug": "dania-dla-dzieci",
       "sort_order": 18,
       "name": {
-        "pl": "DANIA DLA DZIECI",
+        "pl": "Dania dla dzieci",
         "uk": "Страви для дітей",
         "en": "Kids menu"
       },
@@ -2713,12 +2714,26 @@ JSON, true, flags: JSON_THROW_ON_ERROR);
                 ['slug' => $categoryData['slug']],
                 [
                     'name' => $categoryData['name'],
+                    'intro_text' => $this->categoryIntroText($categoryData),
+                    'seo_text' => $this->categorySeoText($categoryData),
                     'sort_order' => $categoryData['sort_order'],
                     'is_active' => true,
                 ],
             );
 
+            $usedSlugs = [];
             foreach ($categoryData['items'] as $itemData) {
+                $baseSlug = Str::slug($itemData['name']['pl'] ?? 'danie') ?: 'danie';
+                $slug = $baseSlug;
+                $suffix = 2;
+
+                while (in_array($slug, $usedSlugs, true) || MenuItem::query()->where('slug', $slug)->where('menu_category_id', '!=', $category->id)->exists()) {
+                    $slug = $baseSlug.'-'.$suffix;
+                    $suffix++;
+                }
+
+                $usedSlugs[] = $slug;
+
                 MenuItem::updateOrCreate(
                     [
                         'menu_category_id' => $category->id,
@@ -2726,7 +2741,9 @@ JSON, true, flags: JSON_THROW_ON_ERROR);
                     ],
                     [
                         'name' => $itemData['name'],
+                        'slug' => $slug,
                         'description' => $itemData['description'],
+                        'marketing_description' => $this->itemMarketingDescription($itemData, $categoryData),
                         'price' => $itemData['price'],
                         'image' => $itemData['image'],
                         'source_image' => $itemData['source_image'],
@@ -2760,5 +2777,639 @@ JSON, true, flags: JSON_THROW_ON_ERROR);
                 ],
             );
         }
+    }
+
+    private function categoryIntroText(array $category): array
+    {
+        $profile = $this->categoryProfile($category);
+
+        return [
+            'pl' => $profile['intro']['pl'],
+            'uk' => $profile['intro']['uk'],
+            'en' => $profile['intro']['en'],
+        ];
+    }
+
+    private function categorySeoText(array $category): array
+    {
+        $profile = $this->categoryProfile($category);
+        $examples = collect($category['items'] ?? [])
+            ->sortBy(fn (array $item) => $item['is_bestseller'] ? 0 : ($item['sort_order'] ?? 999))
+            ->take(5)
+            ->map(fn (array $item) => $item['name'])
+            ->all();
+
+        $plExamples = collect($examples)->pluck('pl')->filter()->implode(', ');
+        $ukExamples = collect($examples)->pluck('uk')->filter()->implode(', ');
+        $enExamples = collect($examples)->pluck('en')->filter()->implode(', ');
+
+        return [
+            'pl' => "{$profile['seo']['pl']} ".$this->categorySeoClosing($category, $plExamples, 'pl'),
+            'uk' => "{$profile['seo']['uk']} ".$this->categorySeoClosing($category, $ukExamples, 'uk'),
+            'en' => "{$profile['seo']['en']} ".$this->categorySeoClosing($category, $enExamples, 'en'),
+        ];
+    }
+
+    private function categorySeoClosing(array $category, string $examples, string $locale): string
+    {
+        $slug = $category['slug'];
+
+        $texts = [
+            'przystawki-zimne' => [
+                'pl' => "W tej sekcji warto zwrócić uwagę na {$examples}: dobrze budują apetyt, ale nie przytłaczają przed głównym zamówieniem. To dobry wybór, gdy planujesz sushi w Toruniu i chcesz zacząć od czegoś świeżego, pikantnego albo lekko morskiego.",
+                'uk' => "У цьому розділі варто звернути увагу на {$examples}: вони добре відкривають апетит, але не перевантажують перед основним замовленням. Це вдалий вибір, якщо плануєте суші в Торуні й хочете почати з чогось свіжого, пікантного або легкого морського смаку.",
+                'en' => "In this section, {$examples} are worth noticing: they open the appetite without overpowering the main order. It is a good start when planning sushi in Toruń and wanting something fresh, spicy or lightly sea-inspired.",
+            ],
+            'przystawki-ciep-e' => [
+                'pl' => "{$examples} dobrze sprawdzają się do dzielenia przy stole, szczególnie kiedy zamówienie ma mieć więcej tekstur niż same rolki. Ciepłe przystawki dodają chrupkości, aromatu i restauracyjnego rytmu przed ramenem, sushi albo daniem głównym.",
+                'uk' => "{$examples} добре підходять для спільного столу, особливо коли в замовленні хочеться більше текстур, ніж лише роли. Гарячі закуски додають хрусткість, аромат і ресторанний ритм перед раменом, суші або основною стравою.",
+                'en' => "{$examples} work well for sharing, especially when the order should have more texture than rolls alone. Warm starters add crunch, aroma and restaurant rhythm before ramen, sushi or a main dish.",
+            ],
+            'zupy' => [
+                'pl' => "Wśród zup znajdziesz {$examples}, czyli propozycje na lżejszy start albo rozgrzewającą część posiłku. To sekcja dla gości, którzy lubią aromatyczny bulion, kwaśno-pikantne nuty lub delikatniejsze smaki przed sushi.",
+                'uk' => "Серед супів є {$examples} — варіанти для легкого старту або зігрівальної частини трапези. Це розділ для гостей, які люблять ароматний бульйон, кисло-гострі ноти або делікатніші смаки перед суші.",
+                'en' => "Among the soups you will find {$examples}, suitable as a lighter start or a warming part of the meal. This section is for guests who enjoy aromatic broth, hot-sour notes or gentler flavors before sushi.",
+            ],
+            'rameny' => [
+                'pl' => "{$examples} pokazują różne kierunki ramenu: od mięsnych i głębokich po łagodniejsze lub warzywne. To dobra kategoria, gdy chcesz zamówić ramen w Toruniu jako pełny obiad, a nie tylko dodatek do sushi.",
+                'uk' => "{$examples} показують різні напрями рамену: від м’ясних і глибоких до м’якших або овочевих. Це добра категорія, коли хочеться замовити рамен у Торуні як повноцінний обід, а не лише додаток до суші.",
+                'en' => "{$examples} show different ramen directions: from meaty and deep to gentler or vegetable-forward. This is a strong category when you want to order ramen in Toruń as a full meal, not just an addition to sushi.",
+            ],
+            'dania-g-owne' => [
+                'pl' => "Pozycje takie jak {$examples} są dobrym wyborem, gdy apetyt idzie bardziej w stronę makaronu, ryżu i ciepłego sosu niż klasycznych rolek. To część menu dla osób, które szukają azjatyckiego obiadu w Toruniu z konkretną porcją.",
+                'uk' => "Такі позиції, як {$examples}, добре підходять, коли хочеться більше локшини, рису й теплого соусу, ніж класичних ролів. Це частина меню для тих, хто шукає азійський обід у Торуні з повноцінною порцією.",
+                'en' => "Items such as {$examples} are a good choice when the appetite leans more toward noodles, rice and warm sauce than classic rolls. This part of the menu is for guests looking for an Asian lunch in Toruń with a proper portion.",
+            ],
+            'sashimi' => [
+                'pl' => "{$examples} pozwalają skupić się na smaku ryby bez ryżu, panierki i mocnych sosów. To spokojna, elegancka kategoria dla osób, które cenią prostotę, świeżość i czysty charakter sushi.",
+                'uk' => "{$examples} дозволяють зосередитися на смаку риби без рису, панірування й сильних соусів. Це спокійна, елегантна категорія для тих, хто цінує простоту, свіжість і чистий характер суші.",
+                'en' => "{$examples} let the fish flavor stand on its own, without rice, coating or strong sauces. It is a calm, elegant category for guests who value simplicity, freshness and a clean sushi character.",
+            ],
+            'nigiri' => [
+                'pl' => "Wybierając {$examples}, łatwo porównać różne ryby w tej samej, klasycznej formie. Nigiri dobrze sprawdza się jako elegancki dodatek do zestawu albo minimalistyczne sushi na spokojną kolację.",
+                'uk' => "Обираючи {$examples}, легко порівняти різну рибу в одній класичній формі. Нігірі добре працює як елегантний додаток до сету або мінімалістичні суші для спокійної вечері.",
+                'en' => "Choosing {$examples} makes it easy to compare different fish in the same classic form. Nigiri works well as an elegant addition to a set or as minimal sushi for a calm dinner.",
+            ],
+            'hosomaki' => [
+                'pl' => "{$examples} są proste, czytelne i wygodne, kiedy chcesz dobrać kilka małych rolek do większego zamówienia. Hosomaki dobrze porządkują menu: jeden główny smak, ryż, nori i bez zbędnego ciężaru.",
+                'uk' => "{$examples} прості, зрозумілі й зручні, коли хочеться додати кілька малих ролів до більшого замовлення. Хосомакі добре впорядковують меню: один головний смак, рис, норі й без зайвої важкості.",
+                'en' => "{$examples} are simple, clear and convenient when adding several small rolls to a larger order. Hosomaki keep the menu tidy: one main flavor, rice, nori and no unnecessary heaviness.",
+            ],
+            'gunkanmaki' => [
+                'pl' => "{$examples} są małe, ale intensywne, dlatego dobrze uzupełniają klasyczne rolki i nigiri. To kategoria dla osób, które lubią wyraziste nadzienia, tatar, krewetki albo węgorza podane w kilku konkretnych kęsach.",
+                'uk' => "{$examples} невеликі, але насичені, тому добре доповнюють класичні роли й нігірі. Це категорія для тих, хто любить виразні начинки, тартар, креветки або вугра в кількох конкретних шматках.",
+                'en' => "{$examples} are small but intense, so they complement classic rolls and nigiri well. This category is for guests who enjoy expressive fillings, tartare, shrimp or eel in a few focused bites.",
+            ],
+            'futomaki' => [
+                'pl' => "{$examples} dają pełniejszy przekrój sushi i lepiej sycą niż małe rolki. Futomaki są dobrym wyborem, gdy chcesz wyraźny środek, kilka tekstur i klasyczną rolkę w większym formacie.",
+                'uk' => "{$examples} дають повніший зріз суші й краще насичують, ніж малі роли. Футомакі — добрий вибір, коли хочеться виразної начинки, кількох текстур і класичного ролу в більшому форматі.",
+                'en' => "{$examples} offer a fuller sushi cross-section and feel more filling than small rolls. Futomaki are a good choice when you want a clear filling, several textures and a classic roll in a larger format.",
+            ],
+            'rolki-smazone' => [
+                'pl' => "{$examples} są bardziej komfortowe i intensywne niż lekkie rolki, bo dochodzi chrupkość oraz ciepły charakter. To dobra sekcja dla osób, które lubią sushi w bardziej wyrazistej, przyjemnie sycącej odsłonie.",
+                'uk' => "{$examples} більш комфортні й насичені, ніж легкі роли, бо мають хрусткість і теплий характер. Це добрий розділ для тих, хто любить суші в більш виразному, приємно ситному форматі.",
+                'en' => "{$examples} feel more comforting and intense than light rolls because of their crunch and warm character. This is a good section for guests who enjoy sushi in a bolder, satisfyingly filling form.",
+            ],
+            'freshmaki' => [
+                'pl' => "{$examples} stawiają na świeżość i lżejszy odbiór, dlatego dobrze pasują do osób, które nie chcą panierki ani bardzo ciężkich sosów. To rolki na spokojne zamówienie, w którym liczy się delikatność i czysty smak.",
+                'uk' => "{$examples} роблять акцент на свіжості й легшому відчутті, тому добре підходять тим, хто не хоче панірування або дуже важких соусів. Це роли для спокійного замовлення, де важлива делікатність і чистий смак.",
+                'en' => "{$examples} focus on freshness and a lighter feel, making them suitable for guests who do not want coating or very heavy sauces. These rolls are for calmer orders where delicacy and clean flavor matter.",
+            ],
+            'uramaki' => [
+                'pl' => "{$examples} pokazują nowoczesną stronę sushi: ryż na zewnątrz, efektowne dodatki i smaki, które łatwo polubić. To jedna z najlepszych kategorii, gdy zamawiasz sushi na wynos w Toruniu i chcesz różnorodności.",
+                'uk' => "{$examples} показують сучасну сторону суші: рис зовні, ефектні додатки та смаки, які легко полюбити. Це одна з найкращих категорій, коли замовляєте суші з собою в Торуні й хочете різноманіття.",
+                'en' => "{$examples} show the modern side of sushi: rice on the outside, appealing toppings and flavors that are easy to enjoy. It is one of the best categories when ordering sushi takeaway in Toruń and wanting variety.",
+            ],
+            'zestawy-sushi' => [
+                'pl' => "{$examples} pomagają zamówić sushi bez długiego wybierania pojedynczych rolek. To praktyczna kategoria na spotkanie, rodzinny wieczór albo kolację dla kilku osób, kiedy na stole ma pojawić się różnorodność i wygodny podział porcji.",
+                'uk' => "{$examples} допомагають замовити суші без довгого вибору окремих ролів. Це практична категорія для зустрічі, сімейного вечора або вечері на кілька людей, коли на столі потрібне різноманіття й зручний поділ порцій.",
+                'en' => "{$examples} make it easier to order sushi without choosing every roll separately. It is a practical category for a meeting, family evening or dinner for several people, when variety and easy sharing matter.",
+            ],
+            'dodatki' => [
+                'pl' => "{$examples} nie grają pierwszej roli, ale potrafią zmienić całe zamówienie: dodać ostrości, słodyczy, świeżości albo klasycznego sushi-akcentu. Warto dobrać je od razu, zwłaszcza przy większych zestawach na wynos.",
+                'uk' => "{$examples} не головні в замовленні, але можуть змінити його настрій: додати гостроти, солодкуватості, свіжості або класичного суші-акценту. Їх варто додати одразу, особливо до більших сетів з собою.",
+                'en' => "{$examples} are not the main part of the order, but they can change its mood: adding heat, sweetness, freshness or a classic sushi accent. They are worth adding right away, especially with larger takeaway sets.",
+            ],
+            'napoje' => [
+                'pl' => "{$examples} pomagają odświeżyć smak między kęsami i dobrze pasują do tempury, ramenu oraz pikantniejszych dodatków. To prosta, ale potrzebna część zamówienia, szczególnie przy sushi na wynos.",
+                'uk' => "{$examples} допомагають освіжити смак між шматками й добре пасують до темпури, рамену та пікантніших додатків. Це проста, але потрібна частина замовлення, особливо для суші з собою.",
+                'en' => "{$examples} help refresh the palate between bites and pair well with tempura, ramen and spicier additions. It is a simple but useful part of the order, especially with sushi takeaway.",
+            ],
+            'menu-sezonowe' => [
+                'pl' => "{$examples} warto sprawdzić wtedy, gdy chcesz spróbować czegoś spoza stałej karty. Menu sezonowe jest krótsze, bardziej zmienne i dobre dla gości, którzy lubią wracać po nowe smaki.",
+                'uk' => "{$examples} варто переглянути, коли хочеться спробувати щось поза постійним меню. Сезонне меню коротше, змінніше й добре підходить гостям, які люблять повертатися за новими смаками.",
+                'en' => "{$examples} are worth checking when you want something outside the regular menu. The seasonal menu is shorter, more changeable and good for guests who like returning for new flavors.",
+            ],
+            'dania-dla-dzieci' => [
+                'pl' => "{$examples} ułatwia rodzinne zamówienie, kiedy najmłodsi potrzebują prostszego, łagodniejszego smaku. To spokojniejsza część menu, która pozwala dorosłym zamówić sushi, a dzieciom dostać coś wygodnego dla siebie.",
+                'uk' => "{$examples} полегшує сімейне замовлення, коли наймолодшим потрібен простіший і м’якший смак. Це спокійніша частина меню, яка дозволяє дорослим замовити суші, а дітям отримати щось зручне для себе.",
+                'en' => "{$examples} makes family ordering easier when younger guests need a simpler, milder flavor. It is a calmer part of the menu that lets adults order sushi while kids get something comfortable for themselves.",
+            ],
+        ];
+
+        return $texts[$slug][$locale] ?? [
+            'pl' => "W tej kategorii znajdziesz {$examples}, czyli propozycje przygotowane z myślą o wygodnym wyborze i świeżym smaku. To dobra część menu dla osób szukających sushi i kuchni azjatyckiej w Toruniu.",
+            'uk' => "У цій категорії є {$examples} — позиції, створені для зручного вибору й свіжого смаку. Це добрий розділ меню для тих, хто шукає суші та азійську кухню в Торуні.",
+            'en' => "In this category you will find {$examples}, prepared for easy choice and fresh flavor. It is a good part of the menu for guests looking for sushi and Asian food in Toruń.",
+        ][$locale];
+    }
+
+    private function categoryTextName(array $category): array
+    {
+        $names = [
+            'przystawki-zimne' => ['pl' => 'zimne przystawki', 'uk' => 'холодні закуски', 'en' => 'cold starters'],
+            'przystawki-ciep-e' => ['pl' => 'ciepłe przystawki', 'uk' => 'гарячі закуски', 'en' => 'warm starters'],
+            'zupy' => ['pl' => 'zupy azjatyckie', 'uk' => 'азійські супи', 'en' => 'Asian soups'],
+            'rameny' => ['pl' => 'rameny', 'uk' => 'рамен', 'en' => 'ramen'],
+            'dania-g-owne' => ['pl' => 'dania główne', 'uk' => 'основні страви', 'en' => 'main dishes'],
+            'sashimi' => ['pl' => 'sashimi', 'uk' => 'сашимі', 'en' => 'sashimi'],
+            'nigiri' => ['pl' => 'nigiri', 'uk' => 'нігірі', 'en' => 'nigiri'],
+            'hosomaki' => ['pl' => 'hosomaki', 'uk' => 'хосомакі', 'en' => 'hosomaki'],
+            'gunkanmaki' => ['pl' => 'gunkanmaki', 'uk' => 'гунканмакі', 'en' => 'gunkanmaki'],
+            'futomaki' => ['pl' => 'futomaki', 'uk' => 'футомакі', 'en' => 'futomaki'],
+            'rolki-smazone' => ['pl' => 'rolki smażone', 'uk' => 'смажені роли', 'en' => 'fried rolls'],
+            'freshmaki' => ['pl' => 'freshmaki', 'uk' => 'фрешмакі', 'en' => 'freshmaki'],
+            'uramaki' => ['pl' => 'uramaki', 'uk' => 'урамакі', 'en' => 'uramaki'],
+            'zestawy-sushi' => ['pl' => 'zestawy sushi', 'uk' => 'суші-сети', 'en' => 'sushi sets'],
+            'dodatki' => ['pl' => 'dodatki do sushi', 'uk' => 'додатки до суші', 'en' => 'sushi add-ons'],
+            'napoje' => ['pl' => 'napoje', 'uk' => 'напої', 'en' => 'drinks'],
+            'menu-sezonowe' => ['pl' => 'menu sezonowe', 'uk' => 'сезонне меню', 'en' => 'seasonal menu'],
+            'dania-dla-dzieci' => ['pl' => 'dania dla dzieci', 'uk' => 'дитячі страви', 'en' => 'kids dishes'],
+        ];
+
+        if (isset($names[$category['slug']])) {
+            return $names[$category['slug']];
+        }
+
+        return [
+            'pl' => mb_strtolower($category['name']['pl'] ?? ''),
+            'uk' => mb_strtolower($category['name']['uk'] ?? ''),
+            'en' => mb_strtolower($category['name']['en'] ?? ''),
+        ];
+    }
+
+    private function itemMarketingDescription(array $item, array $category): array
+    {
+        $name = $item['name'];
+        $categoryName = $this->categoryTextName($category);
+        $focus = $this->itemFocus($item, $category);
+        $focus = [
+            'pl' => $this->sentence($focus['pl']),
+            'uk' => $this->sentence($focus['uk']),
+            'en' => $this->sentence($focus['en']),
+        ];
+        $variant = ((int) ($item['sort_order'] ?? 1)) % 5;
+
+        $texts = [
+            [
+                'pl' => "{$name['pl']} ma charakter, który od razu kojarzy się z dobrze dopracowaną kuchnią azjatycką: {$focus['pl']} To dobra propozycja, gdy chcesz zamówić {$categoryName['pl']} w Toruniu i zależy Ci na smaku, który zostaje w pamięci.",
+                'uk' => "{$name['uk']} має характер, який одразу асоціюється з продуманою азійською кухнею: {$focus['uk']} Це вдалий вибір, якщо хочете замовити {$categoryName['uk']} у Торуні й цінуєте смак, який запам’ятовується.",
+                'en' => "{$name['en']} has the character of carefully prepared Asian cuisine: {$focus['en']} It is a good choice when you want to order {$categoryName['en']} in Toruń and prefer a flavor that stays memorable.",
+            ],
+            [
+                'pl' => "W {$name['pl']} najważniejsze jest pierwsze wrażenie: {$focus['pl']} Danie dobrze pasuje do spokojnego obiadu, wieczornego zamówienia online albo odbioru na wynos z Umami Sushi & Food.",
+                'uk' => "У {$name['uk']} найважливіше перше враження: {$focus['uk']} Страва добре підходить для обіду, вечірнього онлайн-замовлення або самовивозу з Umami Sushi & Food.",
+                'en' => "With {$name['en']}, the first impression matters most: {$focus['en']} It fits a relaxed lunch, an evening online order or takeaway pickup from Umami Sushi & Food.",
+            ],
+            [
+                'pl' => "{$name['pl']} jest dla osób, które lubią zamawiać świadomie, a nie wybierać przypadkowo. {$focus['pl']} Sprawdza się jako samodzielne danie, część większego zamówienia lub element kolacji z sushi i kuchnią azjatycką w Toruniu.",
+                'uk' => "{$name['uk']} — для тих, хто любить обирати усвідомлено, а не випадково. {$focus['uk']} Добре працює як окрема страва, частина більшого замовлення або елемент вечері з суші та азійською кухнею в Торуні.",
+                'en' => "{$name['en']} is for guests who like to choose consciously rather than randomly. {$focus['en']} It works as a standalone dish, part of a larger order or one element of a sushi and Asian food dinner in Toruń.",
+            ],
+            [
+                'pl' => "Jeśli porównujesz menu i chcesz wybrać coś z kategorii {$categoryName['pl']}, {$name['pl']} daje czytelny kierunek smaku. {$focus['pl']} To wygodna opcja do zamówienia online i odbioru w restauracji.",
+                'uk' => "Якщо ви порівнюєте меню й хочете обрати щось із категорії {$categoryName['uk']}, {$name['uk']} дає зрозумілий напрям смаку. {$focus['uk']} Це зручний варіант для онлайн-замовлення та самовивозу.",
+                'en' => "If you are comparing the menu and choosing from {$categoryName['en']}, {$name['en']} gives a clear flavor direction. {$focus['en']} It is a convenient option for online ordering and restaurant pickup.",
+            ],
+            [
+                'pl' => "{$name['pl']} dobrze pokazuje styl Umami Sushi & Food: uważne przygotowanie, świeże składniki i smak bez przypadkowych dodatków. {$focus['pl']} To wybór dla fanów kuchni azjatyckiej w Toruniu.",
+                'uk' => "{$name['uk']} добре показує стиль Umami Sushi & Food: уважне приготування, свіжі інгредієнти й смак без зайвих випадкових додатків. {$focus['uk']} Це вибір для шанувальників азійської кухні в Торуні.",
+                'en' => "{$name['en']} shows the Umami Sushi & Food style well: careful preparation, fresh ingredients and flavor without unnecessary extras. {$focus['en']} It is a choice for fans of Asian food in Toruń.",
+            ],
+        ];
+
+        return $texts[$variant];
+    }
+
+    private function sentence(string $text): string
+    {
+        $text = trim($text);
+
+        if ($text === '') {
+            return '';
+        }
+
+        return mb_strtoupper(mb_substr($text, 0, 1)).mb_substr($text, 1);
+    }
+
+    private function itemFocus(array $item, array $category): array
+    {
+        $slug = $item['slug'] ?? Str::slug($item['name']['pl'] ?? '');
+        $name = mb_strtolower($item['name']['pl'] ?? '');
+
+        $exact = [
+            'chashu-ramen' => [
+                'pl' => 'głęboki bulion, miękkie mięso i marynowane jajko tworzą miskę, po którą wraca się wtedy, gdy potrzebny jest prawdziwie sycący ramen.',
+                'uk' => 'глибокий бульйон, м’яке м’ясо та мариноване яйце створюють миску, до якої хочеться повертатися, коли потрібен по-справжньому ситний рамен.',
+                'en' => 'deep broth, tender meat and marinated egg create a bowl worth returning to when you want truly satisfying ramen.',
+            ],
+            'bifu-ramen' => [
+                'pl' => 'kremowa baza i wołowina dają mocniejszy, bardziej treściwy charakter niż w lekkich bulionach.',
+                'uk' => 'кремова основа й яловичина дають сильніший, більш насичений характер, ніж у легких бульйонах.',
+                'en' => 'a creamy base and beef give it a stronger, fuller character than lighter broths.',
+            ],
+            'tom-yum' => [
+                'pl' => 'ostro-kwaśny aromat, cytrusowa świeżość i morski akcent sprawiają, że zupa jest intensywna już od pierwszej łyżki.',
+                'uk' => 'гостро-кислий аромат, цитрусова свіжість і морський акцент роблять суп насиченим уже з першої ложки.',
+                'en' => 'hot-sour aroma, citrus freshness and a sea-inspired accent make the soup intense from the first spoonful.',
+            ],
+            'master-roll' => [
+                'pl' => 'duży wybór rolek pozwala spróbować kilku smaków bez układania całego zamówienia od zera.',
+                'uk' => 'великий вибір ролів дозволяє спробувати кілька смаків без складання всього замовлення з нуля.',
+                'en' => 'a broad selection of rolls lets you try several flavors without building the whole order from scratch.',
+            ],
+            'deluxe' => [
+                'pl' => 'to zestaw na większy apetyt i dłuższy wieczór, kiedy na stole ma pojawić się kilka charakterów sushi naraz.',
+                'uk' => 'це сет для більшого апетиту й довшого вечора, коли на столі має з’явитися кілька характерів суші одразу.',
+                'en' => 'it is a set for a bigger appetite and a longer evening, when several sushi characters should land on the table at once.',
+            ],
+            'umami' => [
+                'pl' => 'zestaw pokazuje restauracyjny styl w pigułce: różne rolki, różne tekstury i wygodny wybór dla kilku osób.',
+                'uk' => 'сет коротко показує стиль ресторану: різні роли, різні текстури й зручний вибір для кількох людей.',
+                'en' => 'the set captures the restaurant style in one order: different rolls, different textures and an easy choice for several people.',
+            ],
+        ];
+
+        if (isset($exact[$slug])) {
+            return $exact[$slug];
+        }
+
+        $rules = [
+            ['needles' => ['sashimi'], 'text' => ['pl' => 'czysty smak ryby i prostota podania pozwalają skupić się na jakości bez ciężkich dodatków.', 'uk' => 'чистий смак риби та простота подачі дозволяють зосередитися на якості без важких додатків.', 'en' => 'clean fish flavor and simple serving let the quality stand out without heavy extras.']],
+            ['needles' => ['nigiri'], 'text' => ['pl' => 'proporcja ryżu i głównego dodatku daje klasyczne sushi w minimalistycznej, eleganckiej formie.', 'uk' => 'пропорція рису й головного додатку дає класичні суші в мінімалістичній, елегантній формі.', 'en' => 'the proportion of rice and topping gives classic sushi in a minimal, elegant form.']],
+            ['needles' => ['tempura', 'panko', 'smazona', 'smażona'], 'text' => ['pl' => 'chrupiąca tekstura dodaje energii i sprawia, że każdy kęs jest bardziej wyrazisty.', 'uk' => 'хрустка текстура додає енергії й робить кожен шматок виразнішим.', 'en' => 'crispy texture adds energy and makes every bite more expressive.']],
+            ['needles' => ['uramaki', 'uramak'], 'text' => ['pl' => 'ryż na zewnątrz, efektowny przekrój i dopracowane dodatki dają nowoczesny styl sushi.', 'uk' => 'рис зовні, виразний зріз і продумані додатки створюють сучасний стиль суші.', 'en' => 'rice on the outside, an appealing cut and thoughtful toppings create a modern sushi style.']],
+            ['needles' => ['futomak'], 'text' => ['pl' => 'większa rolka daje pełniejszy kęs i pozwala połączyć kilka smaków w jednej porcji.', 'uk' => 'більший рол дає повніший шматок і дозволяє поєднати кілька смаків в одній порції.', 'en' => 'a larger roll gives a fuller bite and combines several flavors in one portion.']],
+            ['needles' => ['hosomak'], 'text' => ['pl' => 'prosta rolka stawia na jeden wyraźny kierunek smaku i dobrze przygotowany ryż.', 'uk' => 'простий рол робить акцент на одному чіткому напрямі смаку й добре підготовленому рисі.', 'en' => 'the simple roll focuses on one clear flavor direction and well-prepared rice.']],
+            ['needles' => ['gunkanmaki'], 'text' => ['pl' => 'mała forma koncentruje intensywny smak, dlatego świetnie uzupełnia klasyczne rolki.', 'uk' => 'невелика форма концентрує насичений смак, тому чудово доповнює класичні роли.', 'en' => 'the small form concentrates bold flavor, making it a great complement to classic rolls.']],
+            ['needles' => ['tatar'], 'text' => ['pl' => 'aksamitna struktura i intensywny rybny charakter tworzą propozycję dla fanów mocniejszego sushi.', 'uk' => 'оксамитова текстура й насичений рибний характер створюють вибір для прихильників виразніших суші.', 'en' => 'silky texture and a bold fish character make it a choice for fans of stronger sushi flavors.']],
+            ['needles' => ['tataki', 'aburi'], 'text' => ['pl' => 'delikatne opalanie wydobywa aromat i dodaje głębi bez odbierania świeżości.', 'uk' => 'легке обпалювання розкриває аромат і додає глибини, не забираючи свіжості.', 'en' => 'gentle searing brings out aroma and depth without taking away freshness.']],
+            ['needles' => ['ramen'], 'text' => ['pl' => 'gorący bulion, makaron i dodatki budują pełną miskę na sycący obiad lub wieczór.', 'uk' => 'гарячий бульйон, локшина та додатки створюють повну миску для ситного обіду або вечора.', 'en' => 'hot broth, noodles and toppings build a complete bowl for a filling lunch or evening meal.']],
+            ['needles' => ['udon', 'soba'], 'text' => ['pl' => 'sprężysty makaron i intensywny sos tworzą ciepłe danie dla osób, które wolą pełny posiłek zamiast rolek.', 'uk' => 'пружна локшина й насичений соус створюють гарячу страву для тих, хто хоче повноцінну порцію замість ролів.', 'en' => 'springy noodles and an expressive sauce create a warm dish for guests who prefer a full meal over rolls.']],
+            ['needles' => ['gyoza'], 'text' => ['pl' => 'małe pierożki mają komfortowy, ciepły charakter i dobrze zaczynają większe zamówienie.', 'uk' => 'невеликі пельмені мають теплий комфортний характер і добре відкривають більше замовлення.', 'en' => 'small dumplings bring warm comfort and make a good start to a larger order.']],
+            ['needles' => ['harumaki'], 'text' => ['pl' => 'lekka chrupkość i ciepły środek sprawiają, że to przystawka dobra do dzielenia.', 'uk' => 'легка хрусткість і теплий центр роблять цю закуску доброю для спільного столу.', 'en' => 'light crispness and a warm center make it a starter that is easy to share.']],
+            ['needles' => ['edamame'], 'text' => ['pl' => 'lekko słony, zielony akcent dobrze otwiera posiłek i nie przytłacza kolejnych dań.', 'uk' => 'легкий солонуватий зелений акцент добре відкриває трапезу й не перебиває наступні страви.', 'en' => 'a lightly salty green accent opens the meal without overpowering the dishes that follow.']],
+            ['needles' => ['kimchi'], 'text' => ['pl' => 'pikantno-kwaśny charakter dodaje zamówieniu energii i dobrze przełamuje ryż oraz smażone dodatki.', 'uk' => 'гостро-кислий характер додає замовленню енергії й добре врівноважує рис та смажені додатки.', 'en' => 'spicy-tangy character adds energy to the order and balances rice and fried additions well.']],
+            ['needles' => ['wakame'], 'text' => ['pl' => 'morska świeżość i lekko słodki profil wprowadzają spokojny kontrast do bardziej intensywnych dań.', 'uk' => 'морська свіжість і легкий солодкуватий профіль створюють спокійний контраст до більш насичених страв.', 'en' => 'sea freshness and a gently sweet profile create a calm contrast to more intense dishes.']],
+            ['needles' => ['sos', 'wasabi', 'imbir'], 'text' => ['pl' => 'dodatek pozwala dopasować intensywność zamówienia i podkreślić ulubiony kierunek smaku.', 'uk' => 'додаток допомагає налаштувати інтенсивність замовлення й підкреслити улюблений напрям смаку.', 'en' => 'the add-on helps adjust the intensity of the order and highlight your preferred flavor direction.']],
+            ['needles' => ['pepsi', 'lemoniada'], 'text' => ['pl' => 'napój odświeża podniebienie i dobrze równoważy intensywne sosy, tempurę oraz ramen.', 'uk' => 'напій освіжає смак і добре врівноважує інтенсивні соуси, темпуру та рамен.', 'en' => 'the drink refreshes the palate and balances intense sauces, tempura and ramen.']],
+            ['needles' => ['vege', 'yasai', 'tofu', 'warzywa', 'szparag'], 'text' => ['pl' => 'roślinny profil daje świeżość, lekkość i dobrą alternatywę dla rybnych oraz mięsnych pozycji.', 'uk' => 'рослинний профіль дає свіжість, легкість і добру альтернативу рибним та м’ясним позиціям.', 'en' => 'the plant-forward profile brings freshness, lightness and a good alternative to fish and meat options.']],
+            ['needles' => ['losos', 'łosoś', 'sake'], 'text' => ['pl' => 'łosoś daje miękkość, delikatną tłustość i przyjemnie łagodny charakter sushi.', 'uk' => 'лосось дає м’якість, делікатну жирність і приємно ніжний характер суші.', 'en' => 'salmon brings softness, gentle richness and a pleasantly mild sushi character.']],
+            ['needles' => ['tunczyk', 'tuńczyk', 'maguro', 'tekka'], 'text' => ['pl' => 'tuńczyk wnosi czystszy, bardziej zdecydowany smak dla osób lubiących wyraźniejszą rybę.', 'uk' => 'тунець дає чистіший і рішучіший смак для тих, хто любить виразнішу рибу.', 'en' => 'tuna brings a cleaner, more decisive flavor for guests who enjoy more expressive fish.']],
+            ['needles' => ['ebi', 'krewet'], 'text' => ['pl' => 'krewetka dodaje słodyczy, sprężystej tekstury i eleganckiego morskiego akcentu.', 'uk' => 'креветка додає солодкуватість, пружну текстуру й елегантний морський акцент.', 'en' => 'shrimp adds sweetness, springy texture and an elegant sea-inspired accent.']],
+            ['needles' => ['unagi', 'wegorz', 'węgorz'], 'text' => ['pl' => 'węgorz daje głębszy, lekko dymny charakter i przyjemnie otula ryż.', 'uk' => 'вугор дає глибший, злегка димний характер і приємно огортає рис.', 'en' => 'eel brings a deeper, lightly smoky character and wraps the rice in rich flavor.']],
+        ];
+
+        foreach ($rules as $rule) {
+            foreach ($rule['needles'] as $needle) {
+                if (str_contains($slug, $needle) || str_contains($name, $needle)) {
+                    return $rule['text'];
+                }
+            }
+        }
+
+        return $this->categoryProfile($category)['item'];
+    }
+
+    private function categoryProfile(array $category): array
+    {
+        $slug = $category['slug'];
+
+        $profiles = [
+            'przystawki-zimne' => [
+                'intro' => [
+                    'pl' => 'Zimne przystawki są dobrym początkiem posiłku: lekkie, wyraziste i gotowe, żeby pobudzić apetyt przed sushi, ramenem albo zestawem rolek.',
+                    'uk' => 'Холодні закуски добре відкривають трапезу: легкі, виразні й створені, щоб підготувати смак до суші, рамену або сету ролів.',
+                    'en' => 'Cold starters are a clean way to begin the meal: light, expressive and ready to open the appetite before sushi, ramen or a roll set.',
+                ],
+                'seo' => [
+                    'pl' => 'Przystawki zimne w Umami Sushi & Food są dla gości, którzy lubią zacząć od czegoś świeżego, kwaśnego, pikantnego albo lekko morskiego.',
+                    'uk' => 'Холодні закуски в Umami Sushi & Food підходять гостям, які люблять почати з чогось свіжого, кислуватого, пікантного або легкого морського смаку.',
+                    'en' => 'Cold starters at Umami Sushi & Food are for guests who like to begin with something fresh, tangy, spicy or gently sea-inspired.',
+                ],
+                'item' => [
+                    'pl' => 'stawia na świeżość, kontrast temperatur i wyrazisty pierwszy akcent przed głównym daniem.',
+                    'uk' => 'робить акцент на свіжості, контрасті температур і виразному першому смаку перед основною стравою.',
+                    'en' => 'focuses on freshness, temperature contrast and a clear first accent before the main dish.',
+                ],
+            ],
+            'przystawki-ciep-e' => [
+                'intro' => [
+                    'pl' => 'Ciepłe przystawki to chrupiące tempury, pierożki i małe dania, które najlepiej smakują od razu po przygotowaniu.',
+                    'uk' => 'Гарячі закуски — це хрустка темпура, пельмені та невеликі страви, які найкраще смакують одразу після приготування.',
+                    'en' => 'Warm starters bring crispy tempura, dumplings and small dishes that taste best right after preparation.',
+                ],
+                'seo' => [
+                    'pl' => 'Ta część menu jest dobra, kiedy szukasz czegoś ciepłego do podziału, dodatku do sushi albo małej porcji przed ramenem.',
+                    'uk' => 'Цей розділ меню доречний, коли хочеться чогось теплого для спільного столу, додатку до суші або невеликої порції перед раменом.',
+                    'en' => 'This menu section is useful when you want something warm to share, an add-on to sushi or a small portion before ramen.',
+                ],
+                'item' => [
+                    'pl' => 'łączy ciepło, chrupkość i aromat, dlatego dobrze pasuje jako dodatek do większego zamówienia.',
+                    'uk' => 'поєднує тепло, хрусткість і аромат, тому добре підходить як додаток до більшого замовлення.',
+                    'en' => 'combines warmth, crunch and aroma, so it works well as an addition to a larger order.',
+                ],
+            ],
+            'zupy' => [
+                'intro' => [
+                    'pl' => 'Zupy w Umami to aromatyczna część menu: od lekkich bulionów po wyraźniejsze smaki z owocami morza, kurczakiem albo warzywami.',
+                    'uk' => 'Супи в Umami — ароматна частина меню: від легких бульйонів до виразніших смаків із морепродуктами, куркою або овочами.',
+                    'en' => 'Soups at Umami are an aromatic part of the menu, from light broths to bolder flavors with seafood, chicken or vegetables.',
+                ],
+                'seo' => [
+                    'pl' => 'To dobry wybór dla osób, które szukają rozgrzewającej zupy azjatyckiej w Toruniu albo chcą dobrać coś lekkiego przed sushi.',
+                    'uk' => 'Це добрий вибір для тих, хто шукає зігрівальний азійський суп у Торуні або хоче щось легке перед суші.',
+                    'en' => 'This is a good choice for guests looking for a warming Asian soup in Toruń or something light before sushi.',
+                ],
+                'item' => [
+                    'pl' => 'opiera się na aromacie bulionu i dodatkach, które budują pełniejszy, rozgrzewający smak.',
+                    'uk' => 'тримається на ароматі бульйону та додатках, які створюють глибший, зігрівальний смак.',
+                    'en' => 'is built around broth aroma and toppings that create a fuller, warming flavor.',
+                ],
+            ],
+            'rameny' => [
+                'intro' => [
+                    'pl' => 'Rameny są sycącą częścią menu: gorący bulion, makaron, dodatki i smak, który sprawdza się szczególnie wtedy, gdy chcesz pełnego dania.',
+                    'uk' => 'Рамени — ситна частина меню: гарячий бульйон, локшина, додатки й смак, який особливо доречний, коли хочеться повноцінної страви.',
+                    'en' => 'Ramen is the hearty part of the menu: hot broth, noodles, toppings and a flavor that works when you want a complete dish.',
+                ],
+                'seo' => [
+                    'pl' => 'Ramen w Toruniu często wybierają osoby, które szukają czegoś bardziej treściwego niż rolki, ale nadal chcą kuchni japońskiej i azjatyckiej.',
+                    'uk' => 'Рамен у Торуні часто обирають ті, хто хоче чогось ситнішого за роли, але все ще в стилі японської та азійської кухні.',
+                    'en' => 'Ramen in Toruń is often chosen by guests who want something more filling than rolls while staying close to Japanese and Asian cuisine.',
+                ],
+                'item' => [
+                    'pl' => 'buduje smak na gorącym bulionie, makaronie i dodatkach, które dają pełną, sycącą miskę.',
+                    'uk' => 'будує смак на гарячому бульйоні, локшині та додатках, що створюють повну й ситну миску.',
+                    'en' => 'builds flavor through hot broth, noodles and toppings that create a full, satisfying bowl.',
+                ],
+            ],
+            'dania-g-owne' => [
+                'intro' => [
+                    'pl' => 'Dania główne to wybór dla osób, które chcą pełnego posiłku z ryżem, makaronem, mięsem, warzywami albo intensywnym sosem.',
+                    'uk' => 'Основні страви — вибір для тих, хто хоче повноцінну порцію з рисом, локшиною, м’ясом, овочами або насиченим соусом.',
+                    'en' => 'Main dishes are for guests who want a full meal with rice, noodles, meat, vegetables or an expressive sauce.',
+                ],
+                'seo' => [
+                    'pl' => 'Ta kategoria pomaga szybko znaleźć azjatycki obiad w Toruniu, kiedy sushi ma być dodatkiem albo kiedy masz ochotę na ciepłe danie.',
+                    'uk' => 'Ця категорія допомагає швидко знайти азійський обід у Торуні, коли суші — лише додаток або коли хочеться гарячої страви.',
+                    'en' => 'This category helps you quickly find an Asian lunch in Toruń when sushi is an add-on or when you want a warm dish.',
+                ],
+                'item' => [
+                    'pl' => 'jest nastawione na pełną porcję, konkretny sos i składniki, które dobrze sprawdzają się jako samodzielny posiłek.',
+                    'uk' => 'орієнтована на повну порцію, виразний соус і складники, що добре працюють як самостійна страва.',
+                    'en' => 'is focused on a full portion, a clear sauce and ingredients that work as a standalone meal.',
+                ],
+            ],
+            'sashimi' => [
+                'intro' => [
+                    'pl' => 'Sashimi pozwala skupić się na czystym smaku ryby, strukturze cięcia i prostocie bez ryżu oraz dodatków.',
+                    'uk' => 'Сашимі дає змогу зосередитися на чистому смаку риби, текстурі нарізки та простоті без рису й зайвих додатків.',
+                    'en' => 'Sashimi focuses on clean fish flavor, cut texture and simplicity without rice or unnecessary extras.',
+                ],
+                'seo' => [
+                    'pl' => 'To kategoria dla osób, które dobrze znają sushi i chcą zamówić rybę w najprostszym, najbardziej bezpośrednim wydaniu.',
+                    'uk' => 'Це категорія для тих, хто добре знає суші й хоче замовити рибу в найпростішому та найпрямішому форматі.',
+                    'en' => 'This category is for guests who know sushi well and want fish in its simplest, most direct form.',
+                ],
+                'item' => [
+                    'pl' => 'pozwala ocenić jakość ryby bez nadmiaru dodatków, sosów i ryżu.',
+                    'uk' => 'дозволяє оцінити якість риби без надміру додатків, соусів і рису.',
+                    'en' => 'lets the quality of the fish speak without too many toppings, sauces or rice.',
+                ],
+            ],
+            'nigiri' => [
+                'intro' => [
+                    'pl' => 'Nigiri łączy porcję ryżu z wybranym dodatkiem na wierzchu, dlatego jest klasycznym sposobem na poznanie smaku ryby.',
+                    'uk' => 'Нігірі поєднує порцію рису з обраним додатком зверху, тому це класичний спосіб відчути смак риби.',
+                    'en' => 'Nigiri combines a portion of rice with a topping on top, making it a classic way to taste fish.',
+                ],
+                'seo' => [
+                    'pl' => 'Nigiri w Toruniu to dobry wybór dla osób, które chcą sushi w minimalistycznej formie, bez ciężkich sosów i rozbudowanych rolek.',
+                    'uk' => 'Нігірі в Торуні — добрий вибір для тих, хто хоче суші в мінімалістичній формі, без важких соусів і складних ролів.',
+                    'en' => 'Nigiri in Toruń is a good choice for guests who want sushi in a minimal form, without heavy sauces or complex rolls.',
+                ],
+                'item' => [
+                    'pl' => 'stawia na proporcję ryżu i głównego dodatku, dzięki czemu smak jest prosty i czytelny.',
+                    'uk' => 'робить акцент на пропорції рису й основного додатку, тому смак простий і зрозумілий.',
+                    'en' => 'focuses on the proportion of rice and topping, keeping the flavor simple and clear.',
+                ],
+            ],
+            'hosomaki' => [
+                'intro' => [
+                    'pl' => 'Hosomaki to małe, proste rolki z jednym głównym składnikiem, dobre jako dodatek do większego zamówienia.',
+                    'uk' => 'Хосомакі — невеликі прості роли з одним головним інгредієнтом, доречні як додаток до більшого замовлення.',
+                    'en' => 'Hosomaki are small, simple rolls with one main ingredient, useful as an addition to a larger order.',
+                ],
+                'seo' => [
+                    'pl' => 'Ta kategoria sprawdza się, gdy chcesz zamówić klasyczne sushi w Toruniu, bez wielu dodatków i ciężkich sosów.',
+                    'uk' => 'Ця категорія підходить, коли хочеться замовити класичні суші в Торуні без багатьох додатків і важких соусів.',
+                    'en' => 'This category works when you want to order classic sushi in Toruń without many toppings or heavy sauces.',
+                ],
+                'item' => [
+                    'pl' => 'jest prostą rolką, w której najważniejszy jest jeden główny składnik i dobrze przygotowany ryż.',
+                    'uk' => 'є простою ролкою, де головне — один основний інгредієнт і добре підготовлений рис.',
+                    'en' => 'is a simple roll where one main ingredient and well-prepared rice matter most.',
+                ],
+            ],
+            'gunkanmaki' => [
+                'intro' => [
+                    'pl' => 'Gunkanmaki to małe porcje z intensywnym nadzieniem, dobre dla osób, które lubią wyrazisty smak w kilku kęsach.',
+                    'uk' => 'Гунканмакі — невеликі порції з насиченою начинкою, добрі для тих, хто любить виразний смак у кілька укусів.',
+                    'en' => 'Gunkanmaki are small portions with expressive fillings, good for guests who enjoy bold flavor in a few bites.',
+                ],
+                'seo' => [
+                    'pl' => 'To bardziej charakterystyczna część menu sushi, często wybierana przez osoby szukające tatara, węgorza albo krewetek w zwartej formie.',
+                    'uk' => 'Це більш характерна частина суші-меню, яку часто обирають ті, хто шукає тартар, вугра або креветки в компактній формі.',
+                    'en' => 'This is a more distinctive part of the sushi menu, often chosen by guests looking for tartare, eel or shrimp in a compact form.',
+                ],
+                'item' => [
+                    'pl' => 'koncentruje dużo smaku w małej porcji, dlatego dobrze uzupełnia zestawy i klasyczne rolki.',
+                    'uk' => 'концентрує багато смаку в невеликій порції, тому добре доповнює сети й класичні роли.',
+                    'en' => 'concentrates a lot of flavor in a small portion, making it a good complement to sets and classic rolls.',
+                ],
+            ],
+            'futomaki' => [
+                'intro' => [
+                    'pl' => 'Futomaki to większe rolki z bogatszym środkiem, dobre dla osób, które chcą pełniejszego smaku w jednej porcji.',
+                    'uk' => 'Футомакі — більші роли з насиченішою начинкою, добрі для тих, хто хоче повніший смак в одній порції.',
+                    'en' => 'Futomaki are larger rolls with richer fillings, good for guests who want fuller flavor in one portion.',
+                ],
+                'seo' => [
+                    'pl' => 'Futomaki w Toruniu to jedna z najczęściej wybieranych kategorii, bo łączy ryż, rybę, warzywa i dodatki w czytelnej kompozycji.',
+                    'uk' => 'Футомакі в Торуні — одна з найчастіше обраних категорій, бо поєднує рис, рибу, овочі та додатки в зрозумілій композиції.',
+                    'en' => 'Futomaki in Toruń is one of the most popular categories because it combines rice, fish, vegetables and toppings in a clear composition.',
+                ],
+                'item' => [
+                    'pl' => 'ma pełniejszy przekrój składników i dobrze sprawdza się, gdy chcesz bardziej sycącą rolkę.',
+                    'uk' => 'має повніший склад інгредієнтів і добре підходить, коли хочеться ситнішого ролу.',
+                    'en' => 'has a fuller set of ingredients and works well when you want a more filling roll.',
+                ],
+            ],
+            'rolki-smazone' => [
+                'intro' => [
+                    'pl' => 'Rolki smażone są dla fanów chrupiącej tekstury, ciepłego środka i bardziej wyrazistego efektu niż w klasycznym sushi.',
+                    'uk' => 'Смажені роли — для прихильників хрусткої текстури, теплого центру й виразнішого ефекту, ніж у класичних суші.',
+                    'en' => 'Fried rolls are for fans of crispy texture, warm filling and a bolder effect than classic sushi.',
+                ],
+                'seo' => [
+                    'pl' => 'Ta kategoria jest często wybierana przez osoby, które dopiero zaczynają przygodę z sushi albo lubią połączenie panierki, ryżu i sosu.',
+                    'uk' => 'Цю категорію часто обирають ті, хто лише знайомиться із суші або любить поєднання панірування, рису та соусу.',
+                    'en' => 'This category is often chosen by guests who are new to sushi or enjoy the combination of coating, rice and sauce.',
+                ],
+                'item' => [
+                    'pl' => 'dodaje do sushi chrupkość i ciepło, dzięki czemu rolka ma bardziej komfortowy, intensywny charakter.',
+                    'uk' => 'додає суші хрусткість і тепло, завдяки чому рол має більш комфортний і насичений характер.',
+                    'en' => 'adds crunch and warmth to sushi, giving the roll a more comforting and intense character.',
+                ],
+            ],
+            'freshmaki' => [
+                'intro' => [
+                    'pl' => 'Freshmaki są lekkie, świeże i delikatniejsze w odbiorze, dobre dla osób, które lubią czysty smak bez ciężkiej panierki.',
+                    'uk' => 'Фрешмакі — легкі, свіжі й делікатніші за відчуттям, добрі для тих, хто любить чистий смак без важкого панірування.',
+                    'en' => 'Freshmaki are light, fresh and gentler in character, good for guests who enjoy clean flavor without heavy coating.',
+                ],
+                'seo' => [
+                    'pl' => 'To dobry wybór, gdy szukasz świeżych rolek sushi w Toruniu z rybą, warzywami i wyraźnie lżejszym profilem.',
+                    'uk' => 'Це добрий вибір, коли шукаєте свіжі суші-роли в Торуні з рибою, овочами та помітно легшим профілем.',
+                    'en' => 'This is a good choice when looking for fresh sushi rolls in Toruń with fish, vegetables and a clearly lighter profile.',
+                ],
+                'item' => [
+                    'pl' => 'stawia na świeży charakter i lekkość, dlatego dobrze pasuje do spokojnego, mniej ciężkiego zamówienia.',
+                    'uk' => 'робить акцент на свіжості й легкості, тому добре підходить для спокійного, менш важкого замовлення.',
+                    'en' => 'focuses on freshness and lightness, making it suitable for a calmer, less heavy order.',
+                ],
+            ],
+            'uramaki' => [
+                'intro' => [
+                    'pl' => 'Uramaki to popularne rolki z ryżem na zewnątrz, często wybierane za kremowe dodatki, rybę i efektowny wygląd.',
+                    'uk' => 'Урамакі — популярні роли з рисом зовні, які часто обирають за кремові додатки, рибу та виразний вигляд.',
+                    'en' => 'Uramaki are popular inside-out rolls, often chosen for creamy toppings, fish and an appealing look.',
+                ],
+                'seo' => [
+                    'pl' => 'Uramaki w Toruniu są dobrym wyborem dla osób, które lubią nowoczesne sushi z awokado, serkiem, tatarem, opalaniem albo pikantnym sosem.',
+                    'uk' => 'Урамакі в Торуні — добрий вибір для тих, хто любить сучасні суші з авокадо, сиром, тартаром, обпалюванням або пікантним соусом.',
+                    'en' => 'Uramaki in Toruń are a good choice for guests who enjoy modern sushi with avocado, cream cheese, tartare, searing or spicy sauce.',
+                ],
+                'item' => [
+                    'pl' => 'łączy ryż na zewnątrz z wyrazistym środkiem, dlatego rolka jest efektowna i łatwa do lubienia.',
+                    'uk' => 'поєднує рис зовні з виразною начинкою, тому рол виглядає ефектно й легко подобається.',
+                    'en' => 'combines rice on the outside with an expressive filling, making the roll appealing and easy to enjoy.',
+                ],
+            ],
+            'zestawy-sushi' => [
+                'intro' => [
+                    'pl' => 'Zestawy sushi ułatwiają wybór, gdy zamawiasz dla dwóch osób, rodziny albo grupy i chcesz kilka smaków w jednym pudełku.',
+                    'uk' => 'Суші-сети спрощують вибір, коли замовляєте для двох, родини або компанії й хочете кілька смаків в одному наборі.',
+                    'en' => 'Sushi sets make ordering easier for two people, family or a group when you want several flavors in one box.',
+                ],
+                'seo' => [
+                    'pl' => 'Zestawy sushi są najwygodniejszym wyborem, gdy na stole ma pojawić się kilka smaków naraz: dla pary, rodziny, spotkania ze znajomymi albo większego zamówienia na wynos.',
+                    'uk' => 'Суші-сети — найзручніший вибір, коли на столі має бути кілька смаків одразу: для пари, родини, зустрічі з друзями або більшого замовлення з собою.',
+                    'en' => 'Sushi sets are the easiest choice when several flavors should appear on the table at once: for a couple, family, friends or a larger takeaway order.',
+                ],
+                'item' => [
+                    'pl' => 'zbiera kilka rolek w jednym zamówieniu, więc pozwala spróbować różnych smaków bez wybierania każdej pozycji osobno.',
+                    'uk' => 'збирає кілька ролів в одному замовленні, тому дає змогу спробувати різні смаки без вибору кожної позиції окремо.',
+                    'en' => 'brings several rolls into one order, making it possible to try different flavors without choosing every item separately.',
+                ],
+            ],
+            'dodatki' => [
+                'intro' => [
+                    'pl' => 'Dodatki pomagają dopasować zamówienie do własnego smaku: więcej sosu, imbiru, wasabi albo mały element uzupełniający.',
+                    'uk' => 'Додатки допомагають налаштувати замовлення під власний смак: більше соусу, імбиру, васабі або невеликий супровідний елемент.',
+                    'en' => 'Add-ons help adjust the order to your taste: more sauce, ginger, wasabi or a small supporting element.',
+                ],
+                'seo' => [
+                    'pl' => 'Ta sekcja jest praktyczna przy zamówieniach sushi na wynos, kiedy chcesz uzupełnić rolki o sosy i klasyczne dodatki.',
+                    'uk' => 'Цей розділ практичний для замовлень суші з собою, коли хочеться доповнити роли соусами й класичними додатками.',
+                    'en' => 'This section is practical for sushi takeaway orders when you want to complete rolls with sauces and classic add-ons.',
+                ],
+                'item' => [
+                    'pl' => 'jest praktycznym uzupełnieniem zamówienia i pozwala dopasować intensywność smaku do własnych preferencji.',
+                    'uk' => 'є практичним доповненням до замовлення й допомагає налаштувати інтенсивність смаку під власні вподобання.',
+                    'en' => 'is a practical addition to the order and helps adjust flavor intensity to personal preference.',
+                ],
+            ],
+            'napoje' => [
+                'intro' => [
+                    'pl' => 'Napoje dopełniają zamówienie i dobrze równoważą intensywność sosów, tempury, ramenu albo pikantnych dodatków.',
+                    'uk' => 'Напої доповнюють замовлення й добре балансують інтенсивність соусів, темпури, рамену або пікантних додатків.',
+                    'en' => 'Drinks complete the order and help balance the intensity of sauces, tempura, ramen or spicy toppings.',
+                ],
+                'seo' => [
+                    'pl' => 'To prosta część menu, ale ważna przy zamówieniach online, zwłaszcza gdy wybierasz sushi albo ciepłe dania na wynos.',
+                    'uk' => 'Це проста, але важлива частина меню для онлайн-замовлень, особливо коли обираєте суші або гарячі страви з собою.',
+                    'en' => 'This is a simple but important part of the menu for online orders, especially with sushi or warm takeaway dishes.',
+                ],
+                'item' => [
+                    'pl' => 'uzupełnia posiłek i pomaga zbalansować intensywne, słone albo pikantne smaki.',
+                    'uk' => 'доповнює їжу й допомагає збалансувати насичені, солоні або пікантні смаки.',
+                    'en' => 'completes the meal and helps balance intense, salty or spicy flavors.',
+                ],
+            ],
+            'menu-sezonowe' => [
+                'intro' => [
+                    'pl' => 'Menu sezonowe pokazuje pozycje dostępne czasowo, często związane ze świeżymi składnikami i krótszą ofertą.',
+                    'uk' => 'Сезонне меню показує позиції, доступні тимчасово, часто пов’язані зі свіжими інгредієнтами та коротшою пропозицією.',
+                    'en' => 'The seasonal menu presents items available for a limited time, often connected with fresh ingredients and a shorter offer.',
+                ],
+                'seo' => [
+                    'pl' => 'Warto zaglądać tu regularnie, bo sezonowe sushi i dania azjatyckie w Toruniu mogą zmieniać się szybciej niż stałe menu.',
+                    'uk' => 'Варто заглядати сюди регулярно, бо сезонні суші й азійські страви в Торуні можуть змінюватися швидше, ніж основне меню.',
+                    'en' => 'It is worth checking this section regularly because seasonal sushi and Asian dishes in Toruń may change faster than the regular menu.',
+                ],
+                'item' => [
+                    'pl' => 'ma sezonowy charakter i pozwala spróbować czegoś mniej oczywistego niż stałe pozycje menu.',
+                    'uk' => 'має сезонний характер і дає змогу спробувати щось менш очевидне, ніж постійні позиції меню.',
+                    'en' => 'has a seasonal character and lets you try something less obvious than the regular menu items.',
+                ],
+            ],
+            'dania-dla-dzieci' => [
+                'intro' => [
+                    'pl' => 'Dania dla dzieci są prostsze, łagodniejsze i wygodne wtedy, gdy zamawiasz jedzenie dla całej rodziny.',
+                    'uk' => 'Дитячі страви простіші, м’якші на смак і зручні, коли замовляєте їжу для всієї родини.',
+                    'en' => 'Kids dishes are simpler, milder and convenient when ordering food for the whole family.',
+                ],
+                'seo' => [
+                    'pl' => 'Ta kategoria pomaga wybrać coś dla najmłodszych gości restauracji sushi w Toruniu, bez intensywnych sosów i trudnych smaków.',
+                    'uk' => 'Ця категорія допомагає обрати щось для наймолодших гостей суші-ресторану в Торуні, без інтенсивних соусів і складних смаків.',
+                    'en' => 'This category helps choose something for the youngest guests of a sushi restaurant in Toruń, without intense sauces or difficult flavors.',
+                ],
+                'item' => [
+                    'pl' => 'jest łagodniejszą propozycją, dobrą dla dzieci i rodzinnych zamówień.',
+                    'uk' => 'є м’якшою пропозицією, доброю для дітей і сімейних замовлень.',
+                    'en' => 'is a milder option, suitable for kids and family orders.',
+                ],
+            ],
+        ];
+
+        return $profiles[$slug] ?? [
+            'intro' => [
+                'pl' => 'Ta część menu zbiera dania przygotowywane na miejscu z myślą o świeżym, azjatyckim smaku.',
+                'uk' => 'Ця частина меню об’єднує страви, які готуються на місці з акцентом на свіжий азійський смак.',
+                'en' => 'This part of the menu brings together dishes prepared on site with a fresh Asian flavor in mind.',
+            ],
+            'seo' => [
+                'pl' => 'To praktyczna kategoria dla osób szukających sushi i kuchni azjatyckiej w Toruniu z jasnym składem i cenami.',
+                'uk' => 'Це практична категорія для тих, хто шукає суші та азійську кухню в Торуні з прозорим складом і цінами.',
+                'en' => 'This is a practical category for guests looking for sushi and Asian food in Toruń with clear ingredients and prices.',
+            ],
+            'item' => [
+                'pl' => 'łączy świeże przygotowanie z czytelnym smakiem charakterystycznym dla kuchni azjatyckiej.',
+                'uk' => 'поєднує свіже приготування зі зрозумілим смаком, характерним для азійської кухні.',
+                'en' => 'combines fresh preparation with a clear flavor typical of Asian cuisine.',
+            ],
+        ];
     }
 }

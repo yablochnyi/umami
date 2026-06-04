@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\MenuCategories\Schemas;
 
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
@@ -28,6 +29,22 @@ class MenuCategoryForm
                             TextInput::make('slug')->required()->maxLength(255),
                             TextInput::make('sort_order')->label('Sort')->numeric()->default(0)->required(),
                             Toggle::make('is_active')->label('Active')->default(true),
+                        ]),
+                    ]),
+                Section::make('SEO intro before dishes')
+                    ->schema([
+                        Grid::make(3)->schema([
+                            Textarea::make('intro_text.pl')->label('PL')->rows(4),
+                            Textarea::make('intro_text.uk')->label('UA')->rows(4),
+                            Textarea::make('intro_text.en')->label('EN')->rows(4),
+                        ]),
+                    ]),
+                Section::make('SEO text after dishes')
+                    ->schema([
+                        Grid::make(3)->schema([
+                            Textarea::make('seo_text.pl')->label('PL')->rows(7),
+                            Textarea::make('seo_text.uk')->label('UA')->rows(7),
+                            Textarea::make('seo_text.en')->label('EN')->rows(7),
                         ]),
                     ]),
             ]);

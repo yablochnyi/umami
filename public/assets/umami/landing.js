@@ -75,6 +75,7 @@ const modalTitle = document.getElementById('modalTitle');
 const modalCategory = document.getElementById('modalCategory');
 const modalPrice = document.getElementById('modalPrice');
 const modalDescription = document.getElementById('modalDescription');
+const modalDetailsLink = document.getElementById('modalDetailsLink');
 
 document.querySelectorAll('[data-modal-card]').forEach((card) => {
     card.addEventListener('click', () => {
@@ -82,6 +83,16 @@ document.querySelectorAll('[data-modal-card]').forEach((card) => {
         modalCategory.textContent = card.dataset.category || '';
         modalPrice.textContent = card.dataset.price || '';
         modalDescription.textContent = card.dataset.desc || '';
+
+        if (modalDetailsLink) {
+            if (card.dataset.url) {
+                modalDetailsLink.href = card.dataset.url;
+                modalDetailsLink.hidden = false;
+            } else {
+                modalDetailsLink.hidden = true;
+                modalDetailsLink.removeAttribute('href');
+            }
+        }
 
         if (card.dataset.image) {
             modalImage.src = card.dataset.image;

@@ -121,7 +121,7 @@ class LegalPageController extends Controller
     private function siteUrl(): string
     {
         return rtrim(
-            SiteSetting::query()->where('key', 'site_url')->value('value') ?: 'https://www.umamisushifood.pl',
+            SiteSetting::query()->where('key', 'site_url')->value('value') ?: 'https://umamisushifood.pl',
             '/'
         );
     }

@@ -13,7 +13,9 @@ class MenuItem extends Model
     protected $fillable = [
         'menu_category_id',
         'name',
+        'slug',
         'description',
+        'marketing_description',
         'price',
         'image',
         'source_image',
@@ -27,7 +29,7 @@ class MenuItem extends Model
         'is_active' => 'boolean',
     ];
 
-    public array $translatable = ['name', 'description'];
+    public array $translatable = ['name', 'description', 'marketing_description'];
 
     public function category(): BelongsTo
     {
