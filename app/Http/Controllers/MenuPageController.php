@@ -77,9 +77,10 @@ class MenuPageController extends Controller
 
         $categoryName = $this->translated($category, 'name');
         $name = $this->translated($item, 'name');
-        $description = $this->translated($item, 'description') ?: $this->fallbackDescription($locale, $name, $categoryName);
-        $marketingDescription = $this->translated($item, 'marketing_description') ?: $this->itemMarketingFallback($locale, $name, $description);
-        $title = $this->itemTitle($locale, $name);
+        $ingredients = $this->translated($item, 'description') ?: $this->fallbackDescription($locale, $name, $categoryName);
+        $marketingDescription = $this->translated($item, 'marketing_description') ?: $this->itemMarketingFallback($locale, $name, $ingredients);
+        $title = $this->translated($item, 'seo_title') ?: $this->itemTitle($locale, $name, $categoryName);
+        $description = $this->translated($item, 'seo_description') ?: $this->itemMetaDescription($locale, $name, $categoryName, $ingredients, $item->price);
         $localizedUrls = $this->localizedUrls($siteUrl, 'item', $category, $item);
         $similarItems = MenuItem::query()
             ->where('menu_category_id', $category->id)
@@ -92,13 +93,14 @@ class MenuPageController extends Controller
             ->map(fn (MenuItem $similar) => $this->itemCard($similar, $category, $locale));
         $image = $this->mediaUrl($item->image);
         $breadcrumbs = $this->breadcrumbs($locale, $siteUrl, $category, $item);
-        $schema = $this->itemSchema($siteUrl, $locale, $category, $item, $name, $description, $image, $breadcrumbs);
+        $schema = $this->itemSchema($siteUrl, $locale, $category, $item, $name, $ingredients, $image, $breadcrumbs);
 
         return response()->view('menu-item', [
             'locale' => $locale,
             'localeLabels' => $this->localeLabels(),
             'title' => $title,
             'description' => $description,
+            'ingredients' => $ingredients,
             'marketingDescription' => $marketingDescription,
             'categoryName' => $categoryName,
             'categoryUrl' => $this->relativePageUrl($locale, $category),
@@ -248,23 +250,6 @@ class MenuPageController extends Controller
                         'availability' => 'https://schema.org/InStock',
                     ],
                 ],
-                [
-                    '@type' => 'Product',
-                    '@id' => $this->localizedPageUrl($siteUrl, $locale, $category, $item).'#product',
-                    'name' => $name,
-                    'description' => $description,
-                    'image' => $this->absoluteUrl($image, $siteUrl),
-                    'brand' => [
-                        '@type' => 'Brand',
-                        'name' => 'Umami Sushi & Food Toruń',
-                    ],
-                    'offers' => [
-                        '@type' => 'Offer',
-                        'priceCurrency' => 'PLN',
-                        'price' => $this->priceValue($item->price),
-                        'availability' => 'https://schema.org/InStock',
-                    ],
-                ],
             ],
         ];
     }
@@ -395,12 +380,24 @@ class MenuPageController extends Controller
         ][$locale];
     }
 
-    private function itemTitle(string $locale, string $name): string
+    private function itemTitle(string $locale, string $name, string $category): string
     {
         return [
-            'pl' => "{$name} Toruń | Skład, cena i zamówienie",
-            'uk' => "{$name} Торунь | Склад, ціна та замовлення",
-            'en' => "{$name} Toruń | Ingredients, price and order",
+            'pl' => "{$name} | {$category} Toruń | Umami Sushi",
+            'uk' => "{$name} | {$category} Торунь | Umami Sushi",
+            'en' => "{$name} | {$category} Toruń | Umami Sushi",
+        ][$locale];
+    }
+
+    private function itemMetaDescription(string $locale, string $name, string $category, string $ingredients, ?string $price): string
+    {
+        $ingredients = str($ingredients)->squish()->limit(82, '')->toString();
+        $priceText = filled($price) ? " {$price}." : '';
+
+        return [
+            'pl' => str("{$name} w Umami Sushi & Food Toruń: {$ingredients}. Cena{$priceText} Zobacz zdjęcie i zamów online lub na wynos.")->limit(160, '')->toString(),
+            'uk' => str("{$name} в Umami Sushi & Food Торунь: {$ingredients}. Ціна{$priceText} Перегляньте фото та замовте онлайн або з собою.")->limit(160, '')->toString(),
+            'en' => str("{$name} at Umami Sushi & Food Toruń: {$ingredients}. Price{$priceText} See photo and order online or takeaway.")->limit(160, '')->toString(),
         ][$locale];
     }
 

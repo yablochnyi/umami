@@ -56,11 +56,11 @@
                     @endif
                 </a>
             @endforeach
-            <div class="language-switcher" aria-label="Language switcher">
+            <nav class="language-switcher" aria-label="Language switcher">
                 @foreach($supportedLocales as $lang)
                     <a href="{{ $seo['localizedUrls'][$lang] }}" class="{{ $locale === $lang ? 'active' : '' }}" @if($locale === $lang) aria-current="page" @endif>{{ $localeLabels[$lang] }}</a>
                 @endforeach
-            </div>
+            </nav>
             <a class="pill" href="{{ $settings['phoneHref'] }}">{{ $settings['phone'] }}</a>
         </div>
     </header>
@@ -88,7 +88,7 @@
             </div>
             <div class="best-grid">
                 @foreach($bestsellers as $dish)
-                    <button type="button" class="dish-card" data-modal-card data-name="{{ $dish['name'] }}" data-category="{{ $dish['category'] }}" data-price="{{ $dish['price'] }}" data-desc="{{ $dish['description'] }}" data-image="{{ $dish['image'] }}" data-url="{{ $dish['url'] }}">
+                    <a href="{{ $dish['url'] }}" class="dish-card" data-modal-card data-name="{{ $dish['name'] }}" data-category="{{ $dish['category'] }}" data-price="{{ $dish['price'] }}" data-desc="{{ $dish['description'] }}" data-image="{{ $dish['image'] }}" data-url="{{ $dish['url'] }}">
                         @if($dish['image'])
                             <img src="{{ $dish['image'] }}" alt="{{ $dish['name'] }}" loading="lazy">
                         @endif
@@ -99,7 +99,7 @@
                             </div>
                             <p class="dish-desc">{{ $dish['description'] }}</p>
                         </div>
-                    </button>
+                    </a>
                 @endforeach
             </div>
         </section>
@@ -109,16 +109,16 @@
                 <h2>{{ $copy['menuTitle'] }}</h2>
             </div>
             <div class="menu-shell">
-                <div class="category-tabs" id="categoryTabs" aria-label="Kategorie menu">
+                <div class="category-tabs" id="categoryTabs" role="tablist" aria-label="Kategorie menu">
                     @foreach($categories as $category)
-                        <button type="button" class="{{ $loop->first ? 'active' : '' }}" data-category-tab="category-{{ $category['id'] }}">{{ $category['name'] }}</button>
+                        <button type="button" role="tab" class="{{ $loop->first ? 'active' : '' }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}" data-category-tab="category-{{ $category['id'] }}">{{ $category['name'] }}</button>
                     @endforeach
                 </div>
                 <div>
                     @foreach($categories as $category)
-                        <div class="menu-grid" data-menu-panel="category-{{ $category['id'] }}" @if(! $loop->first) hidden @endif>
+                        <div class="menu-grid" role="tabpanel" data-menu-panel="category-{{ $category['id'] }}" @if(! $loop->first) hidden @endif>
                             @foreach($category['items'] as $dish)
-                                <button type="button" class="dish-card menu-item" data-modal-card data-name="{{ $dish['name'] }}" data-category="{{ $dish['category'] }}" data-price="{{ $dish['price'] }}" data-desc="{{ $dish['description'] }}" data-image="{{ $dish['image'] }}" data-url="{{ $dish['url'] }}">
+                                <a href="{{ $dish['url'] }}" class="dish-card menu-item" data-modal-card data-name="{{ $dish['name'] }}" data-category="{{ $dish['category'] }}" data-price="{{ $dish['price'] }}" data-desc="{{ $dish['description'] }}" data-image="{{ $dish['image'] }}" data-url="{{ $dish['url'] }}">
                                     @if($dish['image'])
                                         <img src="{{ $dish['image'] }}" alt="{{ $dish['name'] }}" loading="lazy">
                                     @endif
@@ -129,7 +129,7 @@
                                         </div>
                                         <p class="dish-desc">{{ $dish['description'] }}</p>
                                     </div>
-                                </button>
+                                </a>
                             @endforeach
                         </div>
                     @endforeach
@@ -164,7 +164,7 @@
                 </div>
                 <button class="slider-arrow prev" type="button" id="galleryPrev" aria-label="{{ $copy['prevPhoto'] }}">‹</button>
                 <button class="slider-arrow next" type="button" id="galleryNext" aria-label="{{ $copy['nextPhoto'] }}">›</button>
-                <div class="slider-dots" id="galleryDots" aria-label="{{ $copy['photoChoice'] }}"></div>
+                <div class="slider-dots" id="galleryDots" role="group" aria-label="{{ $copy['photoChoice'] }}"></div>
             </div>
         </section>
 

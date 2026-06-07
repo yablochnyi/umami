@@ -334,6 +334,11 @@ h2 {
     box-shadow: 0 24px 70px rgba(38,28,21,.18);
 }
 
+.dish-card:focus-visible {
+    outline: 3px solid rgba(184, 36, 33, .38);
+    outline-offset: 3px;
+}
+
 .dish-card img {
     width: 100%;
     flex: 0 0 auto;

@@ -11,12 +11,18 @@
         <link rel="alternate" hreflang="{{ $lang }}" href="{{ $url }}">
     @endforeach
     <link rel="alternate" hreflang="x-default" href="{{ $localizedUrls['pl'] }}">
-    <meta property="og:type" content="product">
+    <meta property="og:type" content="article">
     <meta property="og:title" content="{{ $title }}">
     <meta property="og:description" content="{{ $description }}">
     <meta property="og:url" content="{{ $canonicalUrl }}">
     @if($image)
         <meta property="og:image" content="{{ $ogImage }}">
+    @endif
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $title }}">
+    <meta name="twitter:description" content="{{ $description }}">
+    @if($image)
+        <meta name="twitter:image" content="{{ $ogImage }}">
     @endif
     <link rel="stylesheet" href="/assets/umami/landing.css">
     <script type="application/ld+json">{!! $schemaJson !!}</script>
@@ -28,11 +34,11 @@
             <span>Umami Sushi & Food</span>
         </a>
         <div class="top-actions">
-            <div class="language-switcher" aria-label="Language switcher">
+            <nav class="language-switcher" aria-label="Language switcher">
                 @foreach($localizedUrls as $lang => $url)
                     <a href="{{ $url }}" class="{{ $locale === $lang ? 'active' : '' }}" @if($locale === $lang) aria-current="page" @endif>{{ $localeLabels[$lang] }}</a>
                 @endforeach
-            </div>
+            </nav>
             <a class="pill" href="{{ $menuUrl }}">Menu</a>
         </div>
     </header>
@@ -61,7 +67,7 @@
                     <span class="price">{{ $item->price }}</span>
                 </div>
                 <h2>{{ $copy['details'] }}</h2>
-                <p>{{ $description }}</p>
+                <p>{{ $ingredients }}</p>
                 <h2>{{ $copy['taste'] }}</h2>
                 <p>{{ $marketingDescription }}</p>
                 <div class="hero-actions">

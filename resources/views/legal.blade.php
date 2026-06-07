@@ -20,11 +20,11 @@
             <span>Umami Sushi & Food</span>
         </a>
         <div class="top-actions">
-            <div class="language-switcher" aria-label="Language switcher">
+            <nav class="language-switcher" aria-label="Language switcher">
                 @foreach($localizedUrls as $lang => $url)
                     <a href="{{ $url }}" class="{{ $locale === $lang ? 'active' : '' }}" @if($locale === $lang) aria-current="page" @endif>{{ $localeLabels[$lang] }}</a>
                 @endforeach
-            </div>
+            </nav>
             <a class="pill" href="{{ $homeUrl }}#menu">Menu</a>
         </div>
     </header>

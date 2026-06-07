@@ -2744,6 +2744,8 @@ JSON, true, flags: JSON_THROW_ON_ERROR);
                         'slug' => $slug,
                         'description' => $itemData['description'],
                         'marketing_description' => $this->itemMarketingDescription($itemData, $categoryData),
+                        'seo_title' => $this->itemSeoTitle($itemData, $categoryData),
+                        'seo_description' => $this->itemSeoDescription($itemData, $categoryData),
                         'price' => $itemData['price'],
                         'image' => $itemData['image'],
                         'source_image' => $itemData['source_image'],
@@ -2951,7 +2953,7 @@ JSON, true, flags: JSON_THROW_ON_ERROR);
     private function itemMarketingDescription(array $item, array $category): array
     {
         $name = $item['name'];
-        $categoryName = $this->categoryTextName($category);
+        $categoryName = $category['name'];
         $focus = $this->itemFocus($item, $category);
         $focus = [
             'pl' => $this->sentence($focus['pl']),
@@ -2989,6 +2991,162 @@ JSON, true, flags: JSON_THROW_ON_ERROR);
         ];
 
         return $texts[$variant];
+    }
+
+    private function itemSeoTitle(array $item, array $category): array
+    {
+        $name = $item['name'];
+        $categoryName = $category['name'];
+
+        return [
+            'pl' => $this->metaLimit("{$name['pl']} | {$categoryName['pl']} Toruń | Umami Sushi", 68),
+            'uk' => $this->metaLimit("{$name['uk']} | {$categoryName['uk']} Торунь | Umami Sushi", 68),
+            'en' => $this->metaLimit("{$name['en']} | {$categoryName['en']} Toruń | Umami Sushi", 68),
+        ];
+    }
+
+    private function itemSeoDescription(array $item, array $category): array
+    {
+        $name = $item['name'];
+        $categoryName = $this->categoryTextName($category);
+        $price = trim((string) ($item['price'] ?? ''));
+        $pricePl = $price !== '' ? " Cena: {$price}." : '';
+        $priceUk = $price !== '' ? " Ціна: {$price}." : '';
+        $priceEn = $price !== '' ? " Price: {$price}." : '';
+
+        $composition = [
+            'pl' => $this->compositionSnippet($item, 'pl'),
+            'uk' => $this->compositionSnippet($item, 'uk'),
+            'en' => $this->compositionSnippet($item, 'en'),
+        ];
+
+        $templates = $this->itemSeoTemplates($category);
+        $variant = ((int) ($item['sort_order'] ?? 1)) % count($templates['pl']);
+
+        return [
+            'pl' => $this->metaLimit(sprintf($templates['pl'][$variant], $name['pl'], $composition['pl'], $pricePl, $categoryName['pl']), 158),
+            'uk' => $this->metaLimit(sprintf($templates['uk'][$variant], $name['uk'], $composition['uk'], $priceUk, $categoryName['uk']), 158),
+            'en' => $this->metaLimit(sprintf($templates['en'][$variant], $name['en'], $composition['en'], $priceEn, $categoryName['en']), 158),
+        ];
+    }
+
+    private function itemSeoTemplates(array $category): array
+    {
+        $slug = $category['slug'];
+
+        $defaults = [
+            'pl' => [
+                '%s w Umami Toruń: %s.%s Sprawdź skład, zdjęcie i zamów online lub na wynos.',
+                '%s z kategorii %4$s: %2$s.%3$s Zobacz szczegóły dania w Umami Sushi & Food.',
+                'Zamów %s w Toruniu. W składzie %s.%s Dobre na lunch, kolację albo odbiór na wynos.',
+            ],
+            'uk' => [
+                '%s в Umami Торунь: %s.%s Перегляньте склад, фото та замовте онлайн або з собою.',
+                '%s з категорії %4$s: %2$s.%3$s Дивіться деталі страви в Umami Sushi & Food.',
+                'Замовте %s у Торуні. У складі %s.%s Для обіду, вечері або самовивозу.',
+            ],
+            'en' => [
+                '%s at Umami Toruń: %s.%s Check ingredients, photo and order online or takeaway.',
+                '%s from %4$s: %2$s.%3$s See dish details at Umami Sushi & Food.',
+                'Order %s in Toruń. With %s.%s Good for lunch, dinner or takeaway pickup.',
+            ],
+        ];
+
+        $special = [
+            'rameny' => [
+                'pl' => [
+                    '%s ramen Toruń: %s.%s Zamów online lub na wynos w Umami.',
+                    'Rozgrzewający %s: %s.%s Dobry wybór na ramen, lunch albo kolację w Toruniu.',
+                    'Zamów %s w Toruniu. W składzie %s.%s Ramen na miejscu, online lub z odbiorem.',
+                ],
+                'uk' => [
+                    '%s рамен Торунь: %s.%s Замовте онлайн або з собою в Umami.',
+                    'Зігрівальний %s: %s.%s Добрий вибір для рамену, обіду або вечері в Торуні.',
+                    'Замовте %s у Торуні. У складі %s.%s Рамен на місці, онлайн або з самовивозом.',
+                ],
+                'en' => [
+                    '%s ramen Toruń: %s.%s Order online or takeaway at Umami.',
+                    'Warming %s: %s.%s A good ramen choice for lunch or dinner in Toruń.',
+                    'Order %s in Toruń. With %s.%s Ramen for dine-in, online order or takeaway pickup.',
+                ],
+            ],
+            'zestawy-sushi' => [
+                'pl' => [
+                    '%s zestaw sushi Toruń: %s.%s Sprawdź skład, zdjęcie i zamów online.',
+                    'Zamów zestaw %s w Umami. W środku: %s.%s Sushi na spotkanie, kolację albo wynos.',
+                    '%s to zestaw sushi z kilkoma smakami: %s.%s Zobacz szczegóły i cenę.',
+                ],
+                'uk' => [
+                    '%s суші-сет Торунь: %s.%s Перегляньте склад, фото та замовте онлайн.',
+                    'Замовте сет %s в Umami. Усередині: %s.%s Суші для зустрічі, вечері або з собою.',
+                    '%s — суші-сет із кількома смаками: %s.%s Дивіться деталі та ціну.',
+                ],
+                'en' => [
+                    '%s sushi set Toruń: %s.%s Check ingredients, photo and order online.',
+                    'Order the %s set at Umami. Inside: %s.%s Sushi for a meeting, dinner or takeaway.',
+                    '%s is a sushi set with several flavors: %s.%s See details and price.',
+                ],
+            ],
+            'dania-g-owne' => [
+                'pl' => [
+                    '%s w Toruniu: %s.%s Ciepłe danie azjatyckie w Umami, online lub na wynos.',
+                    'Zamów %s w Umami. W składzie %s.%s Dobra opcja na azjatycki obiad w Toruniu.',
+                    '%s z dań głównych: %s.%s Sprawdź zdjęcie, cenę i zamówienie online.',
+                ],
+                'uk' => [
+                    '%s у Торуні: %s.%s Гаряча азійська страва в Umami, онлайн або з собою.',
+                    'Замовте %s в Umami. У складі %s.%s Добрий варіант для азійського обіду в Торуні.',
+                    '%s з категорії основних страв: %s.%s Перегляньте фото, ціну й онлайн-замовлення.',
+                ],
+                'en' => [
+                    '%s in Toruń: %s.%s A warm Asian dish at Umami, online or takeaway.',
+                    'Order %s at Umami. With %s.%s A good option for an Asian lunch in Toruń.',
+                    '%s from the main dishes category: %s.%s Check photo, price and online ordering.',
+                ],
+            ],
+        ];
+
+        return $special[$slug] ?? $defaults;
+    }
+
+    private function compositionSnippet(array $item, string $locale): string
+    {
+        $description = $item['description'][$locale] ?? $item['description']['pl'] ?? '';
+        $description = trim((string) $description);
+
+        if ($description === '') {
+            return [
+                'pl' => 'świeże składniki i dopracowany smak',
+                'uk' => 'свіжі інгредієнти та продуманий смак',
+                'en' => 'fresh ingredients and carefully balanced flavor',
+            ][$locale];
+        }
+
+        $description = Str::of($description)
+            ->replaceMatches('/\s+/', ' ')
+            ->replaceMatches('/\s+([,.;:])/', '$1')
+            ->trim(' .')
+            ->toString();
+
+        return $this->metaLimit($description, 58);
+    }
+
+    private function metaLimit(string $text, int $limit): string
+    {
+        $text = Str::of($text)
+            ->replaceMatches('/\s+/', ' ')
+            ->replaceMatches('/\s+([,.;:])/', '$1')
+            ->trim()
+            ->toString();
+
+        if (mb_strlen($text) <= $limit) {
+            return $text;
+        }
+
+        $cut = mb_substr($text, 0, $limit);
+        $wordSafe = Str::of($cut)->beforeLast(' ')->trim()->toString();
+
+        return $wordSafe !== '' ? $wordSafe : trim($cut);
     }
 
     private function sentence(string $text): string

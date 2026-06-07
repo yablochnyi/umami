@@ -65,6 +65,19 @@ class MenuItemForm
                             Textarea::make('marketing_description.en')->label('EN')->rows(6),
                         ]),
                     ]),
+                Section::make('SEO meta tags')
+                    ->schema([
+                        Grid::make(3)->schema([
+                            TextInput::make('seo_title.pl')->label('Meta title PL')->maxLength(70),
+                            TextInput::make('seo_title.uk')->label('Meta title UA')->maxLength(70),
+                            TextInput::make('seo_title.en')->label('Meta title EN')->maxLength(70),
+                        ]),
+                        Grid::make(3)->schema([
+                            Textarea::make('seo_description.pl')->label('Meta description PL')->rows(3)->maxLength(170),
+                            Textarea::make('seo_description.uk')->label('Meta description UA')->rows(3)->maxLength(170),
+                            Textarea::make('seo_description.en')->label('Meta description EN')->rows(3)->maxLength(170),
+                        ]),
+                    ]),
                 Section::make('Images')
                     ->schema([
                         FileUpload::make('image')

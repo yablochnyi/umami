@@ -115,35 +115,49 @@ const modalPrice = document.getElementById('modalPrice');
 const modalDescription = document.getElementById('modalDescription');
 const modalDetailsLink = document.getElementById('modalDetailsLink');
 
-document.querySelectorAll('[data-modal-card]').forEach((card) => {
-    card.addEventListener('click', () => {
-        modalTitle.textContent = card.dataset.name || '';
-        modalCategory.textContent = card.dataset.category || '';
-        modalPrice.textContent = card.dataset.price || '';
-        modalDescription.textContent = card.dataset.desc || '';
+function openModalCard(card) {
+    modalTitle.textContent = card.dataset.name || '';
+    modalCategory.textContent = card.dataset.category || '';
+    modalPrice.textContent = card.dataset.price || '';
+    modalDescription.textContent = card.dataset.desc || '';
 
-        if (modalDetailsLink) {
-            if (card.dataset.url) {
-                modalDetailsLink.href = card.dataset.url;
-                modalDetailsLink.hidden = false;
-            } else {
-                modalDetailsLink.hidden = true;
-                modalDetailsLink.removeAttribute('href');
-            }
-        }
-
-        if (card.dataset.image) {
-            modalImage.src = card.dataset.image;
-            modalImage.alt = card.dataset.name || '';
-            modalImage.hidden = false;
+    if (modalDetailsLink) {
+        if (card.dataset.url) {
+            modalDetailsLink.href = card.dataset.url;
+            modalDetailsLink.hidden = false;
         } else {
-            modalImage.removeAttribute('src');
-            modalImage.alt = '';
-            modalImage.hidden = true;
+            modalDetailsLink.hidden = true;
+            modalDetailsLink.removeAttribute('href');
+        }
+    }
+
+    if (card.dataset.image) {
+        modalImage.src = card.dataset.image;
+        modalImage.alt = card.dataset.name || '';
+        modalImage.hidden = false;
+    } else {
+        modalImage.removeAttribute('src');
+        modalImage.alt = '';
+        modalImage.hidden = true;
+    }
+
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+}
+
+document.querySelectorAll('[data-modal-card]').forEach((card) => {
+    card.addEventListener('click', (event) => {
+        if (card.tagName === 'A') {
+            event.preventDefault();
         }
 
-        modal.classList.add('open');
-        modal.setAttribute('aria-hidden', 'false');
+        openModalCard(card);
+    });
+    card.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openModalCard(card);
+        }
     });
 });
 
@@ -162,9 +176,13 @@ document.addEventListener('keydown', (event) => {
 
 document.querySelectorAll('[data-category-tab]').forEach((tab) => {
     tab.addEventListener('click', () => {
-        document.querySelectorAll('[data-category-tab]').forEach((button) => button.classList.remove('active'));
+        document.querySelectorAll('[data-category-tab]').forEach((button) => {
+            button.classList.remove('active');
+            button.setAttribute('aria-selected', 'false');
+        });
         document.querySelectorAll('[data-menu-panel]').forEach((panel) => panel.hidden = true);
         tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
         const panel = document.querySelector('[data-menu-panel="' + tab.dataset.categoryTab + '"]');
         if (panel) panel.hidden = false;
     });

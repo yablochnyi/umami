@@ -16,6 +16,8 @@ class MenuItem extends Model
         'slug',
         'description',
         'marketing_description',
+        'seo_title',
+        'seo_description',
         'price',
         'image',
         'source_image',
@@ -29,7 +31,7 @@ class MenuItem extends Model
         'is_active' => 'boolean',
     ];
 
-    public array $translatable = ['name', 'description', 'marketing_description'];
+    public array $translatable = ['name', 'description', 'marketing_description', 'seo_title', 'seo_description'];
 
     public function category(): BelongsTo
     {

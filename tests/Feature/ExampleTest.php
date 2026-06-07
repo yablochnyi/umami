@@ -114,13 +114,15 @@ class ExampleTest extends TestCase
             ->assertStatus(200)
             ->assertSee('<link rel="canonical" href="https://umamisushifood.pl/menu/rameny/chashu-ramen">', false)
             ->assertSee('"@type": "MenuItem"', false)
-            ->assertSee('"@type": "Product"', false)
+            ->assertDontSee('"@type": "Product"', false)
             ->assertSee('"@type": "BreadcrumbList"', false)
+            ->assertSee('<meta name="description" content="Zamów Chashu Ramen w Toruniu.', false)
+            ->assertSee('<meta name="twitter:card" content="summary_large_image">', false)
             ->assertSee('Skład', false)
             ->assertSee('Dlaczego warto spróbować', false)
             ->assertSee('Chashu Ramen jest dla osób', false)
             ->assertDontSee('Skład:', false)
-            ->assertSee('Chashu Ramen Toruń', false);
+            ->assertSee('Zamów Chashu Ramen w Toruniu', false);
 
         $this->get('/menu/rameny')
             ->assertDontSee('wpisujesz w Google', false);
