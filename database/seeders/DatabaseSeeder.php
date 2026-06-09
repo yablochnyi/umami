@@ -16,11 +16,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $adminEmail = config('app.admin_email', 'artem.yablochnyi@gmail.com');
+        $adminPassword = env('ADMIN_PASSWORD', 'password');
+
         User::updateOrCreate([
-            'email' => 'artem.yablochnyi@gmail.com',
+            'email' => $adminEmail,
         ], [
             'name' => 'Umami Admin',
-            'password' => Hash::make('password'),
+            'password' => Hash::make($adminPassword),
         ]);
 
         $this->call(UmamiContentSeeder::class);
