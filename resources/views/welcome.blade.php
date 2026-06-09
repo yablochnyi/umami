@@ -32,6 +32,8 @@
 <body
     data-background-desktop="{{ $settings['backgroundDesktop'] }}"
     data-background-mobile="{{ $settings['backgroundMobile'] }}"
+    data-hero-video-desktop="{{ $settings['heroVideoDesktop'] }}"
+    data-hero-video-mobile="{{ $settings['heroVideoMobile'] }}"
     data-hero-poster="{{ $settings['heroPoster'] }}"
     data-show-photo-label="{{ $copy['showPhoto'] }}"
     data-google-analytics-id="{{ $settings['googleAnalyticsId'] }}"
@@ -68,7 +70,6 @@
     <main id="top">
         <section class="hero">
             <video class="bg-video" autoplay muted loop playsinline poster="{{ $settings['heroPoster'] }}">
-                <source src="{{ $settings['heroVideo'] }}" type="video/mp4">
             </video>
             <div class="hero-inner">
                 <img class="hero-logo" src="{{ $settings['logo'] }}" alt="Umami Sushi & Food">
@@ -111,12 +112,27 @@
             <div class="menu-shell">
                 <div class="category-tabs" id="categoryTabs" role="tablist" aria-label="Kategorie menu">
                     @foreach($categories as $category)
-                        <button type="button" role="tab" class="{{ $loop->first ? 'active' : '' }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}" data-category-tab="category-{{ $category['id'] }}">{{ $category['name'] }}</button>
+                        <button
+                            type="button"
+                            role="tab"
+                            id="category-tab-{{ $category['id'] }}"
+                            class="{{ $loop->first ? 'active' : '' }}"
+                            aria-selected="{{ $loop->first ? 'true' : 'false' }}"
+                            aria-controls="category-panel-{{ $category['id'] }}"
+                            data-category-tab="category-{{ $category['id'] }}"
+                        >{{ $category['name'] }}</button>
                     @endforeach
                 </div>
                 <div>
                     @foreach($categories as $category)
-                        <div class="menu-grid" role="tabpanel" data-menu-panel="category-{{ $category['id'] }}" @if(! $loop->first) hidden @endif>
+                        <div
+                            class="menu-grid"
+                            role="tabpanel"
+                            id="category-panel-{{ $category['id'] }}"
+                            aria-labelledby="category-tab-{{ $category['id'] }}"
+                            data-menu-panel="category-{{ $category['id'] }}"
+                            @if(! $loop->first) hidden @endif
+                        >
                             @foreach($category['items'] as $dish)
                                 <a href="{{ $dish['url'] }}" class="dish-card menu-item" data-modal-card data-name="{{ $dish['name'] }}" data-category="{{ $dish['category'] }}" data-price="{{ $dish['price'] }}" data-desc="{{ $dish['description'] }}" data-image="{{ $dish['image'] }}" data-url="{{ $dish['url'] }}">
                                     @if($dish['image'])
@@ -229,13 +245,13 @@
     <div class="modal" id="modal" aria-hidden="true">
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
             <button class="close" type="button" aria-label="{{ $copy['close'] }}" id="modalClose">×</button>
-            <img class="modal-image" id="modalImage" alt="" hidden>
+            <img class="modal-image" id="modalImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="" hidden>
             <div class="modal-content">
                 <div class="item-meta">
                     <span class="tag" id="modalCategory"></span>
                     <span class="price" id="modalPrice"></span>
                 </div>
-                <h3 id="modalTitle"></h3>
+                <h3 id="modalTitle">{{ $copy['detailsFallback'] }}</h3>
                 <p id="modalDescription"></p>
                 <a class="pill modal-details-link" href="#" id="modalDetailsLink">{{ $menuDetailsLabel }}</a>
             </div>

@@ -1,5 +1,7 @@
 const desktopBackground = document.body.dataset.backgroundDesktop;
 const mobileBackground = document.body.dataset.backgroundMobile;
+const heroVideoDesktop = document.body.dataset.heroVideoDesktop;
+const heroVideoMobile = document.body.dataset.heroVideoMobile;
 const heroPoster = document.body.dataset.heroPoster;
 const googleAnalyticsId = document.body.dataset.googleAnalyticsId;
 const cookieConsentKey = 'umami_cookie_consent';
@@ -77,6 +79,7 @@ if (heroPoster) {
 const heroVideo = document.querySelector('.bg-video');
 if (heroVideo) {
     const hero = heroVideo.closest('.hero');
+    const mobileVideoQuery = window.matchMedia('(max-width: 900px)');
 
     heroVideo.muted = true;
     heroVideo.playsInline = true;
@@ -97,12 +100,29 @@ if (heroVideo) {
         }
     };
 
+    const selectHeroVideoSource = () => {
+        const selectedSource = mobileVideoQuery.matches
+            ? (heroVideoMobile || heroVideoDesktop)
+            : (heroVideoDesktop || heroVideoMobile);
+
+        if (!selectedSource || heroVideo.dataset.currentSource === selectedSource) return;
+
+        heroVideo.dataset.currentSource = selectedSource;
+        hero?.classList.remove('video-ready');
+        heroVideo.pause();
+        heroVideo.src = selectedSource;
+        heroVideo.load();
+        startHeroVideo();
+    };
+
     heroVideo.addEventListener('loadeddata', markHeroVideoReady);
     heroVideo.addEventListener('playing', markHeroVideoReady);
     heroVideo.addEventListener('error', () => hero?.classList.remove('video-ready'));
 
+    selectHeroVideoSource();
     markHeroVideoReady();
     startHeroVideo();
+    mobileVideoQuery.addEventListener('change', selectHeroVideoSource);
     window.addEventListener('pageshow', startHeroVideo, { once: true });
     document.addEventListener('touchstart', startHeroVideo, { once: true, passive: true });
 }

@@ -492,11 +492,19 @@ class UmamiContentSeeder extends Seeder
     },
     {
       "group": "hero",
-      "key": "hero_video",
-      "label": "Hero video",
+      "key": "hero_video_desktop",
+      "label": "Hero video desktop",
       "value": "umami/UMAMI.MP4",
       "type": "video",
       "sort_order": 5
+    },
+    {
+      "group": "hero",
+      "key": "hero_video_mobile",
+      "label": "Hero video mobile",
+      "value": "umami/UMAMI.MP4",
+      "type": "video",
+      "sort_order": 6
     },
     {
       "group": "hero",
@@ -504,7 +512,7 @@ class UmamiContentSeeder extends Seeder
       "label": "Hero poster",
       "value": "umami/res1.png",
       "type": "image",
-      "sort_order": 6
+      "sort_order": 7
     },
     {
       "group": "contact",
