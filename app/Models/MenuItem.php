@@ -11,7 +11,11 @@ class MenuItem extends Model
     use HasTranslations;
 
     protected $fillable = [
+        'gopos_id',
         'menu_category_id',
+        'gopos_category_id',
+        'gopos_tax_id',
+        'gopos_joint_id',
         'name',
         'slug',
         'description',
@@ -23,12 +27,16 @@ class MenuItem extends Model
         'source_image',
         'is_bestseller',
         'is_active',
+        'gopos_payload',
+        'gopos_synced_at',
         'sort_order',
     ];
 
     protected $casts = [
         'is_bestseller' => 'boolean',
         'is_active' => 'boolean',
+        'gopos_payload' => 'array',
+        'gopos_synced_at' => 'datetime',
     ];
 
     public array $translatable = ['name', 'description', 'marketing_description', 'seo_title', 'seo_description'];
