@@ -124,53 +124,93 @@ class GoPosMenuSynchronizer
     private function downloadImage(string $url, int $goposItemId): ?string
     {
         try {
-            $extension = pathinfo(parse_url($url, PHP_URL_PATH) ?: '', PATHINFO_EXTENSION) ?: 'jpg';
-            $extension = strtolower($extension);
-            $extension = in_array($extension, ['jpg', 'jpeg', 'png', 'webp'], true) ? $extension : 'jpg';
-
-            $path = 'umami/gopos/items/'.$goposItemId.'-'.substr(sha1($url), 0, 10).'.'.$extension;
+            $baseName = $goposItemId.'-'.substr(sha1($url), 0, 10);
+            $directory = 'umami/gopos/items';
+            $path = "{$directory}/{$baseName}.webp";
             $absolutePath = Storage::disk('public')->path($path);
+            $temporaryPath = Storage::disk('public')->path("{$directory}/{$baseName}.tmp");
 
             if (! is_dir(dirname($absolutePath))) {
                 mkdir(dirname($absolutePath), 0755, true);
             }
 
             $response = Http::timeout(60)
-                ->withOptions(['sink' => $absolutePath])
+                ->withOptions(['sink' => $temporaryPath])
                 ->get($url);
 
             if (! $response->successful()) {
-                if (is_file($absolutePath)) {
-                    unlink($absolutePath);
+                if (is_file($temporaryPath)) {
+                    unlink($temporaryPath);
                 }
 
                 return null;
             }
 
-            $contentType = $response->header('Content-Type');
-            if ($contentType) {
-                $detectedExtension = match (true) {
-                    str_contains($contentType, 'png') => 'png',
-                    str_contains($contentType, 'webp') => 'webp',
-                    default => null,
-                };
+            if ($this->convertToWebp($temporaryPath, $absolutePath)) {
+                unlink($temporaryPath);
+                chmod($absolutePath, 0644);
+                Storage::disk('public')->setVisibility($path, 'public');
 
-                if ($detectedExtension && $detectedExtension !== $extension) {
-                    $newPath = preg_replace('/\.[^.]+$/', '.'.$detectedExtension, $path);
-                    $newAbsolutePath = Storage::disk('public')->path($newPath);
-                    rename($absolutePath, $newAbsolutePath);
-                    $path = $newPath;
-                    $absolutePath = $newAbsolutePath;
-                }
+                return $path;
             }
 
-            chmod($absolutePath, 0644);
-            Storage::disk('public')->setVisibility($path, 'public');
+            $fallbackExtension = $this->imageExtension($response->header('Content-Type'), $url);
+            $fallbackPath = "{$directory}/{$baseName}.{$fallbackExtension}";
+            $fallbackAbsolutePath = Storage::disk('public')->path($fallbackPath);
+            rename($temporaryPath, $fallbackAbsolutePath);
+            chmod($fallbackAbsolutePath, 0644);
+            Storage::disk('public')->setVisibility($fallbackPath, 'public');
 
-            return $path;
+            return $fallbackPath;
         } catch (\Throwable) {
             return null;
         }
+    }
+
+    private function convertToWebp(string $sourcePath, string $destinationPath): bool
+    {
+        if (! function_exists('imagecreatefromstring') || ! function_exists('imagewebp')) {
+            return false;
+        }
+
+        $contents = file_get_contents($sourcePath);
+        if ($contents === false) {
+            return false;
+        }
+
+        $image = imagecreatefromstring($contents);
+        if (! $image) {
+            return false;
+        }
+
+        imagepalettetotruecolor($image);
+        imagealphablending($image, true);
+        imagesavealpha($image, true);
+
+        $quality = config('gopos.image_webp_quality', 88);
+        $quality = $quality === 'lossless' && defined('IMG_WEBP_LOSSLESS')
+            ? IMG_WEBP_LOSSLESS
+            : max(0, min(100, (int) $quality));
+
+        $converted = imagewebp($image, $destinationPath, $quality);
+        imagedestroy($image);
+
+        return $converted && is_file($destinationPath);
+    }
+
+    private function imageExtension(?string $contentType, string $url): string
+    {
+        if ($contentType && str_contains($contentType, 'png')) {
+            return 'png';
+        }
+
+        if ($contentType && str_contains($contentType, 'webp')) {
+            return 'webp';
+        }
+
+        $extension = strtolower(pathinfo(parse_url($url, PHP_URL_PATH) ?: '', PATHINFO_EXTENSION));
+
+        return in_array($extension, ['jpg', 'jpeg', 'png', 'webp'], true) ? $extension : 'jpg';
     }
 
     private function uniqueBaseSlug(string $value): string

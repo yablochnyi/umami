@@ -7,4 +7,5 @@ return [
     'organization_id' => env('GOPOS_ORGANIZATION_ID'),
     'timeout' => (int) env('GOPOS_TIMEOUT', 20),
     'token_cache_key' => env('GOPOS_TOKEN_CACHE_KEY', 'gopos_access_token'),
+    'image_webp_quality' => env('GOPOS_IMAGE_WEBP_QUALITY', 88),
 ];
