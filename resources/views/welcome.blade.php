@@ -29,6 +29,13 @@
     <script src="/assets/umami/landing.js?v={{ filemtime(public_path('assets/umami/landing.js')) }}" defer></script>
     <script type="application/ld+json">{!! $restaurantSchemaJson !!}</script>
 </head>
+@php
+    $cartCopy = [
+        'pl' => ['cart' => 'Koszyk', 'add' => 'Dodaj do koszyka', 'increase' => 'Zwiększ ilość', 'decrease' => 'Zmniejsz ilość'],
+        'uk' => ['cart' => 'Кошик', 'add' => 'Додати до кошика', 'increase' => 'Збільшити кількість', 'decrease' => 'Зменшити кількість'],
+        'en' => ['cart' => 'Cart', 'add' => 'Add to cart', 'increase' => 'Increase quantity', 'decrease' => 'Decrease quantity'],
+    ][$locale] ?? ['cart' => 'Koszyk', 'add' => 'Dodaj do koszyka', 'increase' => 'Zwiększ ilość', 'decrease' => 'Zmniejsz ilość'];
+@endphp
 <body
     data-background-desktop="{{ $settings['backgroundDesktop'] }}"
     data-background-mobile="{{ $settings['backgroundMobile'] }}"
@@ -37,6 +44,9 @@
     data-hero-poster="{{ $settings['heroPoster'] }}"
     data-show-photo-label="{{ $copy['showPhoto'] }}"
     data-google-analytics-id="{{ $settings['googleAnalyticsId'] }}"
+    data-cart-add-label="{{ $cartCopy['add'] }}"
+    data-cart-increase-label="{{ $cartCopy['increase'] }}"
+    data-cart-decrease-label="{{ $cartCopy['decrease'] }}"
 >
     <header class="topbar">
         <a class="brand" href="{{ route('home', ['lang' => $locale]) }}#top" aria-label="Umami Sushi & Food">
@@ -63,6 +73,14 @@
                     <a href="{{ $seo['localizedUrls'][$lang] }}" class="{{ $locale === $lang ? 'active' : '' }}" @if($locale === $lang) aria-current="page" @endif>{{ $localeLabels[$lang] }}</a>
                 @endforeach
             </nav>
+            <button class="cart-button" type="button" aria-label="{{ $cartCopy['cart'] }}">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M6.4 7.2h13.1l-1.2 7.1a2 2 0 0 1-2 1.7H8.8a2 2 0 0 1-2-1.7L5.7 4.9H3.8" />
+                    <circle cx="9.2" cy="19.4" r="1.1" />
+                    <circle cx="16.4" cy="19.4" r="1.1" />
+                </svg>
+                <span class="cart-badge" id="cartBadge" hidden>0</span>
+            </button>
             <a class="pill" href="{{ $settings['phoneHref'] }}">{{ $settings['phone'] }}</a>
         </div>
     </header>
@@ -89,9 +107,11 @@
             </div>
             <div class="best-grid">
                 @foreach($bestsellers as $dish)
-                    <a href="{{ $dish['url'] }}" class="dish-card" data-modal-card data-name="{{ $dish['name'] }}" data-category="{{ $dish['category'] }}" data-price="{{ $dish['price'] }}" data-desc="{{ $dish['description'] }}" data-image="{{ $dish['image'] }}" data-url="{{ $dish['url'] }}">
+                    <article class="dish-card" data-modal-card data-cart-id="{{ $dish['id'] }}" data-name="{{ $dish['name'] }}" data-category="{{ $dish['category'] }}" data-price="{{ $dish['price'] }}" data-desc="{{ $dish['description'] }}" data-image="{{ $dish['image'] }}" data-url="{{ $dish['url'] }}">
                         @if($dish['image'])
-                            <img src="{{ $dish['image'] }}" alt="{{ $dish['name'] }}" loading="lazy">
+                            <button class="dish-image-button" type="button" data-modal-trigger aria-label="{{ $menuDetailsLabel }}: {{ $dish['name'] }}">
+                                <img src="{{ $dish['image'] }}" alt="{{ $dish['name'] }}" loading="lazy">
+                            </button>
                         @endif
                         <div class="dish-body">
                             <div class="dish-top">
@@ -99,8 +119,19 @@
                                 <span class="price">{{ $dish['price'] }}</span>
                             </div>
                             <p class="dish-desc">{{ $dish['description'] }}</p>
+                            <div class="dish-actions">
+                                <a class="details-button" href="{{ $dish['url'] }}">{{ $menuDetailsLabel }}</a>
+                                <div class="cart-control" data-cart-control data-cart-id="{{ $dish['id'] }}" data-cart-name="{{ $dish['name'] }}" data-cart-price="{{ $dish['price'] }}" data-cart-image="{{ $dish['image'] }}">
+                                    <button class="cart-step decrease" type="button" data-cart-decrease aria-label="{{ $cartCopy['decrease'] }}">−</button>
+                                    <span class="cart-quantity" data-cart-quantity>0</span>
+                                    <button class="cart-add" type="button" data-cart-add aria-label="{{ $cartCopy['add'] }}">
+                                        <img src="/cart-svgrepo-com.svg" alt="">
+                                    </button>
+                                    <button class="cart-step increase" type="button" data-cart-increase aria-label="{{ $cartCopy['increase'] }}">+</button>
+                                </div>
+                            </div>
                         </div>
-                    </a>
+                    </article>
                 @endforeach
             </div>
         </section>
@@ -134,9 +165,11 @@
                             @if(! $loop->first) hidden @endif
                         >
                             @foreach($category['items'] as $dish)
-                                <a href="{{ $dish['url'] }}" class="dish-card menu-item" data-modal-card data-name="{{ $dish['name'] }}" data-category="{{ $dish['category'] }}" data-price="{{ $dish['price'] }}" data-desc="{{ $dish['description'] }}" data-image="{{ $dish['image'] }}" data-url="{{ $dish['url'] }}">
+                                <article class="dish-card menu-item" data-modal-card data-cart-id="{{ $dish['id'] }}" data-name="{{ $dish['name'] }}" data-category="{{ $dish['category'] }}" data-price="{{ $dish['price'] }}" data-desc="{{ $dish['description'] }}" data-image="{{ $dish['image'] }}" data-url="{{ $dish['url'] }}">
                                     @if($dish['image'])
-                                        <img src="{{ $dish['image'] }}" alt="{{ $dish['name'] }}" loading="lazy">
+                                        <button class="dish-image-button" type="button" data-modal-trigger aria-label="{{ $menuDetailsLabel }}: {{ $dish['name'] }}">
+                                            <img src="{{ $dish['image'] }}" alt="{{ $dish['name'] }}" loading="lazy">
+                                        </button>
                                     @endif
                                     <div class="dish-body">
                                         <div class="dish-top">
@@ -144,8 +177,19 @@
                                             <span class="price">{{ $dish['price'] }}</span>
                                         </div>
                                         <p class="dish-desc">{{ $dish['description'] }}</p>
+                                        <div class="dish-actions">
+                                            <a class="details-button" href="{{ $dish['url'] }}">{{ $menuDetailsLabel }}</a>
+                                            <div class="cart-control" data-cart-control data-cart-id="{{ $dish['id'] }}" data-cart-name="{{ $dish['name'] }}" data-cart-price="{{ $dish['price'] }}" data-cart-image="{{ $dish['image'] }}">
+                                                <button class="cart-step decrease" type="button" data-cart-decrease aria-label="{{ $cartCopy['decrease'] }}">−</button>
+                                                <span class="cart-quantity" data-cart-quantity>0</span>
+                                                <button class="cart-add" type="button" data-cart-add aria-label="{{ $cartCopy['add'] }}">
+                                                    <img src="/cart-svgrepo-com.svg" alt="">
+                                                </button>
+                                                <button class="cart-step increase" type="button" data-cart-increase aria-label="{{ $cartCopy['increase'] }}">+</button>
+                                            </div>
+                                        </div>
                                     </div>
-                                </a>
+                                </article>
                             @endforeach
                         </div>
                     @endforeach
@@ -253,7 +297,17 @@
                 </div>
                 <h3 id="modalTitle">{{ $copy['detailsFallback'] }}</h3>
                 <p id="modalDescription"></p>
-                <a class="pill modal-details-link" href="#" id="modalDetailsLink">{{ $menuDetailsLabel }}</a>
+                <div class="modal-actions">
+                    <div class="cart-control modal-cart-control" id="modalCartControl" data-cart-control hidden>
+                        <button class="cart-step decrease" type="button" data-cart-decrease aria-label="{{ $cartCopy['decrease'] }}">−</button>
+                        <span class="cart-quantity" data-cart-quantity>0</span>
+                        <button class="cart-add" type="button" data-cart-add aria-label="{{ $cartCopy['add'] }}">
+                            <img src="/cart-svgrepo-com.svg" alt="">
+                        </button>
+                        <button class="cart-step increase" type="button" data-cart-increase aria-label="{{ $cartCopy['increase'] }}">+</button>
+                    </div>
+                    <a class="pill modal-details-link" href="#" id="modalDetailsLink">{{ $menuDetailsLabel }}</a>
+                </div>
             </div>
         </div>
     </div>

@@ -213,6 +213,7 @@ class HomeController extends Controller
         $ogLocales = ['pl' => 'pl_PL', 'uk' => 'uk_UA', 'en' => 'en_US'];
 
         $bestsellerCards = $bestsellers->map(fn (MenuItem $dish) => [
+            'id' => $dish->id,
             'name' => $translated($dish, 'name'),
             'description' => $translated($dish, 'description', $copy['detailsFallback']),
             'category' => $dish->category ? $translated($dish->category, 'name') : '',
@@ -226,6 +227,7 @@ class HomeController extends Controller
             'name' => $translated($category, 'name'),
             'url' => $this->menuCategoryUrl($viewSettings['siteUrl'], $locale, $category),
             'items' => $category->items->map(fn (MenuItem $dish) => [
+                'id' => $dish->id,
                 'name' => $translated($dish, 'name'),
                 'description' => $translated($dish, 'description', $copy['detailsFallback']),
                 'category' => $translated($category, 'name'),

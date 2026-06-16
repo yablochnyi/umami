@@ -125,6 +125,49 @@ button {
 
 .social-link img { width: 18px; height: 18px; object-fit: contain; }
 
+.cart-button {
+    position: relative;
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(217, 69, 63, .22);
+    border-radius: 8px;
+    background: var(--charcoal);
+    color: white;
+    cursor: pointer;
+}
+
+.cart-button svg {
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    min-width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+    border: 2px solid var(--paper-solid);
+    border-radius: 999px;
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    font-weight: 800;
+}
+
 .social-buttons {
     display: flex;
     align-items: center;
@@ -339,7 +382,22 @@ h2 {
     outline-offset: 3px;
 }
 
-.dish-card img {
+.dish-image-button {
+    width: 100%;
+    display: block;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    overflow: hidden;
+}
+
+.dish-image-button:focus-visible {
+    outline: 3px solid rgba(184, 36, 33, .38);
+    outline-offset: -3px;
+}
+
+.dish-image-button img {
     width: 100%;
     flex: 0 0 auto;
     height: 218px;
@@ -348,11 +406,16 @@ h2 {
     background: #eee;
 }
 
-.best-grid .dish-card img {
+.best-grid .dish-image-button img {
     height: 270px;
 }
 
-.dish-body { padding: 16px; }
+.dish-body {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    padding: 16px;
+}
 .dish-top {
     display: flex;
     justify-content: space-between;
@@ -378,6 +441,86 @@ h2 {
     color: var(--muted);
     font-size: 14px;
     line-height: 1.5;
+}
+
+.dish-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 14px;
+}
+
+.details-button {
+    min-width: 0;
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(21, 19, 18, .12);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .64);
+    color: var(--ink);
+    cursor: pointer;
+    padding: 0 12px;
+    font-size: 13px;
+    font-weight: 780;
+}
+
+.details-button:hover {
+    border-color: rgba(217, 69, 63, .26);
+    color: var(--accent-dark);
+}
+
+.cart-control {
+    display: inline-grid;
+    grid-template-columns: 38px;
+    align-items: center;
+    gap: 6px;
+    min-height: 38px;
+}
+
+.cart-control.has-item {
+    grid-template-columns: 38px 32px 38px;
+}
+
+.cart-add,
+.cart-step {
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 800;
+}
+
+.cart-add {
+    background: var(--accent);
+    color: white;
+}
+
+.cart-add img {
+    width: 19px;
+    height: 19px;
+    object-fit: contain;
+}
+
+.cart-step {
+    background: var(--charcoal);
+    color: white;
+    font-size: 20px;
+    line-height: 1;
+}
+
+.cart-quantity {
+    min-width: 32px;
+    color: var(--ink);
+    font-weight: 850;
+    text-align: center;
 }
 
 .menu-shell {
@@ -898,7 +1041,15 @@ footer {
 .modal-content .item-meta { padding-right: 58px; }
 .modal-content h3 { margin: 0 0 8px; font-size: 28px; }
 .modal-content p { margin: 0; color: var(--muted); line-height: 1.7; white-space: pre-line; }
-.modal-details-link { margin-top: 18px; }
+.modal-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+}
+.modal-actions .cart-control { margin-top: 0; }
+.modal-details-link { margin-top: 0; }
 .close {
     position: absolute;
     top: 12px;
@@ -963,8 +1114,10 @@ footer {
         min-height: 430px;
     }
     .slider-dots { display: none; }
-    .dish-card img { height: 204px; }
-    .best-grid .dish-card img { height: 260px; }
+    .dish-image-button img { height: 204px; }
+    .best-grid .dish-image-button img { height: 260px; }
+    .dish-actions { grid-template-columns: 1fr auto; }
+    .details-button { padding: 0 10px; font-size: 12px; }
     .cookie-consent {
         right: 10px;
         bottom: 10px;
