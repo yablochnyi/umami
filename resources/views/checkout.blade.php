@@ -9,6 +9,8 @@
         'locale' => $locale,
         'background-desktop' => $settings['backgroundDesktop'],
         'background-mobile' => $settings['backgroundMobile'],
+        'ordering-open' => $settings['isOrderingOpen'] ? '1' : '0',
+        'ordering-unavailable-message' => $settings['orderingUnavailableMessage'],
         'delivery-cost' => $settings['deliveryCost'],
         'free-delivery-from' => $settings['freeDeliveryFrom'],
         'minimum-delivery-amount' => $settings['minimumDeliveryAmount'],

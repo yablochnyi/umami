@@ -37,8 +37,16 @@ class CheckoutController extends Controller
     public function submit(Request $request, GoPosOrderSender $sender, ?string $locale = null)
     {
         $locale = $this->locale($locale);
+        app()->setLocale($locale);
+
         $copy = $this->copy($locale);
         $settings = $this->settings();
+
+        if (! $settings['isOrderingOpen']) {
+            return back()
+                ->withInput()
+                ->with('checkout_error', $settings['orderingUnavailableMessage']);
+        }
 
         $data = $request->validate([
             'cart_json' => ['required', 'string'],
@@ -256,6 +264,8 @@ class CheckoutController extends Controller
             'phone' => $settings['phone'] ?? '+48 513 233 722',
             'phoneHref' => $settings['phone_href'] ?? 'tel:+48513233722',
             'address' => $settings['address'] ?? 'Toruń, ul. Gen. Andersa 72',
+            'isOrderingOpen' => $this->isOrderingOpen($settings['opening_time'] ?? '12:00', $settings['closing_time'] ?? '20:30'),
+            'orderingUnavailableMessage' => $this->orderingUnavailableMessage($settings['opening_time'] ?? '12:00', $settings['closing_time'] ?? '20:30'),
             'deliveryCost' => $this->money($settings['delivery_cost'] ?? '0'),
             'freeDeliveryFrom' => $this->money($settings['free_delivery_from'] ?? '0'),
             'minimumDeliveryAmount' => $this->money($settings['minimum_delivery_amount'] ?? '0'),
@@ -517,6 +527,36 @@ class CheckoutController extends Controller
         $normalized = str_replace(',', '.', (string) $amount);
 
         return max(0, (float) preg_replace('/[^0-9.]/', '', $normalized));
+    }
+
+    private function normalizeTime(?string $time): string
+    {
+        if (preg_match('/^(\d{1,2}):(\d{2})/', (string) $time, $matches)) {
+            return sprintf('%02d:%02d', min(23, (int) $matches[1]), min(59, (int) $matches[2]));
+        }
+
+        return '12:00';
+    }
+
+    private function isOrderingOpen(?string $openingTime, ?string $closingTime): bool
+    {
+        $openingTime = $this->normalizeTime($openingTime);
+        $closingTime = $this->normalizeTime($closingTime);
+        $now = CarbonImmutable::now('Europe/Warsaw');
+        $open = CarbonImmutable::createFromFormat('Y-m-d H:i', $now->format('Y-m-d').' '.$openingTime, 'Europe/Warsaw');
+        $close = CarbonImmutable::createFromFormat('Y-m-d H:i', $now->format('Y-m-d').' '.$closingTime, 'Europe/Warsaw');
+
+        return $open && $close && $now->betweenIncluded($open, $close);
+    }
+
+    private function orderingUnavailableMessage(?string $openingTime, ?string $closingTime): string
+    {
+        $message = trans('site.cart.ordering_unavailable');
+
+        return strtr($message, [
+            ':open' => $this->normalizeTime($openingTime),
+            ':close' => $this->normalizeTime($closingTime),
+        ]);
     }
 
     private function formatPrice(float $amount): string

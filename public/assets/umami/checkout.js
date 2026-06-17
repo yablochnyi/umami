@@ -4,6 +4,8 @@ const mobileBackground = document.body.dataset.backgroundMobile;
 const deliveryCost = Number.parseFloat(document.body.dataset.deliveryCost || '0') || 0;
 const freeDeliveryFrom = Number.parseFloat(document.body.dataset.freeDeliveryFrom || '0') || 0;
 const minimumDeliveryAmount = Number.parseFloat(document.body.dataset.minimumDeliveryAmount || '0') || 0;
+const orderingOpen = document.body.dataset.orderingOpen !== '0';
+const orderingUnavailableMessage = document.body.dataset.orderingUnavailableMessage || '';
 const copy = {
     emptyCart: document.body.dataset.emptyCart || 'Koszyk jest pusty.',
     freeMissing: document.body.dataset.freeMissing || '',
@@ -84,7 +86,8 @@ function renderCart() {
 
     itemsNode.innerHTML = '';
     emptyNode.hidden = items.length > 0;
-    submitButton.disabled = items.length === 0
+    submitButton.disabled = !orderingOpen
+        || items.length === 0
         || (deliveryType() === 'delivery' && minimumDeliveryAmount > 0 && subtotal < minimumDeliveryAmount);
     cartJsonNode.value = JSON.stringify(items.map((item) => ({
         id: item.id,
@@ -140,6 +143,13 @@ function renderHints(subtotal, itemCount) {
     const freeNode = document.getElementById('freeDeliveryHint');
     const minimumNode = document.getElementById('minimumDeliveryHint');
     const isDelivery = deliveryType() === 'delivery';
+
+    if (!orderingOpen) {
+        freeNode.hidden = true;
+        minimumNode.textContent = orderingUnavailableMessage;
+        minimumNode.hidden = false;
+        return;
+    }
 
     if (itemCount === 0 || freeDeliveryFrom <= 0 || !isDelivery) {
         freeNode.hidden = true;
@@ -305,6 +315,12 @@ document.querySelectorAll('input[name="delivery_type"], input[name="fulfillment_
 document.getElementById('checkoutForm').addEventListener('submit', (event) => {
     const items = sortedItems(readCart());
     const subtotal = cartSubtotal(items);
+
+    if (!orderingOpen) {
+        event.preventDefault();
+        alert(orderingUnavailableMessage);
+        return;
+    }
 
     if (items.length === 0) {
         event.preventDefault();
