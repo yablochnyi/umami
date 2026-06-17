@@ -42,15 +42,12 @@ class LegalPageController extends Controller
 
         return view('legal', [
             'locale' => $locale,
-            'localeLabels' => ['pl' => 'PL', 'uk' => 'UA', 'en' => 'EN'],
             'title' => $content['title'],
             'description' => $content['description'],
             'updatedAt' => $content['updatedAt'],
             'sections' => $content['sections'],
-            'legalLinks' => $this->legalLinks($siteUrl, $locale),
             'localizedUrls' => $localizedUrls,
             'canonicalUrl' => $localizedUrls[$locale],
-            'homeUrl' => $locale === 'pl' ? $siteUrl.'/' : $siteUrl.'/'.$locale,
         ]);
     }
 
@@ -87,34 +84,6 @@ class LegalPageController extends Controller
     {
         return collect(self::SUPPORTED_LOCALES)
             ->mapWithKeys(fn (string $locale) => [$locale => self::localizedPageUrl($siteUrl, $pageKey, $locale)])
-            ->all();
-    }
-
-    private function legalLinks(string $siteUrl, string $locale): array
-    {
-        $labels = [
-            'pl' => [
-                'privacy' => 'Polityka prywatności',
-                'cookies' => 'Polityka plików cookie',
-                'terms' => 'Regulamin',
-            ],
-            'uk' => [
-                'privacy' => 'Політика конфіденційності',
-                'cookies' => 'Політика cookie',
-                'terms' => 'Правила користування',
-            ],
-            'en' => [
-                'privacy' => 'Privacy policy',
-                'cookies' => 'Cookie policy',
-                'terms' => 'Terms',
-            ],
-        ];
-
-        return collect(array_keys(self::SLUGS))
-            ->map(fn (string $pageKey) => [
-                'label' => $labels[$locale][$pageKey],
-                'url' => self::localizedPageUrl($siteUrl, $pageKey, $locale),
-            ])
             ->all();
     }
 

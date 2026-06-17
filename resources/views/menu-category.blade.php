@@ -1,38 +1,16 @@
-<!DOCTYPE html>
-<html lang="{{ $locale }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $title }}</title>
-    <meta name="description" content="{{ $description }}">
-    <meta name="robots" content="index, follow, max-image-preview:large">
-    <link rel="canonical" href="{{ $canonicalUrl }}">
-    @foreach($localizedUrls as $lang => $url)
-        <link rel="alternate" hreflang="{{ $lang }}" href="{{ $url }}">
-    @endforeach
-    <link rel="alternate" hreflang="x-default" href="{{ $localizedUrls['pl'] }}">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="{{ $title }}">
-    <meta property="og:description" content="{{ $description }}">
-    <meta property="og:url" content="{{ $canonicalUrl }}">
-    <link rel="stylesheet" href="/assets/umami/landing.css">
+@extends('layouts.site', [
+    'metaTitle' => $title,
+    'metaDescription' => $description,
+    'canonicalUrl' => $canonicalUrl,
+    'localizedUrls' => $localizedUrls,
+])
+
+@push('head')
     <script type="application/ld+json">{!! $schemaJson !!}</script>
-</head>
-<body>
-    <header class="topbar legal-topbar">
-        <a class="brand" href="{{ $homeUrl }}" aria-label="Umami Sushi & Food">
-            <img src="/storage/umami/logo.jpg" alt="Umami logo">
-            <span>Umami Sushi & Food</span>
-        </a>
-        <div class="top-actions">
-            <nav class="language-switcher" aria-label="Language switcher">
-                @foreach($localizedUrls as $lang => $url)
-                    <a href="{{ $url }}" class="{{ $locale === $lang ? 'active' : '' }}" @if($locale === $lang) aria-current="page" @endif>{{ $localeLabels[$lang] }}</a>
-                @endforeach
-            </nav>
-            <a class="pill" href="{{ $menuUrl }}">Menu</a>
-        </div>
-    </header>
+@endpush
+
+@section('content')
+    <div class="cart-notice" id="cartNotice" hidden></div>
 
     <main class="menu-page">
         <section class="menu-seo-head">
@@ -78,14 +56,4 @@
             </section>
         @endif
     </main>
-
-    <footer>
-        <div class="footer-links">
-            @foreach($legalLinks as $link)
-                <a href="{{ $link['url'] }}">{{ $link['label'] }}</a>
-            @endforeach
-        </div>
-        © 2026 Umami Sushi & Food Toruń.
-    </footer>
-</body>
-</html>
+@endsection

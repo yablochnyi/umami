@@ -9,6 +9,7 @@ const orderingUnavailableMessage = document.body.dataset.orderingUnavailableMess
 const freeDeliveryFrom = Number.parseFloat(document.body.dataset.freeDeliveryFrom || '0') || 0;
 const freeDeliveryMissingTemplate = document.body.dataset.cartFreeDeliveryMissing || '';
 const freeDeliveryReadyText = document.body.dataset.cartFreeDeliveryReady || '';
+const checkoutUrl = document.body.dataset.checkoutUrl || '/koszyk';
 const cookieConsentKey = 'umami_cookie_consent';
 const cartStorageKey = 'umami_cart';
 let cart = readCart();
@@ -376,6 +377,11 @@ document.getElementById('cartOpen')?.addEventListener('click', () => {
     }
 });
 document.getElementById('cartClose')?.addEventListener('click', closeCartModal);
+document.getElementById('cartCheckout')?.addEventListener('click', () => {
+    if (sortedCartItems().length > 0) {
+        window.location.href = checkoutUrl;
+    }
+});
 document.addEventListener('click', (event) => {
     const cartWrap = event.target.closest('.cart-popover-wrap, .cart-popover');
     const cartPopover = document.getElementById('cartPopover');
@@ -470,6 +476,8 @@ const modalDetailsLink = document.getElementById('modalDetailsLink');
 const modalCartControl = document.getElementById('modalCartControl');
 
 function openModalCard(card) {
+    if (!modal || !modalTitle || !modalCategory || !modalPrice || !modalDescription || !modalImage) return;
+
     modalTitle.textContent = card.dataset.name || '';
     modalCategory.textContent = card.dataset.category || '';
     modalPrice.textContent = card.dataset.price || '';
@@ -541,12 +549,14 @@ document.querySelectorAll('[data-modal-card]').forEach((card) => {
 });
 
 function closeModal() {
+    if (!modal) return;
+
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
 }
 
-document.getElementById('modalClose').addEventListener('click', closeModal);
-modal.addEventListener('click', (event) => {
+document.getElementById('modalClose')?.addEventListener('click', closeModal);
+modal?.addEventListener('click', (event) => {
     if (event.target.id === 'modal') closeModal();
 });
 document.addEventListener('keydown', (event) => {
@@ -576,6 +586,8 @@ const galleryDots = document.getElementById('galleryDots');
 let activeSlide = 0;
 
 gallerySlides.forEach((slide, index) => {
+    if (!galleryDots) return;
+
     const dot = document.createElement('button');
     dot.type = 'button';
     dot.setAttribute('aria-label', (document.body.dataset.showPhotoLabel || 'Show photo') + ' ' + (index + 1));
@@ -587,17 +599,17 @@ gallerySlides.forEach((slide, index) => {
 });
 
 function setSlide(index) {
-    if (!gallerySlides.length) return;
+    if (!gallerySlides.length || !galleryTrack || !galleryDots) return;
     activeSlide = (index + gallerySlides.length) % gallerySlides.length;
     galleryTrack.style.transform = 'translateX(-' + (activeSlide * 100) + '%)';
     galleryDots.querySelectorAll('button').forEach((dot, dotIndex) => dot.classList.toggle('active', dotIndex === activeSlide));
 }
 
-document.getElementById('galleryPrev').addEventListener('click', (event) => {
+document.getElementById('galleryPrev')?.addEventListener('click', (event) => {
     event.stopPropagation();
     setSlide(activeSlide - 1);
 });
-document.getElementById('galleryNext').addEventListener('click', (event) => {
+document.getElementById('galleryNext')?.addEventListener('click', (event) => {
     event.stopPropagation();
     setSlide(activeSlide + 1);
 });

@@ -1,114 +1,34 @@
-<!DOCTYPE html>
-<html lang="{{ $locale }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $copy['title'] }}</title>
-    <meta name="description" content="{{ $copy['metaDescription'] }}">
-    <meta name="robots" content="index, follow, max-image-preview:large">
-    <link rel="canonical" href="{{ $seo['canonicalUrl'] }}">
-    @foreach($seo['localizedUrls'] as $lang => $url)
-        <link rel="alternate" hreflang="{{ $lang }}" href="{{ $url }}">
-    @endforeach
-    <link rel="alternate" hreflang="x-default" href="{{ $seo['xDefaultUrl'] }}">
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="{{ $seo['ogLocale'] }}">
-    <meta property="og:site_name" content="Umami Sushi & Food">
-    <meta property="og:title" content="{{ $copy['title'] }}">
-    <meta property="og:description" content="{{ $copy['metaDescription'] }}">
-    <meta property="og:url" content="{{ $seo['canonicalUrl'] }}">
-    <meta property="og:image" content="{{ $seo['ogImage'] }}">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ $copy['title'] }}">
-    <meta name="twitter:description" content="{{ $copy['metaDescription'] }}">
-    <meta name="twitter:image" content="{{ $seo['ogImage'] }}">
-    <link rel="icon" href="{{ $settings['logo'] }}">
+@extends('layouts.site', [
+    'metaTitle' => $copy['title'],
+    'metaDescription' => $copy['metaDescription'],
+    'canonicalUrl' => $seo['canonicalUrl'],
+    'localizedUrls' => $seo['localizedUrls'],
+    'ogLocale' => $seo['ogLocale'],
+    'ogImage' => $seo['ogImage'],
+    'bodyData' => [
+        'background-desktop' => $settings['backgroundDesktop'],
+        'background-mobile' => $settings['backgroundMobile'],
+        'hero-video-desktop' => $settings['heroVideoDesktop'],
+        'hero-video-mobile' => $settings['heroVideoMobile'],
+        'hero-poster' => $settings['heroPoster'],
+        'show-photo-label' => $copy['showPhoto'],
+        'google-analytics-id' => $settings['googleAnalyticsId'],
+        'delivery-cost' => $settings['deliveryCost'],
+        'free-delivery-from' => $settings['freeDeliveryFrom'],
+        'minimum-delivery-amount' => $settings['minimumDeliveryAmount'],
+    ],
+])
+
+@push('preload')
     <link rel="preload" as="image" href="{{ $settings['heroPoster'] }}" fetchpriority="high">
     <link rel="preload" as="image" href="{{ $settings['backgroundMobile'] }}" media="(max-width: 900px)">
-    <link rel="stylesheet" href="/assets/umami/landing.css?v={{ filemtime(public_path('assets/umami/landing.css')) }}">
-    <script src="/assets/umami/landing.js?v={{ filemtime(public_path('assets/umami/landing.js')) }}" defer></script>
-    <script type="application/ld+json">{!! $restaurantSchemaJson !!}</script>
-</head>
-@php
-    $cartCopy = [
-        'pl' => ['cart' => 'Koszyk', 'add' => 'Dodaj do koszyka', 'increase' => 'Zwiększ ilość', 'decrease' => 'Zmniejsz ilość', 'remove' => 'Usuń z koszyka', 'empty' => 'Koszyk jest pusty.', 'total' => 'Razem', 'checkout' => 'Przejdź do koszyka', 'freeDeliveryMissing' => 'Do darmowej dostawy brakuje :amount', 'freeDeliveryReady' => 'Masz darmową dostawę'],
-        'uk' => ['cart' => 'Кошик', 'add' => 'Додати до кошика', 'increase' => 'Збільшити кількість', 'decrease' => 'Зменшити кількість', 'remove' => 'Видалити з кошика', 'empty' => 'Кошик порожній.', 'total' => 'Разом', 'checkout' => 'Перейти до кошика', 'freeDeliveryMissing' => 'До безкоштовної доставки залишилось :amount', 'freeDeliveryReady' => 'У вас безкоштовна доставка'],
-        'en' => ['cart' => 'Cart', 'add' => 'Add to cart', 'increase' => 'Increase quantity', 'decrease' => 'Decrease quantity', 'remove' => 'Remove from cart', 'empty' => 'Your cart is empty.', 'total' => 'Total', 'checkout' => 'Go to cart', 'freeDeliveryMissing' => ':amount left for free delivery', 'freeDeliveryReady' => 'You have free delivery'],
-    ][$locale] ?? ['cart' => 'Koszyk', 'add' => 'Dodaj do koszyka', 'increase' => 'Zwiększ ilość', 'decrease' => 'Zmniejsz ilość', 'remove' => 'Usuń z koszyka', 'empty' => 'Koszyk jest pusty.', 'total' => 'Razem', 'checkout' => 'Przejdź do koszyka', 'freeDeliveryMissing' => 'Do darmowej dostawy brakuje :amount', 'freeDeliveryReady' => 'Masz darmową dostawę'];
-@endphp
-<body
-    data-background-desktop="{{ $settings['backgroundDesktop'] }}"
-    data-background-mobile="{{ $settings['backgroundMobile'] }}"
-    data-hero-video-desktop="{{ $settings['heroVideoDesktop'] }}"
-    data-hero-video-mobile="{{ $settings['heroVideoMobile'] }}"
-    data-hero-poster="{{ $settings['heroPoster'] }}"
-    data-show-photo-label="{{ $copy['showPhoto'] }}"
-    data-google-analytics-id="{{ $settings['googleAnalyticsId'] }}"
-    data-ordering-open="{{ $settings['isOrderingOpen'] ? '1' : '0' }}"
-    data-ordering-unavailable-message="{{ $settings['orderingUnavailableMessage'] }}"
-    data-delivery-cost="{{ $settings['deliveryCost'] }}"
-    data-free-delivery-from="{{ $settings['freeDeliveryFrom'] }}"
-    data-cart-add-label="{{ $cartCopy['add'] }}"
-    data-cart-increase-label="{{ $cartCopy['increase'] }}"
-    data-cart-decrease-label="{{ $cartCopy['decrease'] }}"
-    data-cart-remove-label="{{ $cartCopy['remove'] }}"
-    data-cart-empty-label="{{ $cartCopy['empty'] }}"
-    data-cart-free-delivery-missing="{{ $cartCopy['freeDeliveryMissing'] }}"
-    data-cart-free-delivery-ready="{{ $cartCopy['freeDeliveryReady'] }}"
->
-    <header class="topbar">
-        <a class="brand" href="{{ route('home', ['lang' => $locale]) }}#top" aria-label="Umami Sushi & Food">
-            <img src="{{ $settings['logo'] }}" alt="Umami logo">
-            <span>Umami Sushi & Food</span>
-        </a>
-        <nav class="nav" aria-label="Główna nawigacja">
-            <a href="#bestsellers">{{ $copy['navBestsellers'] }}</a>
-            <a href="#menu">{{ $copy['navMenu'] }}</a>
-            <a href="#about">{{ $copy['navAbout'] }}</a>
-            <a href="#gallery">{{ $copy['navGallery'] }}</a>
-            <a href="#contact">{{ $copy['navContact'] }}</a>
-        </nav>
-        <div class="top-actions">
-            @foreach($socialLinks as $link)
-                <a class="social-link" href="{{ $link->url }}" target="_blank" rel="noopener" aria-label="{{ $link->label }}">
-                    @if($link->icon)
-                        <img src="{{ $link->icon }}" alt="" width="18" height="18">
-                    @endif
-                </a>
-            @endforeach
-            <nav class="language-switcher" aria-label="Language switcher">
-                @foreach($supportedLocales as $lang)
-                    <a href="{{ $seo['localizedUrls'][$lang] }}" class="{{ $locale === $lang ? 'active' : '' }}" @if($locale === $lang) aria-current="page" @endif>{{ $localeLabels[$lang] }}</a>
-                @endforeach
-            </nav>
-            <div class="cart-popover-wrap">
-                <button class="cart-button" type="button" id="cartOpen" aria-label="{{ $cartCopy['cart'] }}" aria-controls="cartPopover" aria-expanded="false">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M6.4 7.2h13.1l-1.2 7.1a2 2 0 0 1-2 1.7H8.8a2 2 0 0 1-2-1.7L5.7 4.9H3.8" />
-                        <circle cx="9.2" cy="19.4" r="1.1" />
-                        <circle cx="16.4" cy="19.4" r="1.1" />
-                    </svg>
-                    <span class="cart-badge" id="cartBadge" hidden>0</span>
-                </button>
-                <div class="cart-popover" id="cartPopover" aria-labelledby="cartOpen" hidden>
-                    <div class="cart-popover-head">
-                        <h3 id="cartPopoverTitle">{{ $cartCopy['cart'] }}</h3>
-                        <button class="cart-popover-close" type="button" aria-label="{{ $copy['close'] }}" id="cartClose">×</button>
-                    </div>
-                    <div class="cart-items" id="cartItems"></div>
-                    <p class="cart-empty" id="cartEmpty" hidden>{{ $cartCopy['empty'] }}</p>
-                    <p class="cart-free-delivery" id="cartFreeDelivery" hidden></p>
-                    <div class="cart-summary">
-                        <span>{{ $cartCopy['total'] }}</span>
-                        <strong id="cartTotal">0 zł</strong>
-                    </div>
-                    <button class="pill cart-checkout" type="button" id="cartCheckout">{{ $cartCopy['checkout'] }}</button>
-                </div>
-            </div>
-            <a class="pill" href="{{ $settings['phoneHref'] }}">{{ $settings['phone'] }}</a>
-        </div>
-    </header>
+@endpush
 
+@push('head')
+    <script type="application/ld+json">{!! $restaurantSchemaJson !!}</script>
+@endpush
+
+@section('content')
     <main id="top">
         <section class="hero">
             <video class="bg-video" autoplay muted loop playsinline poster="{{ $settings['heroPoster'] }}">
@@ -146,12 +66,12 @@
                             <div class="dish-actions">
                                 <a class="details-button" href="{{ $dish['url'] }}">{{ $menuDetailsLabel }}</a>
                                 <div class="cart-control" data-cart-control data-cart-id="{{ $dish['id'] }}" data-cart-name="{{ $dish['name'] }}" data-cart-price="{{ $dish['price'] }}" data-cart-image="{{ $dish['image'] }}">
-                                    <button class="cart-step decrease" type="button" data-cart-decrease aria-label="{{ $cartCopy['decrease'] }}">−</button>
+                                    <button class="cart-step decrease" type="button" data-cart-decrease aria-label="{{ trans('site.cart.decrease') }}">−</button>
                                     <span class="cart-quantity" data-cart-quantity>0</span>
-                                    <button class="cart-add" type="button" data-cart-add aria-label="{{ $cartCopy['add'] }}">
+                                    <button class="cart-add" type="button" data-cart-add aria-label="{{ trans('site.cart.add') }}">
                                         <img src="/cart-svgrepo-com.svg" alt="">
                                     </button>
-                                    <button class="cart-step increase" type="button" data-cart-increase aria-label="{{ $cartCopy['increase'] }}">+</button>
+                                    <button class="cart-step increase" type="button" data-cart-increase aria-label="{{ trans('site.cart.increase') }}">+</button>
                                 </div>
                             </div>
                         </div>
@@ -204,12 +124,12 @@
                                         <div class="dish-actions">
                                             <a class="details-button" href="{{ $dish['url'] }}">{{ $menuDetailsLabel }}</a>
                                             <div class="cart-control" data-cart-control data-cart-id="{{ $dish['id'] }}" data-cart-name="{{ $dish['name'] }}" data-cart-price="{{ $dish['price'] }}" data-cart-image="{{ $dish['image'] }}">
-                                                <button class="cart-step decrease" type="button" data-cart-decrease aria-label="{{ $cartCopy['decrease'] }}">−</button>
+                                                <button class="cart-step decrease" type="button" data-cart-decrease aria-label="{{ trans('site.cart.decrease') }}">−</button>
                                                 <span class="cart-quantity" data-cart-quantity>0</span>
-                                                <button class="cart-add" type="button" data-cart-add aria-label="{{ $cartCopy['add'] }}">
+                                                <button class="cart-add" type="button" data-cart-add aria-label="{{ trans('site.cart.add') }}">
                                                     <img src="/cart-svgrepo-com.svg" alt="">
                                                 </button>
-                                                <button class="cart-step increase" type="button" data-cart-increase aria-label="{{ $cartCopy['increase'] }}">+</button>
+                                                <button class="cart-step increase" type="button" data-cart-increase aria-label="{{ trans('site.cart.increase') }}">+</button>
                                             </div>
                                         </div>
                                     </div>
@@ -290,15 +210,9 @@
         </section>
     </main>
 
-    <footer>
-        <div class="footer-links">
-            @foreach($legalLinks as $link)
-                <a href="{{ $link['url'] }}">{{ $link['label'] }}</a>
-            @endforeach
-        </div>
-        © 2026 Umami Sushi & Food Toruń.
-    </footer>
+@endsection
 
+@section('afterFooter')
     <section class="cookie-consent" id="cookieConsent" aria-labelledby="cookieConsentTitle" hidden>
         <div>
             <h2 id="cookieConsentTitle">{{ $cookieConsent['title'] }}</h2>
@@ -323,12 +237,12 @@
                 <p id="modalDescription"></p>
                 <div class="modal-actions">
                     <div class="cart-control modal-cart-control" id="modalCartControl" data-cart-control hidden>
-                        <button class="cart-step decrease" type="button" data-cart-decrease aria-label="{{ $cartCopy['decrease'] }}">−</button>
+                        <button class="cart-step decrease" type="button" data-cart-decrease aria-label="{{ trans('site.cart.decrease') }}">−</button>
                         <span class="cart-quantity" data-cart-quantity>0</span>
-                        <button class="cart-add" type="button" data-cart-add aria-label="{{ $cartCopy['add'] }}">
+                        <button class="cart-add" type="button" data-cart-add aria-label="{{ trans('site.cart.add') }}">
                             <img src="/cart-svgrepo-com.svg" alt="">
                         </button>
-                        <button class="cart-step increase" type="button" data-cart-increase aria-label="{{ $cartCopy['increase'] }}">+</button>
+                        <button class="cart-step increase" type="button" data-cart-increase aria-label="{{ trans('site.cart.increase') }}">+</button>
                     </div>
                     <a class="pill modal-details-link" href="#" id="modalDetailsLink">{{ $menuDetailsLabel }}</a>
                 </div>
@@ -337,5 +251,4 @@
     </div>
 
     <div class="cart-notice" id="cartNotice" role="status" aria-live="polite" hidden></div>
-</body>
-</html>
+@endsection

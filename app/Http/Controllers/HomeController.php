@@ -145,6 +145,7 @@ class HomeController extends Controller
             'orderingUnavailableMessage' => $this->orderingUnavailableMessage($locale, $openingTime, $closingTime),
             'deliveryCost' => $this->normalizeMoney($settings['delivery_cost'] ?? '0'),
             'freeDeliveryFrom' => $this->normalizeMoney($settings['free_delivery_from'] ?? '0'),
+            'minimumDeliveryAmount' => $this->normalizeMoney($settings['minimum_delivery_amount'] ?? '0'),
         ];
 
         $localizedUrls = collect($supportedLocales)
@@ -222,7 +223,6 @@ class HomeController extends Controller
             ],
         ];
 
-        $localeLabels = ['pl' => 'PL', 'uk' => 'UA', 'en' => 'EN'];
         $ogLocales = ['pl' => 'pl_PL', 'uk' => 'uk_UA', 'en' => 'en_US'];
 
         $bestsellerCards = $bestsellers->map(fn (MenuItem $dish) => [
@@ -262,17 +262,14 @@ class HomeController extends Controller
 
         return view('welcome', [
             'locale' => $locale,
-            'supportedLocales' => $supportedLocales,
-            'localeLabels' => $localeLabels,
             'copy' => $copy,
             'settings' => $viewSettings,
             'categories' => $categoryGroups,
             'bestsellers' => $bestsellerCards,
             'galleryImages' => $gallery,
             'socialLinks' => $socialLinks,
-            'cookieConsent' => $this->cookieConsentCopy($locale),
-            'legalLinks' => $this->legalLinks($viewSettings['siteUrl'], $locale),
-            'menuDetailsLabel' => $this->menuDetailsLabel($locale),
+            'cookieConsent' => trans('site.cookie'),
+            'menuDetailsLabel' => trans('site.ui.details'),
             'seo' => [
                 'canonicalUrl' => $canonicalUrl,
                 'localizedUrls' => $localizedUrls,
@@ -291,64 +288,6 @@ class HomeController extends Controller
             : $siteUrl.'/'.$locale;
     }
 
-    /**
-     * Cookie consent copy is intentionally kept outside the content seeder so the banner
-     * stays available even before optional site content is imported.
-     */
-    private function cookieConsentCopy(string $locale): array
-    {
-        $copy = [
-            'pl' => [
-                'title' => 'Prywatność i cookies',
-                'text' => 'Dbamy o komfort korzystania ze strony. Niezbędne pliki cookie pomagają jej działać poprawnie, a za Twoją zgodą możemy korzystać z analityki, aby lepiej rozumieć zainteresowanie naszym menu.',
-                'accept' => 'Zgadzam się',
-                'decline' => 'Tylko niezbędne',
-            ],
-            'uk' => [
-                'title' => 'Приватність і cookies',
-                'text' => 'Ми дбаємо про зручність користування сайтом. Необхідні cookie допомагають йому працювати правильно, а за вашою згодою ми можемо використовувати аналітику, щоб краще розуміти інтерес до нашого меню.',
-                'accept' => 'Погоджуюся',
-                'decline' => 'Лише необхідні',
-            ],
-            'en' => [
-                'title' => 'Privacy and cookies',
-                'text' => 'We care about a smooth website experience. Essential cookies help the site work properly, and with your consent we may use analytics to better understand interest in our menu.',
-                'accept' => 'I agree',
-                'decline' => 'Essential only',
-            ],
-        ];
-
-        return $copy[$locale] ?? $copy['pl'];
-    }
-
-    private function legalLinks(string $siteUrl, string $locale): array
-    {
-        $links = [
-            'pl' => [
-                ['label' => 'Polityka prywatności', 'path' => '/polityka-prywatnosci'],
-                ['label' => 'Polityka plików cookie', 'path' => '/polityka-plikow-cookie'],
-                ['label' => 'Regulamin', 'path' => '/regulamin'],
-            ],
-            'uk' => [
-                ['label' => 'Політика конфіденційності', 'path' => '/uk/polityka-konfidentsiynosti'],
-                ['label' => 'Політика cookie', 'path' => '/uk/polityka-cookie'],
-                ['label' => 'Правила користування', 'path' => '/uk/pravila-korystuvannya'],
-            ],
-            'en' => [
-                ['label' => 'Privacy policy', 'path' => '/en/privacy-policy'],
-                ['label' => 'Cookie policy', 'path' => '/en/cookie-policy'],
-                ['label' => 'Terms', 'path' => '/en/terms'],
-            ],
-        ];
-
-        return collect($links[$locale] ?? $links['pl'])
-            ->map(fn (array $link) => [
-                'label' => $link['label'],
-                'url' => $link['path'],
-            ])
-            ->all();
-    }
-
     private function menuCategoryUrl(string $siteUrl, string $locale, MenuCategory $category): string
     {
         $prefix = $locale === 'pl' ? '' : '/'.$locale;
@@ -359,15 +298,6 @@ class HomeController extends Controller
     private function menuItemUrl(string $siteUrl, string $locale, MenuCategory $category, MenuItem $item): string
     {
         return $this->menuCategoryUrl($siteUrl, $locale, $category).'/'.$item->slug;
-    }
-
-    private function menuDetailsLabel(string $locale): string
-    {
-        return [
-            'pl' => 'Zobacz szczegóły',
-            'uk' => 'Детальніше',
-            'en' => 'View details',
-        ][$locale] ?? 'Zobacz szczegóły';
     }
 
     private function normalizeTime(?string $time): string

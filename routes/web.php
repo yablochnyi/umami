@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LegalPageController;
 use App\Http\Controllers\MenuPageController;
@@ -33,6 +34,15 @@ Route::get('/robots.txt', function () {
         VerifyCsrfToken::class,
     ])
     ->name('robots');
+Route::get('/koszyk', [CheckoutController::class, 'show'])->name('checkout');
+Route::post('/koszyk', [CheckoutController::class, 'submit'])->name('checkout.submit');
+Route::get('/api/torun-streets', [CheckoutController::class, 'streetAutocomplete'])->name('checkout.street-autocomplete');
+Route::get('/{locale}/koszyk', [CheckoutController::class, 'show'])
+    ->whereIn('locale', ['uk', 'en'])
+    ->name('checkout.localized');
+Route::post('/{locale}/koszyk', [CheckoutController::class, 'submit'])
+    ->whereIn('locale', ['uk', 'en'])
+    ->name('checkout.submit.localized');
 Route::get('/menu/{categorySlug}', [MenuPageController::class, 'category'])
     ->name('menu.category');
 Route::get('/menu/{categorySlug}/{itemSlug}', [MenuPageController::class, 'item'])

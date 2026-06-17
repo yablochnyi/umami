@@ -36,7 +36,7 @@ class SiteSettings extends Page
     {
         $settings = SiteSetting::query()
             ->whereIn('key', ['opening_time', 'closing_time'])
-            ->orWhereIn('key', ['delivery_cost', 'free_delivery_from'])
+            ->orWhereIn('key', ['delivery_cost', 'free_delivery_from', 'minimum_delivery_amount'])
             ->pluck('value', 'key');
 
         $this->form->fill([
@@ -44,6 +44,7 @@ class SiteSettings extends Page
             'closing_time' => $settings['closing_time'] ?? '20:30',
             'delivery_cost' => $settings['delivery_cost'] ?? '0',
             'free_delivery_from' => $settings['free_delivery_from'] ?? '0',
+            'minimum_delivery_amount' => $settings['minimum_delivery_amount'] ?? '0',
         ]);
     }
 
@@ -85,8 +86,14 @@ class SiteSettings extends Page
                             ->minValue(0)
                             ->suffix('zł')
                             ->required(),
+                        TextInput::make('minimum_delivery_amount')
+                            ->label('Minimalna kwota dostawy')
+                            ->numeric()
+                            ->minValue(0)
+                            ->suffix('zł')
+                            ->required(),
                     ])
-                    ->columns(2),
+                    ->columns(3),
             ]);
     }
 
@@ -116,6 +123,7 @@ class SiteSettings extends Page
         $this->saveSetting('closing_time', 'Otwarte do', $data['closing_time']);
         $this->saveSetting('delivery_cost', 'Koszt dostawy', (string) $data['delivery_cost'], 'number', 22);
         $this->saveSetting('free_delivery_from', 'Darmowa dostawa od', (string) $data['free_delivery_from'], 'number', 23);
+        $this->saveSetting('minimum_delivery_amount', 'Minimalna kwota dostawy', (string) $data['minimum_delivery_amount'], 'number', 24);
 
         Notification::make()
             ->success()

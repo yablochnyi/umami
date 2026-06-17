@@ -38,6 +38,15 @@ class GoPosClient
         return $response->json() ?? [];
     }
 
+    public function put(string $path, array $payload = []): array
+    {
+        $response = $this->sendWithFreshToken('put', $path, $payload);
+
+        $response->throw();
+
+        return $response->json() ?? [];
+    }
+
     private function sendWithFreshToken(string $method, string $path, array $data): \Illuminate\Http\Client\Response
     {
         $response = $this->http()

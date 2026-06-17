@@ -38,7 +38,6 @@ class MenuPageController extends Controller
 
         return response()->view('menu-category', [
             'locale' => $locale,
-            'localeLabels' => $this->localeLabels(),
             'title' => $title,
             'description' => $description,
             'category' => $category,
@@ -49,9 +48,6 @@ class MenuPageController extends Controller
             'items' => $items,
             'localizedUrls' => $localizedUrls,
             'canonicalUrl' => $localizedUrls[$locale],
-            'homeUrl' => $this->homeUrl($locale),
-            'menuUrl' => $this->homeUrl($locale).'#menu',
-            'legalLinks' => $this->legalLinks($locale),
             'schemaJson' => json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
         ]);
     }
@@ -97,7 +93,6 @@ class MenuPageController extends Controller
 
         return response()->view('menu-item', [
             'locale' => $locale,
-            'localeLabels' => $this->localeLabels(),
             'title' => $title,
             'description' => $description,
             'ingredients' => $ingredients,
@@ -112,10 +107,7 @@ class MenuPageController extends Controller
             'similarItems' => $similarItems,
             'localizedUrls' => $localizedUrls,
             'canonicalUrl' => $localizedUrls[$locale],
-            'homeUrl' => $this->homeUrl($locale),
             'menuUrl' => $this->homeUrl($locale).'#menu',
-            'orderUrl' => SiteSetting::query()->where('key', 'order_url')->value('value') ?: 'http://umamisushifood.goorder.pl/',
-            'legalLinks' => $this->legalLinks($locale),
             'schemaJson' => json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
             'copy' => $this->copy($locale),
         ]);
@@ -357,11 +349,6 @@ class MenuPageController extends Controller
         ];
     }
 
-    private function localeLabels(): array
-    {
-        return ['pl' => 'PL', 'uk' => 'UA', 'en' => 'EN'];
-    }
-
     private function categoryTitle(string $locale, string $name): string
     {
         return [
@@ -422,34 +409,10 @@ class MenuPageController extends Controller
     private function copy(string $locale): array
     {
         return [
-            'pl' => ['back' => 'Wróć do menu', 'order' => 'Zamów online', 'similar' => 'Podobne dania', 'details' => 'Skład', 'taste' => 'Dlaczego warto spróbować'],
-            'uk' => ['back' => 'Назад до меню', 'order' => 'Замовити онлайн', 'similar' => 'Схожі страви', 'details' => 'Склад', 'taste' => 'Чому варто спробувати'],
-            'en' => ['back' => 'Back to menu', 'order' => 'Order online', 'similar' => 'Similar dishes', 'details' => 'Ingredients', 'taste' => 'Why it is worth trying'],
+            'pl' => ['back' => 'Wróć do menu', 'similar' => 'Podobne dania', 'details' => 'Skład', 'taste' => 'Dlaczego warto spróbować', 'close' => 'Zamknij'],
+            'uk' => ['back' => 'Назад до меню', 'similar' => 'Схожі страви', 'details' => 'Склад', 'taste' => 'Чому варто спробувати', 'close' => 'Закрити'],
+            'en' => ['back' => 'Back to menu', 'similar' => 'Similar dishes', 'details' => 'Ingredients', 'taste' => 'Why it is worth trying', 'close' => 'Close'],
         ][$locale];
     }
 
-    private function legalLinks(string $locale): array
-    {
-        $links = [
-            'pl' => [
-                ['label' => 'Polityka prywatności', 'path' => '/polityka-prywatnosci'],
-                ['label' => 'Polityka plików cookie', 'path' => '/polityka-plikow-cookie'],
-                ['label' => 'Regulamin', 'path' => '/regulamin'],
-            ],
-            'uk' => [
-                ['label' => 'Політика конфіденційності', 'path' => '/uk/polityka-konfidentsiynosti'],
-                ['label' => 'Політика cookie', 'path' => '/uk/polityka-cookie'],
-                ['label' => 'Правила користування', 'path' => '/uk/pravila-korystuvannya'],
-            ],
-            'en' => [
-                ['label' => 'Privacy policy', 'path' => '/en/privacy-policy'],
-                ['label' => 'Cookie policy', 'path' => '/en/cookie-policy'],
-                ['label' => 'Terms', 'path' => '/en/terms'],
-            ],
-        ];
-
-        return collect($links[$locale] ?? $links['pl'])
-            ->map(fn (array $link) => ['label' => $link['label'], 'url' => $link['path']])
-            ->all();
-    }
 }
