@@ -8,6 +8,7 @@ use App\Models\MenuItem;
 use App\Models\SiteSetting;
 use App\Models\SiteText;
 use App\Models\SocialLink;
+use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -117,6 +118,12 @@ class HomeController extends Controller
             ->mapWithKeys(fn (string $key) => [$key => $text($key)])
             ->all();
 
+        $openingTime = $this->normalizeTime($settings['opening_time'] ?? '12:00');
+        $closingTime = $this->normalizeTime($settings['closing_time'] ?? '20:30');
+        $isOrderingOpen = $this->isOrderingOpen($openingTime, $closingTime);
+        $hoursValue = $openingTime.' - '.$closingTime;
+        $copy['hoursValue'] = $hoursValue;
+
         $viewSettings = [
             'siteUrl' => rtrim($settings['site_url'] ?? $siteUrl, '/'),
             'logo' => $this->mediaUrl($settings['logo_image'] ?? 'umami/logo.jpg'),
@@ -132,6 +139,12 @@ class HomeController extends Controller
             'mapEmbedUrl' => $settings['map_embed_url'] ?? '',
             'address' => $settings['address'] ?? '',
             'googleAnalyticsId' => $settings['google_analytics_id'] ?? '',
+            'openingTime' => $openingTime,
+            'closingTime' => $closingTime,
+            'isOrderingOpen' => $isOrderingOpen,
+            'orderingUnavailableMessage' => $this->orderingUnavailableMessage($locale, $openingTime, $closingTime),
+            'deliveryCost' => $this->normalizeMoney($settings['delivery_cost'] ?? '0'),
+            'freeDeliveryFrom' => $this->normalizeMoney($settings['free_delivery_from'] ?? '0'),
         ];
 
         $localizedUrls = collect($supportedLocales)
@@ -178,8 +191,8 @@ class HomeController extends Controller
                         [
                             '@type' => 'OpeningHoursSpecification',
                             'dayOfWeek' => ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-                            'opens' => '12:00',
-                            'closes' => '21:00',
+                            'opens' => $openingTime,
+                            'closes' => $closingTime,
                         ],
                     ],
                     'potentialAction' => [
@@ -355,6 +368,45 @@ class HomeController extends Controller
             'uk' => 'Детальніше',
             'en' => 'View details',
         ][$locale] ?? 'Zobacz szczegóły';
+    }
+
+    private function normalizeTime(?string $time): string
+    {
+        if (preg_match('/^(\d{1,2}):(\d{2})/', (string) $time, $matches)) {
+            return sprintf('%02d:%02d', min(23, (int) $matches[1]), min(59, (int) $matches[2]));
+        }
+
+        return '12:00';
+    }
+
+    private function isOrderingOpen(string $openingTime, string $closingTime): bool
+    {
+        $now = CarbonImmutable::now('Europe/Warsaw');
+        $open = CarbonImmutable::createFromFormat('Y-m-d H:i', $now->format('Y-m-d').' '.$openingTime, 'Europe/Warsaw');
+        $close = CarbonImmutable::createFromFormat('Y-m-d H:i', $now->format('Y-m-d').' '.$closingTime, 'Europe/Warsaw');
+
+        if (! $open || ! $close) {
+            return false;
+        }
+
+        return $now->betweenIncluded($open, $close);
+    }
+
+    private function orderingUnavailableMessage(string $locale, string $openingTime, string $closingTime): string
+    {
+        return [
+            'pl' => "Dostępne: dzisiaj, {$openingTime} - {$closingTime}",
+            'uk' => "Доступно: сьогодні, {$openingTime} - {$closingTime}",
+            'en' => "Available: today, {$openingTime} - {$closingTime}",
+        ][$locale] ?? "Dostępne: dzisiaj, {$openingTime} - {$closingTime}";
+    }
+
+    private function normalizeMoney(?string $amount): string
+    {
+        $normalized = str_replace(',', '.', (string) $amount);
+        $value = max(0, (float) preg_replace('/[^0-9.]/', '', $normalized));
+
+        return rtrim(rtrim(number_format($value, 2, '.', ''), '0'), '.');
     }
 
     private function mediaUrl(?string $path): string

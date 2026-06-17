@@ -555,12 +555,44 @@ class UmamiContentSeeder extends Seeder
       "sort_order": 11
     },
     {
+      "group": "restaurant",
+      "key": "opening_time",
+      "label": "Otwarte od",
+      "value": "12:00",
+      "type": "time",
+      "sort_order": 12
+    },
+    {
+      "group": "restaurant",
+      "key": "closing_time",
+      "label": "Otwarte do",
+      "value": "20:30",
+      "type": "time",
+      "sort_order": 13
+    },
+    {
+      "group": "restaurant",
+      "key": "delivery_cost",
+      "label": "Koszt dostawy",
+      "value": "0",
+      "type": "number",
+      "sort_order": 14
+    },
+    {
+      "group": "restaurant",
+      "key": "free_delivery_from",
+      "label": "Darmowa dostawa od",
+      "value": "0",
+      "type": "number",
+      "sort_order": 15
+    },
+    {
       "group": "seo",
       "key": "google_analytics_id",
       "label": "Google Analytics Measurement ID",
       "value": "",
       "type": "text",
-      "sort_order": 12
+      "sort_order": 16
     }
   ],
   "categories": [

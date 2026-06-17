@@ -31,10 +31,10 @@
 </head>
 @php
     $cartCopy = [
-        'pl' => ['cart' => 'Koszyk', 'add' => 'Dodaj do koszyka', 'increase' => 'Zwiększ ilość', 'decrease' => 'Zmniejsz ilość'],
-        'uk' => ['cart' => 'Кошик', 'add' => 'Додати до кошика', 'increase' => 'Збільшити кількість', 'decrease' => 'Зменшити кількість'],
-        'en' => ['cart' => 'Cart', 'add' => 'Add to cart', 'increase' => 'Increase quantity', 'decrease' => 'Decrease quantity'],
-    ][$locale] ?? ['cart' => 'Koszyk', 'add' => 'Dodaj do koszyka', 'increase' => 'Zwiększ ilość', 'decrease' => 'Zmniejsz ilość'];
+        'pl' => ['cart' => 'Koszyk', 'add' => 'Dodaj do koszyka', 'increase' => 'Zwiększ ilość', 'decrease' => 'Zmniejsz ilość', 'remove' => 'Usuń z koszyka', 'empty' => 'Koszyk jest pusty.', 'total' => 'Razem', 'checkout' => 'Przejdź do koszyka', 'freeDeliveryMissing' => 'Do darmowej dostawy brakuje :amount', 'freeDeliveryReady' => 'Masz darmową dostawę'],
+        'uk' => ['cart' => 'Кошик', 'add' => 'Додати до кошика', 'increase' => 'Збільшити кількість', 'decrease' => 'Зменшити кількість', 'remove' => 'Видалити з кошика', 'empty' => 'Кошик порожній.', 'total' => 'Разом', 'checkout' => 'Перейти до кошика', 'freeDeliveryMissing' => 'До безкоштовної доставки залишилось :amount', 'freeDeliveryReady' => 'У вас безкоштовна доставка'],
+        'en' => ['cart' => 'Cart', 'add' => 'Add to cart', 'increase' => 'Increase quantity', 'decrease' => 'Decrease quantity', 'remove' => 'Remove from cart', 'empty' => 'Your cart is empty.', 'total' => 'Total', 'checkout' => 'Go to cart', 'freeDeliveryMissing' => ':amount left for free delivery', 'freeDeliveryReady' => 'You have free delivery'],
+    ][$locale] ?? ['cart' => 'Koszyk', 'add' => 'Dodaj do koszyka', 'increase' => 'Zwiększ ilość', 'decrease' => 'Zmniejsz ilość', 'remove' => 'Usuń z koszyka', 'empty' => 'Koszyk jest pusty.', 'total' => 'Razem', 'checkout' => 'Przejdź do koszyka', 'freeDeliveryMissing' => 'Do darmowej dostawy brakuje :amount', 'freeDeliveryReady' => 'Masz darmową dostawę'];
 @endphp
 <body
     data-background-desktop="{{ $settings['backgroundDesktop'] }}"
@@ -44,9 +44,17 @@
     data-hero-poster="{{ $settings['heroPoster'] }}"
     data-show-photo-label="{{ $copy['showPhoto'] }}"
     data-google-analytics-id="{{ $settings['googleAnalyticsId'] }}"
+    data-ordering-open="{{ $settings['isOrderingOpen'] ? '1' : '0' }}"
+    data-ordering-unavailable-message="{{ $settings['orderingUnavailableMessage'] }}"
+    data-delivery-cost="{{ $settings['deliveryCost'] }}"
+    data-free-delivery-from="{{ $settings['freeDeliveryFrom'] }}"
     data-cart-add-label="{{ $cartCopy['add'] }}"
     data-cart-increase-label="{{ $cartCopy['increase'] }}"
     data-cart-decrease-label="{{ $cartCopy['decrease'] }}"
+    data-cart-remove-label="{{ $cartCopy['remove'] }}"
+    data-cart-empty-label="{{ $cartCopy['empty'] }}"
+    data-cart-free-delivery-missing="{{ $cartCopy['freeDeliveryMissing'] }}"
+    data-cart-free-delivery-ready="{{ $cartCopy['freeDeliveryReady'] }}"
 >
     <header class="topbar">
         <a class="brand" href="{{ route('home', ['lang' => $locale]) }}#top" aria-label="Umami Sushi & Food">
@@ -73,14 +81,30 @@
                     <a href="{{ $seo['localizedUrls'][$lang] }}" class="{{ $locale === $lang ? 'active' : '' }}" @if($locale === $lang) aria-current="page" @endif>{{ $localeLabels[$lang] }}</a>
                 @endforeach
             </nav>
-            <button class="cart-button" type="button" aria-label="{{ $cartCopy['cart'] }}">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M6.4 7.2h13.1l-1.2 7.1a2 2 0 0 1-2 1.7H8.8a2 2 0 0 1-2-1.7L5.7 4.9H3.8" />
-                    <circle cx="9.2" cy="19.4" r="1.1" />
-                    <circle cx="16.4" cy="19.4" r="1.1" />
-                </svg>
-                <span class="cart-badge" id="cartBadge" hidden>0</span>
-            </button>
+            <div class="cart-popover-wrap">
+                <button class="cart-button" type="button" id="cartOpen" aria-label="{{ $cartCopy['cart'] }}" aria-controls="cartPopover" aria-expanded="false">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M6.4 7.2h13.1l-1.2 7.1a2 2 0 0 1-2 1.7H8.8a2 2 0 0 1-2-1.7L5.7 4.9H3.8" />
+                        <circle cx="9.2" cy="19.4" r="1.1" />
+                        <circle cx="16.4" cy="19.4" r="1.1" />
+                    </svg>
+                    <span class="cart-badge" id="cartBadge" hidden>0</span>
+                </button>
+                <div class="cart-popover" id="cartPopover" aria-labelledby="cartOpen" hidden>
+                    <div class="cart-popover-head">
+                        <h3 id="cartPopoverTitle">{{ $cartCopy['cart'] }}</h3>
+                        <button class="cart-popover-close" type="button" aria-label="{{ $copy['close'] }}" id="cartClose">×</button>
+                    </div>
+                    <div class="cart-items" id="cartItems"></div>
+                    <p class="cart-empty" id="cartEmpty" hidden>{{ $cartCopy['empty'] }}</p>
+                    <p class="cart-free-delivery" id="cartFreeDelivery" hidden></p>
+                    <div class="cart-summary">
+                        <span>{{ $cartCopy['total'] }}</span>
+                        <strong id="cartTotal">0 zł</strong>
+                    </div>
+                    <button class="pill cart-checkout" type="button" id="cartCheckout">{{ $cartCopy['checkout'] }}</button>
+                </div>
+            </div>
             <a class="pill" href="{{ $settings['phoneHref'] }}">{{ $settings['phone'] }}</a>
         </div>
     </header>
@@ -311,5 +335,7 @@
             </div>
         </div>
     </div>
+
+    <div class="cart-notice" id="cartNotice" role="status" aria-live="polite" hidden></div>
 </body>
 </html>

@@ -113,6 +113,26 @@ class GoPosClient
         ];
     }
 
+    public function clientsExportData(int $size = 100): array
+    {
+        $organizationId = $this->organizationId();
+
+        return [
+            'exported_at' => now()->toIso8601String(),
+            'organization_id' => $organizationId,
+            'endpoints' => [
+                'clients' => "/api/v3/{$organizationId}/clients",
+                'client_groups' => "/api/v3/{$organizationId}/clients/groups",
+            ],
+            'data' => [
+                'clients' => $this->list("/api/v3/{$organizationId}/clients", [
+                    'include' => 'client_group,id_card,address,contact',
+                ], $size),
+                'client_groups' => $this->list("/api/v3/{$organizationId}/clients/groups", [], $size),
+            ],
+        ];
+    }
+
     public function token(): string
     {
         $cacheKey = config('gopos.token_cache_key');
