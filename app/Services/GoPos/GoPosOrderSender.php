@@ -26,25 +26,32 @@ class GoPosOrderSender
             $response = $this->client->post("/api/v3/{$organizationId}/orders", $payload);
             $goposOrder = $response['data'] ?? $response;
             $goposOrderId = $goposOrder['id'] ?? null;
+        } else {
+            $payload = data_get($existingPayload, 'request', []);
         }
 
         if (! $goposOrderId) {
             throw new RuntimeException('GoPOS created order response does not contain order id.');
         }
 
+        $sendResponse = $this->client->post("/api/v3/{$organizationId}/orders/{$goposOrderId}/send", [
+            'email' => $order->customer->email,
+            'send_without_ereceipt' => true,
+        ]);
         $freshResponse = $this->client->get("/api/v3/{$organizationId}/orders/{$goposOrderId}");
         $freshOrder = $freshResponse['data'] ?? $freshResponse;
         $finalGoPosOrder = filled($freshOrder) ? $freshOrder : $goposOrder;
 
         $order->update([
-            'status' => 'waiting_gopos_acceptance',
+            'status' => 'sent_to_gopos',
             'gopos_id' => $goposOrderId,
             'gopos_uid' => $finalGoPosOrder['uid'] ?? $goposOrder['uid'] ?? null,
             'gopos_number' => $finalGoPosOrder['number'] ?? $goposOrder['number'] ?? null,
             'gopos_payload' => array_filter(array_merge($existingPayload, [
+                'request' => $payload,
                 'created' => $goposOrder,
+                'sent' => $sendResponse,
                 'fresh' => $freshOrder,
-                'waiting_for_restaurant_acceptance' => true,
             ])),
             'gopos_error' => null,
             'gopos_sent_at' => now(),
@@ -135,6 +142,22 @@ class GoPosOrderSender
             return $payload;
         })->values()->all();
 
+        if ($order->delivery_type === 'delivery' && (float) $order->delivery_cost > 0) {
+            $deliveryItem = [
+                'quantity' => 1,
+                'item_id' => 214,
+                'name' => 'Dostawa',
+                'unit_price' => [
+                    'amount' => (float) $order->delivery_cost,
+                    'currency' => 'PLN',
+                ],
+                'comment' => 'Koszt dostawy ze strony www',
+                'tax' => ['id' => 2],
+            ];
+
+            $items[] = $deliveryItem;
+        }
+
         $payload = [
             'type' => $order->delivery_type === 'delivery' ? 'DELIVERY' : 'PICK_UP',
             'source' => 'UMAMI_WWW',
@@ -189,6 +212,7 @@ class GoPosOrderSender
                     'latitude' => data_get($coordinates, 'lat'),
                     'longitude' => data_get($coordinates, 'lng'),
                 ],
+                'comment' => $this->deliveryComment($deliveryQuote),
             ];
         }
 
@@ -203,6 +227,30 @@ class GoPosOrderSender
             $order->payment_type === 'cash' ? 'Płatność: gotówka' : 'Płatność: karta',
             $order->wants_invoice ? 'Faktura NIP: '.$order->nip : null,
         ])), 255, '');
+    }
+
+    private function deliveryComment(array $deliveryQuote): string
+    {
+        $parts = [];
+        $zoneName = data_get($deliveryQuote, 'zone.name');
+        $zoneId = data_get($deliveryQuote, 'zone.id');
+        $distance = data_get($deliveryQuote, 'distance_km');
+        $lat = data_get($deliveryQuote, 'coordinates.lat');
+        $lng = data_get($deliveryQuote, 'coordinates.lng');
+
+        if ($zoneName) {
+            $parts[] = trim($zoneName.' '.($zoneId ? '(ID '.$zoneId.')' : ''));
+        }
+
+        if ($distance !== null) {
+            $parts[] = 'odległość '.$distance.' km';
+        }
+
+        if ($lat !== null && $lng !== null) {
+            $parts[] = 'GPS '.$lat.', '.$lng;
+        }
+
+        return Str::limit(implode(' | ', $parts), 255, '');
     }
 
     private function normalizePhone(?string $phone): string

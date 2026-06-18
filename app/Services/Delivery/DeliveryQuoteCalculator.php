@@ -20,12 +20,13 @@ class DeliveryQuoteCalculator
         $city = $this->normalizeCity($city);
         $destination = $this->destination($city, $street, $building);
         $distance = $this->distance($settings, $city, $destination);
+        $zone = $this->streetZone($settings, $street) ?? $this->zoneForDistance($settings, $distance);
 
         return [
             'city' => $city,
             'distance_km' => $distance,
-            'cost' => $this->costForDistance($settings, $distance),
-            'zone' => $this->zoneForDistance($settings, $distance),
+            'cost' => $this->costForZone($settings, $zone, $distance),
+            'zone' => $zone,
             'coordinates' => $destination,
         ];
     }
@@ -45,12 +46,63 @@ class DeliveryQuoteCalculator
         return (float) ($settings['deliveryTier3Cost'] ?? 24.99);
     }
 
+    private function costForZone(array $settings, array $zone, ?float $distance): float
+    {
+        return match ((string) ($zone['tier'] ?? '')) {
+            '1' => (float) ($settings['deliveryTier1Cost'] ?? 9.99),
+            '2' => (float) ($settings['deliveryTier2Cost'] ?? 14.99),
+            '3' => (float) ($settings['deliveryTier3Cost'] ?? 24.99),
+            default => $this->costForDistance($settings, $distance),
+        };
+    }
+
+    private function streetZone(array $settings, ?string $street): ?array
+    {
+        $street = $this->normalizeStreet($street);
+        if ($street === '') {
+            return null;
+        }
+
+        foreach ([1, 2, 3] as $tier) {
+            $streets = $this->streetList((string) ($settings["deliveryTier{$tier}Streets"] ?? ''));
+            if (in_array($street, $streets, true)) {
+                return [
+                    'tier' => (string) $tier,
+                    'id' => (string) ($settings["deliveryTier{$tier}ZoneId"] ?? ($tier + 1)),
+                    'name' => (string) ($settings["deliveryTier{$tier}ZoneName"] ?? "Strefa {$tier}"),
+                ];
+            }
+        }
+
+        return null;
+    }
+
+    private function streetList(string $value): array
+    {
+        return collect(preg_split('/\r\n|\r|\n|,/', $value) ?: [])
+            ->map(fn (string $street): string => $this->normalizeStreet($street))
+            ->filter()
+            ->values()
+            ->all();
+    }
+
+    private function normalizeStreet(?string $street): string
+    {
+        return str($street ?? '')
+            ->lower()
+            ->ascii()
+            ->replaceMatches('/[^a-z0-9]+/', ' ')
+            ->squish()
+            ->toString();
+    }
+
     private function zoneForDistance(array $settings, ?float $distance): array
     {
         $distance ??= (float) ($settings['deliveryTier1MaxKm'] ?? 3);
 
         if ($distance <= (float) ($settings['deliveryTier1MaxKm'] ?? 3)) {
             return [
+                'tier' => '1',
                 'id' => (string) ($settings['deliveryTier1ZoneId'] ?? '2'),
                 'name' => (string) ($settings['deliveryTier1ZoneName'] ?? 'Strefa 1'),
             ];
@@ -58,12 +110,14 @@ class DeliveryQuoteCalculator
 
         if ($distance <= (float) ($settings['deliveryTier2MaxKm'] ?? 8)) {
             return [
+                'tier' => '2',
                 'id' => (string) ($settings['deliveryTier2ZoneId'] ?? '3'),
                 'name' => (string) ($settings['deliveryTier2ZoneName'] ?? 'Strefa 2'),
             ];
         }
 
         return [
+            'tier' => '3',
             'id' => (string) ($settings['deliveryTier3ZoneId'] ?? '4'),
             'name' => (string) ($settings['deliveryTier3ZoneName'] ?? 'Strefa 3'),
         ];

@@ -347,6 +347,9 @@ class CheckoutController extends Controller
             'deliveryTier2ZoneName' => $settings['delivery_tier_2_zone_name'] ?? 'Strefa 2',
             'deliveryTier3ZoneId' => $settings['delivery_tier_3_zone_id'] ?? '4',
             'deliveryTier3ZoneName' => $settings['delivery_tier_3_zone_name'] ?? 'Strefa 3',
+            'deliveryTier1Streets' => $settings['delivery_tier_1_streets'] ?? '',
+            'deliveryTier2Streets' => $settings['delivery_tier_2_streets'] ?? '',
+            'deliveryTier3Streets' => $settings['delivery_tier_3_streets'] ?? '',
         ];
     }
 

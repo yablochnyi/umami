@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Models\SiteSetting;
 use BackedEnum;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Notifications\Notification;
@@ -54,6 +55,9 @@ class SiteSettings extends Page
                 'delivery_tier_2_zone_name',
                 'delivery_tier_3_zone_id',
                 'delivery_tier_3_zone_name',
+                'delivery_tier_1_streets',
+                'delivery_tier_2_streets',
+                'delivery_tier_3_streets',
             ])
             ->pluck('value', 'key');
 
@@ -77,6 +81,9 @@ class SiteSettings extends Page
             'delivery_tier_2_zone_name' => $settings['delivery_tier_2_zone_name'] ?? 'Strefa 2',
             'delivery_tier_3_zone_id' => $settings['delivery_tier_3_zone_id'] ?? '4',
             'delivery_tier_3_zone_name' => $settings['delivery_tier_3_zone_name'] ?? 'Strefa 3',
+            'delivery_tier_1_streets' => $settings['delivery_tier_1_streets'] ?? "Generała Karola Kniaziewicza\nWojciecha Korfantego\nSzuwarów\nAkacjowa",
+            'delivery_tier_2_streets' => $settings['delivery_tier_2_streets'] ?? '',
+            'delivery_tier_3_streets' => $settings['delivery_tier_3_streets'] ?? '',
         ]);
     }
 
@@ -191,6 +198,18 @@ class SiteSettings extends Page
                         TextInput::make('delivery_tier_3_zone_name')
                             ->label('Nazwa strefy 3 w GoPOS')
                             ->required(),
+                        Textarea::make('delivery_tier_1_streets')
+                            ->label('Ulice zawsze w strefie 1')
+                            ->rows(5)
+                            ->columnSpanFull(),
+                        Textarea::make('delivery_tier_2_streets')
+                            ->label('Ulice zawsze w strefie 2')
+                            ->rows(5)
+                            ->columnSpanFull(),
+                        Textarea::make('delivery_tier_3_streets')
+                            ->label('Ulice zawsze w strefie 3')
+                            ->rows(5)
+                            ->columnSpanFull(),
                     ])
                     ->columns(3),
             ]);
@@ -237,6 +256,9 @@ class SiteSettings extends Page
         $this->saveSetting('delivery_tier_2_zone_name', 'GoPOS nazwa strefy 2', (string) $data['delivery_tier_2_zone_name'], 'text', 35);
         $this->saveSetting('delivery_tier_3_zone_id', 'GoPOS ID strefy 3', (string) $data['delivery_tier_3_zone_id'], 'text', 36);
         $this->saveSetting('delivery_tier_3_zone_name', 'GoPOS nazwa strefy 3', (string) $data['delivery_tier_3_zone_name'], 'text', 37);
+        $this->saveSetting('delivery_tier_1_streets', 'Ulice zawsze w strefie 1', (string) ($data['delivery_tier_1_streets'] ?? ''), 'textarea', 38);
+        $this->saveSetting('delivery_tier_2_streets', 'Ulice zawsze w strefie 2', (string) ($data['delivery_tier_2_streets'] ?? ''), 'textarea', 39);
+        $this->saveSetting('delivery_tier_3_streets', 'Ulice zawsze w strefie 3', (string) ($data['delivery_tier_3_streets'] ?? ''), 'textarea', 40);
 
         Notification::make()
             ->success()
