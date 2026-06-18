@@ -61,6 +61,7 @@ class SiteLayoutComposer
                 'copy' => $cartCopy,
                 'isOrderingOpen' => $this->isOrderingOpen($openingTime, $closingTime),
                 'orderingUnavailableMessage' => strtr($cartCopy['ordering_unavailable'], [
+                    ':day' => $this->availabilityDayLabel($openingTime, $closingTime, $cartCopy),
                     ':open' => $openingTime,
                     ':close' => $closingTime,
                 ]),
@@ -139,6 +140,16 @@ class SiteLayoutComposer
         $close = CarbonImmutable::createFromFormat('Y-m-d H:i', $now->format('Y-m-d').' '.$closingTime, 'Europe/Warsaw');
 
         return $open && $close && $now->betweenIncluded($open, $close);
+    }
+
+    private function availabilityDayLabel(string $openingTime, string $closingTime, array $copy): string
+    {
+        $now = CarbonImmutable::now('Europe/Warsaw');
+        $close = CarbonImmutable::createFromFormat('Y-m-d H:i', $now->format('Y-m-d').' '.$closingTime, 'Europe/Warsaw');
+
+        return $now->gt($close)
+            ? ($copy['day_tomorrow'] ?? 'jutro')
+            : ($copy['day_today'] ?? 'dzisiaj');
     }
 
     private function money(?string $amount): string

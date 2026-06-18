@@ -37,6 +37,7 @@ Route::get('/robots.txt', function () {
 Route::get('/koszyk', [CheckoutController::class, 'show'])->name('checkout');
 Route::post('/koszyk', [CheckoutController::class, 'submit'])->name('checkout.submit');
 Route::get('/api/torun-streets', [CheckoutController::class, 'streetAutocomplete'])->name('checkout.street-autocomplete');
+Route::get('/api/delivery-quote', [CheckoutController::class, 'deliveryQuote'])->name('checkout.delivery-quote');
 Route::get('/{locale}/koszyk', [CheckoutController::class, 'show'])
     ->whereIn('locale', ['uk', 'en'])
     ->name('checkout.localized');

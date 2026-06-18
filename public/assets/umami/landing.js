@@ -112,11 +112,9 @@ function showCartNotice(message) {
 
 function applyOrderingState() {
     document.querySelectorAll('[data-cart-add], [data-cart-increase]').forEach((button) => {
-        button.classList.toggle('is-unavailable', !isOrderingOpen);
-        button.setAttribute('aria-disabled', isOrderingOpen ? 'false' : 'true');
-        if (orderingUnavailableMessage) {
-            button.setAttribute('title', isOrderingOpen ? (button.getAttribute('aria-label') || '') : orderingUnavailableMessage);
-        }
+        button.classList.remove('is-unavailable');
+        button.setAttribute('aria-disabled', 'false');
+        button.setAttribute('title', button.getAttribute('aria-label') || '');
     });
 }
 
@@ -209,6 +207,7 @@ function sortedCartItems() {
 function renderCartModal() {
     const cartItemsNode = document.getElementById('cartItems');
     const cartEmptyNode = document.getElementById('cartEmpty');
+    const cartAvailabilityNode = document.getElementById('cartAvailability');
     const cartFreeDeliveryNode = document.getElementById('cartFreeDelivery');
     const cartTotalNode = document.getElementById('cartTotal');
     const cartCheckout = document.getElementById('cartCheckout');
@@ -220,6 +219,11 @@ function renderCartModal() {
     cartItemsNode.innerHTML = '';
     cartEmptyNode.hidden = items.length > 0;
     if (cartCheckout) cartCheckout.disabled = items.length === 0;
+
+    if (cartAvailabilityNode) {
+        cartAvailabilityNode.textContent = !isOrderingOpen ? orderingUnavailableMessage : '';
+        cartAvailabilityNode.hidden = isOrderingOpen || !orderingUnavailableMessage;
+    }
 
     if (cartFreeDeliveryNode) {
         const text = items.length > 0 ? freeDeliveryText(total) : '';
@@ -343,11 +347,6 @@ document.addEventListener('click', (event) => {
 
     event.preventDefault();
     event.stopPropagation();
-
-    if (!isOrderingOpen && cartButton.matches('[data-cart-add], [data-cart-increase]')) {
-        showCartNotice(orderingUnavailableMessage);
-        return;
-    }
 
     const currentQuantity = cartQuantity(control.dataset.cartId);
     if (cartButton.matches('[data-cart-decrease]')) {

@@ -44,6 +44,7 @@
                     </div>
                     <div class="cart-items" id="cartItems"></div>
                     <p class="cart-empty" id="cartEmpty" hidden>{{ $siteLayout['cart']['copy']['empty'] }}</p>
+                    <p class="cart-availability" id="cartAvailability" hidden></p>
                     <p class="cart-free-delivery" id="cartFreeDelivery" hidden></p>
                     <div class="cart-summary">
                         <span>{{ $siteLayout['cart']['copy']['total'] }}</span>

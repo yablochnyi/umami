@@ -24,7 +24,8 @@ class CustomerForm
                     ]),
                 Section::make('Adres')
                     ->schema([
-                        Grid::make(3)->schema([
+                        Grid::make(4)->schema([
+                            TextInput::make('city')->label('Miasto')->maxLength(255),
                             TextInput::make('street')->label('Ulica')->maxLength(255),
                             TextInput::make('building_number')->label('Numer domu')->maxLength(255),
                             TextInput::make('apartment_number')->label('Numer mieszkania')->maxLength(255),

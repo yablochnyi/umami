@@ -1,16 +1,24 @@
 const cartStorageKey = 'umami_cart';
 const desktopBackground = document.body.dataset.backgroundDesktop;
 const mobileBackground = document.body.dataset.backgroundMobile;
-const deliveryCost = Number.parseFloat(document.body.dataset.deliveryCost || '0') || 0;
+let deliveryCost = Number.parseFloat(document.body.dataset.deliveryCost || '0') || 0;
 const freeDeliveryFrom = Number.parseFloat(document.body.dataset.freeDeliveryFrom || '0') || 0;
 const minimumDeliveryAmount = Number.parseFloat(document.body.dataset.minimumDeliveryAmount || '0') || 0;
 const orderingOpen = document.body.dataset.orderingOpen !== '0';
 const orderingUnavailableMessage = document.body.dataset.orderingUnavailableMessage || '';
+const openingTime = document.body.dataset.openingTime || '12:00';
+const deliveryOpeningTime = document.body.dataset.deliveryOpeningTime || '13:00';
+const closingTime = document.body.dataset.closingTime || '20:30';
+const deliveryQuoteUrl = document.body.dataset.deliveryQuoteUrl || '';
 const copy = {
     emptyCart: document.body.dataset.emptyCart || 'Koszyk jest pusty.',
     freeMissing: document.body.dataset.freeMissing || '',
     freeReady: document.body.dataset.freeReady || '',
     minimumMissing: document.body.dataset.minimumMissing || '',
+    pickupAvailability: document.body.dataset.pickupAvailability || '',
+    deliveryAvailability: document.body.dataset.deliveryAvailability || '',
+    scheduleOutOfHours: document.body.dataset.scheduleOutOfHours || '',
+    schedulePastTime: document.body.dataset.schedulePastTime || '',
 };
 
 if (document.body.dataset.clearCart === '1') {
@@ -52,6 +60,56 @@ function formatPrice(amount) {
         : rounded.toFixed(2).replace('.', ',') + ' zł';
 }
 
+function formatTemplate(template) {
+    return String(template || '')
+        .replaceAll(':open', currentOpeningTime())
+        .replaceAll(':close', closingTime);
+}
+
+function currentOpeningTime() {
+    return deliveryType() === 'delivery' ? deliveryOpeningTime : openingTime;
+}
+
+function isCurrentFulfillmentOpen() {
+    const nowMinutes = currentTimeMinutes();
+
+    return nowMinutes >= timeToMinutes(currentOpeningTime()) && nowMinutes <= timeToMinutes(closingTime);
+}
+
+function todayString(date = new Date()) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
+
+function timeToMinutes(time) {
+    const parts = String(time || '').split(':');
+    return (Number(parts[0]) || 0) * 60 + (Number(parts[1]) || 0);
+}
+
+function minutesToTime(minutes) {
+    const bounded = Math.max(0, Math.min(23 * 60 + 59, Number(minutes) || 0));
+    const hours = String(Math.floor(bounded / 60)).padStart(2, '0');
+    const mins = String(bounded % 60).padStart(2, '0');
+
+    return `${hours}:${mins}`;
+}
+
+function currentTimeRoundedUp() {
+    const now = new Date();
+    const minutes = now.getHours() * 60 + now.getMinutes();
+
+    return minutesToTime(Math.ceil(minutes / 5) * 5);
+}
+
+function currentTimeMinutes() {
+    const now = new Date();
+
+    return now.getHours() * 60 + now.getMinutes();
+}
+
 function sortedItems(cart) {
     return Object.values(cart)
         .filter((item) => Number(item.quantity || 0) > 0)
@@ -86,8 +144,7 @@ function renderCart() {
 
     itemsNode.innerHTML = '';
     emptyNode.hidden = items.length > 0;
-    submitButton.disabled = !orderingOpen
-        || items.length === 0
+    submitButton.disabled = items.length === 0
         || (deliveryType() === 'delivery' && minimumDeliveryAmount > 0 && subtotal < minimumDeliveryAmount);
     cartJsonNode.value = JSON.stringify(items.map((item) => ({
         id: item.id,
@@ -140,15 +197,18 @@ function renderCart() {
 }
 
 function renderHints(subtotal, itemCount) {
+    const availabilityNode = document.getElementById('orderingAvailabilityHint');
     const freeNode = document.getElementById('freeDeliveryHint');
     const minimumNode = document.getElementById('minimumDeliveryHint');
     const isDelivery = deliveryType() === 'delivery';
+    const availabilityText = isDelivery ? copy.deliveryAvailability : copy.pickupAvailability;
 
-    if (!orderingOpen) {
-        freeNode.hidden = true;
-        minimumNode.textContent = orderingUnavailableMessage;
-        minimumNode.hidden = false;
-        return;
+    if (availabilityNode) {
+        const text = !orderingOpen
+            ? (formatTemplate(availabilityText) || orderingUnavailableMessage)
+            : '';
+        availabilityNode.textContent = text;
+        availabilityNode.hidden = !text;
     }
 
     if (itemCount === 0 || freeDeliveryFrom <= 0 || !isDelivery) {
@@ -174,7 +234,85 @@ function updateConditionalFields() {
     document.getElementById('nipField').classList.toggle('is-visible', document.getElementById('invoiceToggle').checked);
     document.getElementById('addressFields').classList.toggle('is-visible', deliveryType() === 'delivery');
     document.getElementById('scheduleFields').classList.toggle('is-visible', document.querySelector('input[name="fulfillment_type"]:checked')?.value === 'scheduled');
+    updateScheduleLimits();
+    scheduleDeliveryQuoteUpdate();
     renderCart();
+}
+
+function updateScheduleLimits() {
+    const dayInput = document.querySelector('input[name="scheduled_day"]');
+    const timeInput = document.querySelector('input[name="scheduled_time"]');
+    if (!dayInput || !timeInput) return;
+
+    const now = new Date();
+    const today = todayString(now);
+    const closeMinutes = timeToMinutes(closingTime);
+    const currentMinutes = timeToMinutes(currentTimeRoundedUp());
+    const minDay = currentMinutes > closeMinutes ? todayString(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)) : today;
+
+    dayInput.min = minDay;
+    if (dayInput.value && dayInput.value < minDay) {
+        dayInput.value = minDay;
+    }
+
+    const selectedDay = dayInput.value || minDay;
+    let minTime = openingTime;
+    if (selectedDay === today) {
+        minTime = minutesToTime(Math.max(timeToMinutes(currentOpeningTime()), currentMinutes));
+    } else {
+        minTime = currentOpeningTime();
+    }
+
+    timeInput.min = minTime;
+    timeInput.max = closingTime;
+
+    if (timeInput.value) {
+        if (timeInput.value < minTime) {
+            timeInput.value = minTime;
+        } else if (timeInput.value > closingTime) {
+            timeInput.value = closingTime;
+        }
+    }
+}
+
+let deliveryQuoteTimer = null;
+let deliveryQuoteController = null;
+
+function scheduleDeliveryQuoteUpdate() {
+    window.clearTimeout(deliveryQuoteTimer);
+    deliveryQuoteTimer = window.setTimeout(updateDeliveryQuote, 350);
+}
+
+async function updateDeliveryQuote() {
+    if (!deliveryQuoteUrl || deliveryType() !== 'delivery') return;
+
+    const city = document.querySelector('select[name="city"]')?.value || 'Toruń';
+    const street = document.querySelector('input[name="street"]')?.value || '';
+    const building = document.querySelector('input[name="building_number"]')?.value || '';
+
+    if (deliveryQuoteController) deliveryQuoteController.abort();
+    deliveryQuoteController = new AbortController();
+
+    try {
+        const url = new URL(deliveryQuoteUrl, window.location.origin);
+        url.searchParams.set('city', city);
+        url.searchParams.set('street', street);
+        url.searchParams.set('building', building);
+
+        const response = await fetch(url, {
+            headers: { Accept: 'application/json' },
+            signal: deliveryQuoteController.signal,
+        });
+        if (!response.ok) return;
+
+        const quote = await response.json();
+        deliveryCost = Number.parseFloat(quote.cost || '0') || 0;
+        renderCart();
+    } catch (error) {
+        if (error.name !== 'AbortError') {
+            renderCart();
+        }
+    }
 }
 
 function setupStreetAutocomplete() {
@@ -244,7 +382,8 @@ function setupStreetAutocomplete() {
             controller = new AbortController();
 
             try {
-                const response = await fetch(`/api/torun-streets?q=${encodeURIComponent(query)}`, {
+                const city = document.querySelector('select[name="city"]')?.value || 'Toruń';
+                const response = await fetch(`/api/torun-streets?q=${encodeURIComponent(query)}&city=${encodeURIComponent(city)}`, {
                     headers: { Accept: 'application/json' },
                     signal: controller.signal,
                 });
@@ -312,15 +451,19 @@ document.querySelectorAll('input[name="delivery_type"], input[name="fulfillment_
     input.addEventListener('change', updateConditionalFields);
 });
 
+document.querySelectorAll('select[name="city"], input[name="street"], input[name="building_number"]').forEach((input) => {
+    input.addEventListener('change', scheduleDeliveryQuoteUpdate);
+    input.addEventListener('input', scheduleDeliveryQuoteUpdate);
+});
+
+document.querySelectorAll('input[name="scheduled_day"], input[name="scheduled_time"]').forEach((input) => {
+    input.addEventListener('change', updateScheduleLimits);
+    input.addEventListener('input', updateScheduleLimits);
+});
+
 document.getElementById('checkoutForm').addEventListener('submit', (event) => {
     const items = sortedItems(readCart());
     const subtotal = cartSubtotal(items);
-
-    if (!orderingOpen) {
-        event.preventDefault();
-        alert(orderingUnavailableMessage);
-        return;
-    }
 
     if (items.length === 0) {
         event.preventDefault();
@@ -332,6 +475,26 @@ document.getElementById('checkoutForm').addEventListener('submit', (event) => {
         event.preventDefault();
         alert(copy.minimumMissing.replace(':amount', formatPrice(minimumDeliveryAmount - subtotal)));
         return;
+    }
+
+    if (document.querySelector('input[name="fulfillment_type"]:checked')?.value === 'scheduled') {
+        updateScheduleLimits();
+        const day = document.querySelector('input[name="scheduled_day"]')?.value || '';
+        const time = document.querySelector('input[name="scheduled_time"]')?.value || '';
+        const selected = day && time ? new Date(`${day}T${time}:00`) : null;
+        const now = new Date();
+
+        if (!selected || selected < now) {
+            event.preventDefault();
+            alert(copy.schedulePastTime);
+            return;
+        }
+
+        if (time < currentOpeningTime() || time > closingTime) {
+            event.preventDefault();
+            alert(formatTemplate(copy.scheduleOutOfHours));
+            return;
+        }
     }
 
     document.getElementById('cartJson').value = JSON.stringify(items.map((item) => ({

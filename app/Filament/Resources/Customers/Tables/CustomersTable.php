@@ -24,6 +24,10 @@ class CustomersTable
                     ->label('E-mail')
                     ->searchable()
                     ->toggleable(),
+                TextColumn::make('city')
+                    ->label('Miasto')
+                    ->searchable()
+                    ->toggleable(),
                 TextColumn::make('orders_count')
                     ->label('Zamówienia')
                     ->counts('orders')

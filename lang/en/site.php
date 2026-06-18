@@ -21,7 +21,9 @@ return [
         'checkout' => 'Go to cart',
         'free_delivery_missing' => ':amount left for free delivery',
         'free_delivery_ready' => 'You have free delivery',
-        'ordering_unavailable' => 'Available: today, :open - :close',
+        'ordering_unavailable' => 'Next preparation time: :day, :open - :close',
+        'day_today' => 'today',
+        'day_tomorrow' => 'tomorrow',
     ],
     'legal' => [
         'privacy' => 'Privacy policy',

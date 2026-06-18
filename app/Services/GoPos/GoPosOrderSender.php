@@ -112,7 +112,7 @@ class GoPosOrderSender
             'address_street' => $order->street ?: $customer->street,
             'address_build_nr' => $order->building_number ?: $customer->building_number,
             'address_flat_nr' => $order->apartment_number ?: $customer->apartment_number,
-            'address_city' => 'Toruń',
+            'address_city' => $order->city ?: $customer->city ?: 'Toruń',
             'address_country' => 'Polska',
         ], fn ($value) => filled($value));
     }
@@ -173,7 +173,7 @@ class GoPosOrderSender
                     'street' => $order->street,
                     'build_nr' => $order->building_number,
                     'flat_nr' => $order->apartment_number,
-                    'city' => 'Toruń',
+                    'city' => $order->city ?: 'Toruń',
                     'country' => 'Polska',
                 ],
             ];

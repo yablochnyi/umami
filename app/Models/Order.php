@@ -18,6 +18,7 @@ class Order extends Model
         'payment_type',
         'wants_invoice',
         'nip',
+        'city',
         'street',
         'building_number',
         'apartment_number',

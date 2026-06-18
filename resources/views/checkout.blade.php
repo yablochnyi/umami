@@ -11,13 +11,21 @@
         'background-mobile' => $settings['backgroundMobile'],
         'ordering-open' => $settings['isOrderingOpen'] ? '1' : '0',
         'ordering-unavailable-message' => $settings['orderingUnavailableMessage'],
+        'opening-time' => $settings['openingTime'],
+        'delivery-opening-time' => $settings['deliveryOpeningTime'],
+        'closing-time' => $settings['closingTime'],
         'delivery-cost' => $settings['deliveryCost'],
+        'delivery-quote-url' => route('checkout.delivery-quote'),
         'free-delivery-from' => $settings['freeDeliveryFrom'],
         'minimum-delivery-amount' => $settings['minimumDeliveryAmount'],
         'empty-cart' => $copy['emptyCart'],
         'free-missing' => $copy['freeMissing'],
         'free-ready' => $copy['freeReady'],
         'minimum-missing' => $copy['minimumMissing'],
+        'pickup-availability' => $copy['pickupAvailability'],
+        'delivery-availability' => $copy['deliveryAvailability'],
+        'schedule-out-of-hours' => $copy['scheduleOutOfHours'],
+        'schedule-past-time' => $copy['schedulePastTime'],
         'clear-cart' => $success ? '1' : '0',
     ],
 ])
@@ -83,6 +91,14 @@
 
                     <div class="conditional" id="addressFields">
                         <h3>{{ $copy['address'] }}</h3>
+                        <label>
+                            <span>{{ $copy['city'] }} *</span>
+                            <select name="city" id="citySelect" autocomplete="address-level2">
+                                @foreach($settings['deliveryCities'] as $city)
+                                    <option value="{{ $city }}" @selected(old('city', 'Toruń') === $city)>{{ $city }}</option>
+                                @endforeach
+                            </select>
+                        </label>
                         <div class="field street-field">
                             <span>{{ $copy['street'] }} *</span>
                             <input name="street" value="{{ old('street') }}" autocomplete="address-line1" placeholder="{{ $copy['streetPlaceholder'] }}" data-street-autocomplete aria-autocomplete="list" aria-controls="streetSuggestions">
@@ -148,6 +164,7 @@
                 <h2>{{ $copy['items'] }}</h2>
                 <div class="summary-items" id="checkoutItems"></div>
                 <p class="summary-empty" id="checkoutEmpty" hidden>{{ $copy['emptyCart'] }}</p>
+                <p class="summary-hint availability" id="orderingAvailabilityHint" hidden></p>
                 <p class="summary-hint" id="freeDeliveryHint" hidden></p>
                 <p class="summary-hint error" id="minimumDeliveryHint" hidden></p>
                 <dl class="totals">

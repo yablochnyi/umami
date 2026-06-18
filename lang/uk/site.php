@@ -21,7 +21,9 @@ return [
         'checkout' => 'Перейти до кошика',
         'free_delivery_missing' => 'До безкоштовної доставки залишилось :amount',
         'free_delivery_ready' => 'У вас безкоштовна доставка',
-        'ordering_unavailable' => 'Доступно: сьогодні, :open - :close',
+        'ordering_unavailable' => 'Найближче виконання: :day, :open - :close',
+        'day_today' => 'сьогодні',
+        'day_tomorrow' => 'завтра',
     ],
     'legal' => [
         'privacy' => 'Політика конфіденційності',

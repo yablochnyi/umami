@@ -21,7 +21,9 @@ return [
         'checkout' => 'Przejdź do koszyka',
         'free_delivery_missing' => 'Do darmowej dostawy brakuje :amount',
         'free_delivery_ready' => 'Masz darmową dostawę',
-        'ordering_unavailable' => 'Dostępne: dzisiaj, :open - :close',
+        'ordering_unavailable' => 'Najbliższa realizacja: :day, :open - :close',
+        'day_today' => 'dzisiaj',
+        'day_tomorrow' => 'jutro',
     ],
     'legal' => [
         'privacy' => 'Polityka prywatności',

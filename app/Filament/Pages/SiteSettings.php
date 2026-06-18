@@ -36,15 +36,35 @@ class SiteSettings extends Page
     {
         $settings = SiteSetting::query()
             ->whereIn('key', ['opening_time', 'closing_time'])
-            ->orWhereIn('key', ['delivery_cost', 'free_delivery_from', 'minimum_delivery_amount'])
+            ->orWhereIn('key', [
+                'delivery_opening_time',
+                'delivery_cost',
+                'free_delivery_from',
+                'minimum_delivery_amount',
+                'restaurant_latitude',
+                'restaurant_longitude',
+                'delivery_tier_1_max_km',
+                'delivery_tier_1_cost',
+                'delivery_tier_2_max_km',
+                'delivery_tier_2_cost',
+                'delivery_tier_3_cost',
+            ])
             ->pluck('value', 'key');
 
         $this->form->fill([
             'opening_time' => $settings['opening_time'] ?? '12:00',
             'closing_time' => $settings['closing_time'] ?? '20:30',
+            'delivery_opening_time' => $settings['delivery_opening_time'] ?? '13:00',
             'delivery_cost' => $settings['delivery_cost'] ?? '0',
             'free_delivery_from' => $settings['free_delivery_from'] ?? '0',
             'minimum_delivery_amount' => $settings['minimum_delivery_amount'] ?? '0',
+            'restaurant_latitude' => $settings['restaurant_latitude'] ?? '53.0217',
+            'restaurant_longitude' => $settings['restaurant_longitude'] ?? '18.6676',
+            'delivery_tier_1_max_km' => $settings['delivery_tier_1_max_km'] ?? '3',
+            'delivery_tier_1_cost' => $settings['delivery_tier_1_cost'] ?? '9.99',
+            'delivery_tier_2_max_km' => $settings['delivery_tier_2_max_km'] ?? '8',
+            'delivery_tier_2_cost' => $settings['delivery_tier_2_cost'] ?? '14.99',
+            'delivery_tier_3_cost' => $settings['delivery_tier_3_cost'] ?? '24.99',
         ]);
     }
 
@@ -54,7 +74,7 @@ class SiteSettings extends Page
             ->statePath('data')
             ->components([
                 Section::make('Godziny pracy restauracji')
-                    ->description('W tych godzinach gość może dodawać dania do koszyka na stronie.')
+                    ->description('Zamówienia można składać cały czas, ale te godziny ograniczają najbliższy możliwy odbiór i dostawę.')
                     ->schema([
                         TimePicker::make('opening_time')
                             ->label('Otwarte od')
@@ -69,8 +89,14 @@ class SiteSettings extends Page
                             ->displayFormat('H:i')
                             ->required()
                             ->after('opening_time'),
+                        TimePicker::make('delivery_opening_time')
+                            ->label('Dostawa od')
+                            ->seconds(false)
+                            ->format('H:i')
+                            ->displayFormat('H:i')
+                            ->required(),
                     ])
-                    ->columns(2),
+                    ->columns(3),
                 Section::make('Dostawa')
                     ->description('Kwoty używane przy koszyku i późniejszym składaniu zamówienia.')
                     ->schema([
@@ -88,6 +114,49 @@ class SiteSettings extends Page
                             ->required(),
                         TextInput::make('minimum_delivery_amount')
                             ->label('Minimalna kwota dostawy')
+                            ->numeric()
+                            ->minValue(0)
+                            ->suffix('zł')
+                            ->required(),
+                    ])
+                    ->columns(3),
+                Section::make('Dostawa według odległości')
+                    ->description('Odległość liczona jest od restauracji do adresu dostawy. Te wartości zastępują stały koszt dostawy.')
+                    ->schema([
+                        TextInput::make('restaurant_latitude')
+                            ->label('Szerokość restauracji')
+                            ->numeric()
+                            ->required(),
+                        TextInput::make('restaurant_longitude')
+                            ->label('Długość restauracji')
+                            ->numeric()
+                            ->required(),
+                        TextInput::make('delivery_tier_1_max_km')
+                            ->label('Pierwszy próg do')
+                            ->numeric()
+                            ->minValue(0)
+                            ->suffix('km')
+                            ->required(),
+                        TextInput::make('delivery_tier_1_cost')
+                            ->label('Cena pierwszego progu')
+                            ->numeric()
+                            ->minValue(0)
+                            ->suffix('zł')
+                            ->required(),
+                        TextInput::make('delivery_tier_2_max_km')
+                            ->label('Drugi próg do')
+                            ->numeric()
+                            ->minValue(0)
+                            ->suffix('km')
+                            ->required(),
+                        TextInput::make('delivery_tier_2_cost')
+                            ->label('Cena drugiego progu')
+                            ->numeric()
+                            ->minValue(0)
+                            ->suffix('zł')
+                            ->required(),
+                        TextInput::make('delivery_tier_3_cost')
+                            ->label('Cena powyżej drugiego progu')
                             ->numeric()
                             ->minValue(0)
                             ->suffix('zł')
@@ -121,9 +190,17 @@ class SiteSettings extends Page
 
         $this->saveSetting('opening_time', 'Otwarte od', $data['opening_time']);
         $this->saveSetting('closing_time', 'Otwarte do', $data['closing_time']);
+        $this->saveSetting('delivery_opening_time', 'Dostawa od', $data['delivery_opening_time']);
         $this->saveSetting('delivery_cost', 'Koszt dostawy', (string) $data['delivery_cost'], 'number', 22);
         $this->saveSetting('free_delivery_from', 'Darmowa dostawa od', (string) $data['free_delivery_from'], 'number', 23);
         $this->saveSetting('minimum_delivery_amount', 'Minimalna kwota dostawy', (string) $data['minimum_delivery_amount'], 'number', 24);
+        $this->saveSetting('restaurant_latitude', 'Szerokość geograficzna restauracji', (string) $data['restaurant_latitude'], 'number', 25);
+        $this->saveSetting('restaurant_longitude', 'Długość geograficzna restauracji', (string) $data['restaurant_longitude'], 'number', 26);
+        $this->saveSetting('delivery_tier_1_max_km', 'Dostawa próg 1 do km', (string) $data['delivery_tier_1_max_km'], 'number', 27);
+        $this->saveSetting('delivery_tier_1_cost', 'Dostawa do 3 km', (string) $data['delivery_tier_1_cost'], 'number', 28);
+        $this->saveSetting('delivery_tier_2_max_km', 'Dostawa próg 2 do km', (string) $data['delivery_tier_2_max_km'], 'number', 29);
+        $this->saveSetting('delivery_tier_2_cost', 'Dostawa 3-8 km', (string) $data['delivery_tier_2_cost'], 'number', 30);
+        $this->saveSetting('delivery_tier_3_cost', 'Dostawa powyżej 8 km', (string) $data['delivery_tier_3_cost'], 'number', 31);
 
         Notification::make()
             ->success()

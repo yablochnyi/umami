@@ -34,7 +34,7 @@ body > * {
     z-index: 1;
 }
 
-button, input, textarea { font: inherit; }
+button, input, select, textarea { font: inherit; }
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
 [hidden] { display: none !important; }
@@ -304,6 +304,7 @@ label,
 }
 
 input,
+select,
 textarea {
     width: 100%;
     border: 1px solid var(--line);
@@ -313,7 +314,8 @@ textarea {
     outline: 0;
 }
 
-input {
+input,
+select {
     min-height: 44px;
     padding: 0 12px;
 }
@@ -324,6 +326,7 @@ textarea {
 }
 
 input:focus,
+select:focus,
 textarea:focus {
     border-color: rgba(184, 36, 33, .45);
     box-shadow: 0 0 0 3px rgba(184, 36, 33, .12);
@@ -457,6 +460,11 @@ textarea:focus {
 
 .summary-hint.error {
     background: rgba(184, 36, 33, .1);
+}
+
+.summary-hint.availability {
+    background: rgba(21, 19, 18, .055);
+    color: var(--ink);
 }
 
 .totals {

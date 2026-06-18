@@ -58,7 +58,8 @@ class OrderForm
                             TextInput::make('fulfillment_type')->label('Termin')->disabled(),
                             TextInput::make('scheduled_at')->label('Zaplanowano')->disabled(),
                         ]),
-                        Grid::make(3)->schema([
+                        Grid::make(4)->schema([
+                            TextInput::make('city')->label('Miasto')->disabled(),
                             TextInput::make('street')->label('Ulica')->disabled(),
                             TextInput::make('building_number')->label('Numer domu')->disabled(),
                             TextInput::make('apartment_number')->label('Numer mieszkania')->disabled(),

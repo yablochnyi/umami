@@ -13,6 +13,7 @@ class Customer extends Model
         'email',
         'phone',
         'nip',
+        'city',
         'street',
         'building_number',
         'apartment_number',
