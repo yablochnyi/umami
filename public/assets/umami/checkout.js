@@ -25,6 +25,10 @@ if (document.body.dataset.clearCart === '1') {
     window.localStorage.removeItem(cartStorageKey);
 }
 
+try {
+    window.localStorage.removeItem('umami_last_order_status');
+} catch (error) {}
+
 if (desktopBackground) {
     document.body.style.setProperty('--umami-bg-desktop', `url('${desktopBackground}')`);
 }

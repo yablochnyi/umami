@@ -48,6 +48,12 @@ class SiteSettings extends Page
                 'delivery_tier_2_max_km',
                 'delivery_tier_2_cost',
                 'delivery_tier_3_cost',
+                'delivery_tier_1_zone_id',
+                'delivery_tier_1_zone_name',
+                'delivery_tier_2_zone_id',
+                'delivery_tier_2_zone_name',
+                'delivery_tier_3_zone_id',
+                'delivery_tier_3_zone_name',
             ])
             ->pluck('value', 'key');
 
@@ -65,6 +71,12 @@ class SiteSettings extends Page
             'delivery_tier_2_max_km' => $settings['delivery_tier_2_max_km'] ?? '8',
             'delivery_tier_2_cost' => $settings['delivery_tier_2_cost'] ?? '14.99',
             'delivery_tier_3_cost' => $settings['delivery_tier_3_cost'] ?? '24.99',
+            'delivery_tier_1_zone_id' => $settings['delivery_tier_1_zone_id'] ?? '2',
+            'delivery_tier_1_zone_name' => $settings['delivery_tier_1_zone_name'] ?? 'Strefa 1',
+            'delivery_tier_2_zone_id' => $settings['delivery_tier_2_zone_id'] ?? '3',
+            'delivery_tier_2_zone_name' => $settings['delivery_tier_2_zone_name'] ?? 'Strefa 2',
+            'delivery_tier_3_zone_id' => $settings['delivery_tier_3_zone_id'] ?? '4',
+            'delivery_tier_3_zone_name' => $settings['delivery_tier_3_zone_name'] ?? 'Strefa 3',
         ]);
     }
 
@@ -161,6 +173,24 @@ class SiteSettings extends Page
                             ->minValue(0)
                             ->suffix('zł')
                             ->required(),
+                        TextInput::make('delivery_tier_1_zone_id')
+                            ->label('ID strefy 1 w GoPOS')
+                            ->required(),
+                        TextInput::make('delivery_tier_1_zone_name')
+                            ->label('Nazwa strefy 1 w GoPOS')
+                            ->required(),
+                        TextInput::make('delivery_tier_2_zone_id')
+                            ->label('ID strefy 2 w GoPOS')
+                            ->required(),
+                        TextInput::make('delivery_tier_2_zone_name')
+                            ->label('Nazwa strefy 2 w GoPOS')
+                            ->required(),
+                        TextInput::make('delivery_tier_3_zone_id')
+                            ->label('ID strefy 3 w GoPOS')
+                            ->required(),
+                        TextInput::make('delivery_tier_3_zone_name')
+                            ->label('Nazwa strefy 3 w GoPOS')
+                            ->required(),
                     ])
                     ->columns(3),
             ]);
@@ -201,6 +231,12 @@ class SiteSettings extends Page
         $this->saveSetting('delivery_tier_2_max_km', 'Dostawa próg 2 do km', (string) $data['delivery_tier_2_max_km'], 'number', 29);
         $this->saveSetting('delivery_tier_2_cost', 'Dostawa 3-8 km', (string) $data['delivery_tier_2_cost'], 'number', 30);
         $this->saveSetting('delivery_tier_3_cost', 'Dostawa powyżej 8 km', (string) $data['delivery_tier_3_cost'], 'number', 31);
+        $this->saveSetting('delivery_tier_1_zone_id', 'GoPOS ID strefy 1', (string) $data['delivery_tier_1_zone_id'], 'text', 32);
+        $this->saveSetting('delivery_tier_1_zone_name', 'GoPOS nazwa strefy 1', (string) $data['delivery_tier_1_zone_name'], 'text', 33);
+        $this->saveSetting('delivery_tier_2_zone_id', 'GoPOS ID strefy 2', (string) $data['delivery_tier_2_zone_id'], 'text', 34);
+        $this->saveSetting('delivery_tier_2_zone_name', 'GoPOS nazwa strefy 2', (string) $data['delivery_tier_2_zone_name'], 'text', 35);
+        $this->saveSetting('delivery_tier_3_zone_id', 'GoPOS ID strefy 3', (string) $data['delivery_tier_3_zone_id'], 'text', 36);
+        $this->saveSetting('delivery_tier_3_zone_name', 'GoPOS nazwa strefy 3', (string) $data['delivery_tier_3_zone_name'], 'text', 37);
 
         Notification::make()
             ->success()

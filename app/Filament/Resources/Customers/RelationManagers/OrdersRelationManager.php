@@ -34,9 +34,16 @@ class OrdersRelationManager extends RelationManager
                     ->label('Status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
+                        'waiting_gopos_acceptance' => 'info',
                         'sent_to_gopos' => 'success',
                         'gopos_error' => 'danger',
                         default => 'warning',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'waiting_gopos_acceptance' => 'Czeka w GoPOS',
+                        'sent_to_gopos' => 'Wysłane',
+                        'gopos_error' => 'Błąd',
+                        default => 'Nowe',
                     }),
             ])
             ->recordActions([

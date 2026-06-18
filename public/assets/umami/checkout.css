@@ -516,6 +516,18 @@ textarea:focus {
     color: #4f6b3f;
 }
 
+.notice.order-status {
+    border-color: rgba(21, 19, 18, .14);
+    background: rgba(21, 19, 18, .055);
+    color: var(--ink);
+}
+
+.notice.order-status.success {
+    border-color: rgba(127, 155, 106, .32);
+    background: rgba(127, 155, 106, .12);
+    color: #4f6b3f;
+}
+
 .notice.error {
     border-color: rgba(184, 36, 33, .26);
     color: var(--accent-dark);

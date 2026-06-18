@@ -19,6 +19,8 @@ class GoPosOrderSender
         $goposOrderId = $order->gopos_id;
         $goposOrder = $order->gopos_payload['created'] ?? $order->gopos_payload ?? [];
 
+        $existingPayload = is_array($order->gopos_payload) ? $order->gopos_payload : [];
+
         if (! $goposOrderId) {
             $payload = $this->orderPayload($order, $customerPayload['id'] ?? null);
             $response = $this->client->post("/api/v3/{$organizationId}/orders", $payload);
@@ -30,24 +32,20 @@ class GoPosOrderSender
             throw new RuntimeException('GoPOS created order response does not contain order id.');
         }
 
-        $sendResponse = $this->client->post("/api/v3/{$organizationId}/orders/{$goposOrderId}/send", [
-            'email' => $order->customer->email,
-            'send_without_ereceipt' => true,
-        ]);
         $freshResponse = $this->client->get("/api/v3/{$organizationId}/orders/{$goposOrderId}");
         $freshOrder = $freshResponse['data'] ?? $freshResponse;
         $finalGoPosOrder = filled($freshOrder) ? $freshOrder : $goposOrder;
 
         $order->update([
-            'status' => 'sent_to_gopos',
+            'status' => 'waiting_gopos_acceptance',
             'gopos_id' => $goposOrderId,
             'gopos_uid' => $finalGoPosOrder['uid'] ?? $goposOrder['uid'] ?? null,
             'gopos_number' => $finalGoPosOrder['number'] ?? $goposOrder['number'] ?? null,
-            'gopos_payload' => [
+            'gopos_payload' => array_filter(array_merge($existingPayload, [
                 'created' => $goposOrder,
-                'sent' => $sendResponse,
                 'fresh' => $freshOrder,
-            ],
+                'waiting_for_restaurant_acceptance' => true,
+            ])),
             'gopos_error' => null,
             'gopos_sent_at' => now(),
         ]);
@@ -164,17 +162,32 @@ class GoPosOrderSender
         ];
 
         if ($order->scheduled_at) {
-            $payload['estimated_delivery_at'] = $order->scheduled_at->format('Y-m-d\TH:i:s');
+            $scheduledAt = $order->scheduled_at->format('Y-m-d\TH:i:s');
+            $payload['estimated_delivery_at'] = $scheduledAt;
+            $payload['execution_at'] = $scheduledAt;
+            $payload['custom_fields']['requested_for'] = $scheduledAt;
         }
 
         if ($order->delivery_type === 'delivery') {
+            $deliveryQuote = data_get($order->gopos_payload, 'delivery_quote', []);
+            $deliveryZone = data_get($deliveryQuote, 'zone', []);
+            $coordinates = data_get($deliveryQuote, 'coordinates', []);
+
             $payload['delivery'] = [
+                'delivery_zone' => [
+                    'id' => (string) data_get($deliveryZone, 'id'),
+                    'name' => data_get($deliveryZone, 'name'),
+                ],
                 'address' => [
                     'street' => $order->street,
                     'build_nr' => $order->building_number,
                     'flat_nr' => $order->apartment_number,
                     'city' => $order->city ?: 'Toruń',
                     'country' => 'Polska',
+                ],
+                'coordinates' => [
+                    'latitude' => data_get($coordinates, 'lat'),
+                    'longitude' => data_get($coordinates, 'lng'),
                 ],
             ];
         }
@@ -186,6 +199,7 @@ class GoPosOrderSender
     {
         return Str::limit(implode(' | ', array_filter([
             $order->comment,
+            $order->scheduled_at ? 'Termin: '.$order->scheduled_at->timezone('Europe/Warsaw')->format('d.m.Y H:i') : null,
             $order->payment_type === 'cash' ? 'Płatność: gotówka' : 'Płatność: karta',
             $order->wants_invoice ? 'Faktura NIP: '.$order->nip : null,
         ])), 255, '');

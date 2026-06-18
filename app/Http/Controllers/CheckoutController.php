@@ -341,6 +341,12 @@ class CheckoutController extends Controller
             'deliveryTier2MaxKm' => $this->money($settings['delivery_tier_2_max_km'] ?? '8'),
             'deliveryTier2Cost' => $this->money($settings['delivery_tier_2_cost'] ?? '14.99'),
             'deliveryTier3Cost' => $this->money($settings['delivery_tier_3_cost'] ?? '24.99'),
+            'deliveryTier1ZoneId' => $settings['delivery_tier_1_zone_id'] ?? '2',
+            'deliveryTier1ZoneName' => $settings['delivery_tier_1_zone_name'] ?? 'Strefa 1',
+            'deliveryTier2ZoneId' => $settings['delivery_tier_2_zone_id'] ?? '3',
+            'deliveryTier2ZoneName' => $settings['delivery_tier_2_zone_name'] ?? 'Strefa 2',
+            'deliveryTier3ZoneId' => $settings['delivery_tier_3_zone_id'] ?? '4',
+            'deliveryTier3ZoneName' => $settings['delivery_tier_3_zone_name'] ?? 'Strefa 3',
         ];
     }
 

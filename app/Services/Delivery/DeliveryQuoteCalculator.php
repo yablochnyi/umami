@@ -18,12 +18,15 @@ class DeliveryQuoteCalculator
     public function quote(array $settings, ?string $city, ?string $street = null, ?string $building = null): array
     {
         $city = $this->normalizeCity($city);
-        $distance = $this->distance($settings, $city, $street, $building);
+        $destination = $this->destination($city, $street, $building);
+        $distance = $this->distance($settings, $city, $destination);
 
         return [
             'city' => $city,
             'distance_km' => $distance,
             'cost' => $this->costForDistance($settings, $distance),
+            'zone' => $this->zoneForDistance($settings, $distance),
+            'coordinates' => $destination,
         ];
     }
 
@@ -42,13 +45,41 @@ class DeliveryQuoteCalculator
         return (float) ($settings['deliveryTier3Cost'] ?? 24.99);
     }
 
-    private function distance(array $settings, string $city, ?string $street, ?string $building): ?float
+    private function zoneForDistance(array $settings, ?float $distance): array
     {
-        if (! filled($street)) {
-            return self::FALLBACK_DISTANCES[$city] ?? null;
+        $distance ??= (float) ($settings['deliveryTier1MaxKm'] ?? 3);
+
+        if ($distance <= (float) ($settings['deliveryTier1MaxKm'] ?? 3)) {
+            return [
+                'id' => (string) ($settings['deliveryTier1ZoneId'] ?? '2'),
+                'name' => (string) ($settings['deliveryTier1ZoneName'] ?? 'Strefa 1'),
+            ];
         }
 
-        $destination = $this->geocode($city, $street, $building);
+        if ($distance <= (float) ($settings['deliveryTier2MaxKm'] ?? 8)) {
+            return [
+                'id' => (string) ($settings['deliveryTier2ZoneId'] ?? '3'),
+                'name' => (string) ($settings['deliveryTier2ZoneName'] ?? 'Strefa 2'),
+            ];
+        }
+
+        return [
+            'id' => (string) ($settings['deliveryTier3ZoneId'] ?? '4'),
+            'name' => (string) ($settings['deliveryTier3ZoneName'] ?? 'Strefa 3'),
+        ];
+    }
+
+    private function destination(string $city, ?string $street, ?string $building): ?array
+    {
+        if (! filled($street)) {
+            return null;
+        }
+
+        return $this->geocode($city, $street, $building);
+    }
+
+    private function distance(array $settings, string $city, ?array $destination): ?float
+    {
         if (! $destination) {
             return self::FALLBACK_DISTANCES[$city] ?? null;
         }

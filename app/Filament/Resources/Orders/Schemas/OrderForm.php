@@ -27,6 +27,7 @@ class OrderForm
                                 ->label('Status')
                                 ->options([
                                     'new' => 'Nowe lokalnie',
+                                    'waiting_gopos_acceptance' => 'Czeka na potwierdzenie w GoPOS',
                                     'sent_to_gopos' => 'Wysłane do GoPOS',
                                     'gopos_error' => 'Błąd GoPOS',
                                 ])
