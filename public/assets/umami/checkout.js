@@ -21,6 +21,23 @@ const copy = {
     schedulePastTime: document.body.dataset.schedulePastTime || '',
 };
 
+function trackPurchase() {
+    const purchaseJson = document.body.dataset.purchaseEvent || '';
+    if (!purchaseJson || typeof window.gtag !== 'function') return;
+
+    try {
+        const purchase = JSON.parse(purchaseJson);
+        const storageKey = 'umami_purchase_tracked_' + purchase.transaction_id;
+
+        if (!purchase.transaction_id || window.sessionStorage.getItem(storageKey)) return;
+
+        window.gtag('event', 'purchase', purchase);
+        window.sessionStorage.setItem(storageKey, '1');
+    } catch (error) {}
+}
+
+trackPurchase();
+
 if (document.body.dataset.clearCart === '1') {
     window.localStorage.removeItem(cartStorageKey);
 }

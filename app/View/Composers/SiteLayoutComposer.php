@@ -55,6 +55,7 @@ class SiteLayoutComposer
                 'phone' => $settings['phone'] ?? '+48 513 233 722',
                 'phoneHref' => $settings['phone_href'] ?? 'tel:+48513233722',
                 'siteUrl' => rtrim($settings['site_url'] ?? 'https://umamisushifood.pl', '/'),
+                'googleAnalyticsId' => $settings['google_analytics_id'] ?? '',
             ],
             'nav' => trans('site.nav'),
             'cart' => [

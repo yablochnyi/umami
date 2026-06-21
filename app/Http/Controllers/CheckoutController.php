@@ -32,6 +32,7 @@ class CheckoutController extends Controller
             'localizedUrls' => $this->localizedUrls(),
             'submitUrl' => $locale === 'pl' ? route('checkout.submit') : route('checkout.submit.localized', ['locale' => $locale]),
             'success' => session('checkout_success'),
+            'purchaseEventJson' => json_encode(session('checkout_purchase'), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '',
             'error' => session('checkout_error'),
         ]);
     }
@@ -167,8 +168,22 @@ class CheckoutController extends Controller
                 ->with('checkout_error', $copy['goposError']);
         }
 
+        $order->loadMissing('items');
+
         return redirect($this->checkoutUrl($locale))
-            ->with('checkout_success', str_replace(':number', $this->publicOrderNumber($order), $copy['success']));
+            ->with('checkout_success', str_replace(':number', $this->publicOrderNumber($order), $copy['success']))
+            ->with('checkout_purchase', [
+                'transaction_id' => $order->number,
+                'value' => (float) $order->total,
+                'shipping' => (float) $order->delivery_cost,
+                'currency' => 'PLN',
+                'items' => $order->items->map(fn ($item): array => [
+                    'item_id' => (string) ($item->gopos_id ?: $item->menu_item_id),
+                    'item_name' => $item->name,
+                    'price' => (float) $item->unit_price,
+                    'quantity' => (int) $item->quantity,
+                ])->values()->all(),
+            ]);
     }
 
     public function streetAutocomplete(Request $request)

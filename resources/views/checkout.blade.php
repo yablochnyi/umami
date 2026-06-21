@@ -27,6 +27,7 @@
         'schedule-out-of-hours' => $copy['scheduleOutOfHours'],
         'schedule-past-time' => $copy['schedulePastTime'],
         'clear-cart' => $success ? '1' : '0',
+        'purchase-event' => $purchaseEventJson,
     ],
 ])
 

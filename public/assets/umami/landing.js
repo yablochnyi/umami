@@ -41,21 +41,14 @@ function storeCookieConsent(value) {
 }
 
 function loadGoogleAnalytics() {
-    if (!/^G-[A-Z0-9]+$/i.test(googleAnalyticsId || '') || window.umamiAnalyticsLoaded) return;
+    if (!/^G-[A-Z0-9]+$/i.test(googleAnalyticsId || '') || typeof window.gtag !== 'function') return;
 
-    window.umamiAnalyticsLoaded = true;
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function gtag() {
-        window.dataLayer.push(arguments);
-    };
-
-    window.gtag('js', new Date());
-    window.gtag('config', googleAnalyticsId);
-
-    const googleAnalyticsScript = document.createElement('script');
-    googleAnalyticsScript.async = true;
-    googleAnalyticsScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(googleAnalyticsId);
-    document.head.appendChild(googleAnalyticsScript);
+    window.gtag('consent', 'update', {
+        analytics_storage: 'granted',
+        ad_storage: 'granted',
+        ad_user_data: 'granted',
+        ad_personalization: 'granted',
+    });
 }
 
 function setCookieConsent(value) {

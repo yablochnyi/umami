@@ -34,10 +34,15 @@ class GoPosOrderSender
             throw new RuntimeException('GoPOS created order response does not contain order id.');
         }
 
-        $sendResponse = $this->client->post("/api/v3/{$organizationId}/orders/{$goposOrderId}/send", [
-            'email' => $order->customer->email,
-            'send_without_ereceipt' => true,
-        ]);
+        $sendResponse = null;
+
+        if (($goposOrder['status'] ?? null) !== 'EXTERNAL') {
+            $sendResponse = $this->client->post("/api/v3/{$organizationId}/orders/{$goposOrderId}/send", [
+                'email' => $order->customer->email,
+                'send_without_ereceipt' => true,
+            ]);
+        }
+
         $freshResponse = $this->client->get("/api/v3/{$organizationId}/orders/{$goposOrderId}");
         $freshOrder = $freshResponse['data'] ?? $freshResponse;
         $finalGoPosOrder = filled($freshOrder) ? $freshOrder : $goposOrder;
@@ -160,11 +165,13 @@ class GoPosOrderSender
 
         $payload = [
             'type' => $order->delivery_type === 'delivery' ? 'DELIVERY' : 'PICK_UP',
+            'status' => 'EXTERNAL',
             'source' => 'UMAMI_WWW',
             'source_number' => $order->number,
             'reference_id' => $order->number,
             'comment' => $this->orderComment($order),
             'items' => $items,
+            'transactions' => [$this->transactionPayload($order)],
             'contact' => [
                 'name' => $order->customer->name,
                 'phone_number' => $this->normalizePhone($order->customer->phone),
@@ -217,6 +224,23 @@ class GoPosOrderSender
         }
 
         return $this->filterRecursive($payload);
+    }
+
+    private function transactionPayload(Order $order): array
+    {
+        return [
+            'payment_method_id' => $order->payment_type === 'card' ? 2 : 1,
+            'paid' => false,
+            'price' => [
+                'amount' => (float) $order->total,
+                'currency' => 'PLN',
+            ],
+            'tender_price' => [
+                'amount' => (float) $order->total,
+                'currency' => 'PLN',
+            ],
+            'reference_id' => $order->number,
+        ];
     }
 
     private function orderComment(Order $order): string

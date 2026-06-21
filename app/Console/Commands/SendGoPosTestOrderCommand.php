@@ -116,14 +116,30 @@ class SendGoPosTestOrderCommand extends Command
             $itemPayload['tax'] = ['id' => (int) $taxId];
         }
 
+        $total = (float) data_get($itemPayload, 'unit_price.amount', 0) * $quantity;
+
         return [
             'type' => 'PICK_UP',
+            'status' => 'EXTERNAL',
             'source' => 'UMAMI_WWW',
             'source_number' => $referenceId,
             'reference_id' => $referenceId,
             'comment' => 'TEST - zamówienie techniczne z integracji strony. Prosimy nie realizować.',
             'estimated_delivery_at' => now()->addMinutes(45)->format('Y-m-d\TH:i:s'),
             'items' => [$itemPayload],
+            'transactions' => [[
+                'payment_method_id' => 1,
+                'paid' => false,
+                'price' => [
+                    'amount' => $total,
+                    'currency' => 'PLN',
+                ],
+                'tender_price' => [
+                    'amount' => $total,
+                    'currency' => 'PLN',
+                ],
+                'reference_id' => $referenceId,
+            ]],
             'contact' => [
                 'name' => (string) $this->option('name'),
                 'phone_number' => (string) $this->option('phone'),

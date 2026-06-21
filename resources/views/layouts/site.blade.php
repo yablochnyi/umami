@@ -40,11 +40,37 @@
         <meta name="twitter:description" content="{{ $metaDescription }}">
     @endisset
     <link rel="icon" href="{{ $siteLayout['settings']['logo'] }}">
+    @if($siteLayout['settings']['googleAnalyticsId'])
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'default', {
+                analytics_storage: 'denied',
+                ad_storage: 'denied',
+                ad_user_data: 'denied',
+                ad_personalization: 'denied'
+            });
+            try {
+                if (window.localStorage.getItem('umami_cookie_consent') === 'accepted') {
+                    gtag('consent', 'update', {
+                        analytics_storage: 'granted',
+                        ad_storage: 'granted',
+                        ad_user_data: 'granted',
+                        ad_personalization: 'granted'
+                    });
+                }
+            } catch (error) {}
+            gtag('js', new Date());
+            gtag('config', @json($siteLayout['settings']['googleAnalyticsId']));
+        </script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ urlencode($siteLayout['settings']['googleAnalyticsId']) }}"></script>
+    @endif
     @stack('preload')
     <link rel="stylesheet" href="{{ $siteLayout['assets']['css'] }}">
     @stack('head')
 </head>
 <body
+    data-google-analytics-id="{{ $siteLayout['settings']['googleAnalyticsId'] }}"
     @if($showCart ?? true)
         data-ordering-open="{{ $siteLayout['cart']['isOrderingOpen'] ? '1' : '0' }}"
         data-ordering-unavailable-message="{{ $siteLayout['cart']['orderingUnavailableMessage'] }}"
