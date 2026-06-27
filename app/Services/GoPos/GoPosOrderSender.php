@@ -4,6 +4,7 @@ namespace App\Services\GoPos;
 
 use App\Models\Customer;
 use App\Models\Order;
+use Carbon\CarbonImmutable;
 use RuntimeException;
 use Illuminate\Support\Str;
 
@@ -192,7 +193,7 @@ class GoPosOrderSender
         ];
 
         if ($order->scheduled_at) {
-            $scheduledAt = $order->scheduled_at->format('Y-m-d\TH:i:s');
+            $scheduledAt = $this->goPosDateTime($order);
             $payload['estimated_delivery_at'] = $scheduledAt;
             $payload['execution_at'] = $scheduledAt;
             $payload['custom_fields']['requested_for'] = $scheduledAt;
@@ -247,10 +248,29 @@ class GoPosOrderSender
     {
         return Str::limit(implode(' | ', array_filter([
             $order->comment,
-            $order->scheduled_at ? 'Termin: '.$order->scheduled_at->timezone('Europe/Warsaw')->format('d.m.Y H:i') : null,
+            $order->scheduled_at ? 'Termin: '.$this->displayScheduledAt($order) : null,
             $order->payment_type === 'cash' ? 'Płatność: gotówka' : 'Płatność: karta',
             $order->wants_invoice ? 'Faktura NIP: '.$order->nip : null,
         ])), 255, '');
+    }
+
+    private function goPosDateTime(Order $order): string
+    {
+        return $this->scheduledAtInWarsaw($order)->format('Y-m-d\TH:i:sP');
+    }
+
+    private function displayScheduledAt(Order $order): string
+    {
+        return $this->scheduledAtInWarsaw($order)->format('d.m.Y H:i');
+    }
+
+    private function scheduledAtInWarsaw(Order $order): CarbonImmutable
+    {
+        return CarbonImmutable::createFromFormat(
+            'Y-m-d H:i:s',
+            $order->scheduled_at->format('Y-m-d H:i:s'),
+            'Europe/Warsaw',
+        );
     }
 
     private function deliveryComment(array $deliveryQuote): string
