@@ -34,6 +34,7 @@ class MenuItemsTable
                 TextColumn::make('sort_order')->label('Sort')->sortable(),
                 IconColumn::make('is_bestseller')->label('Best')->boolean(),
                 IconColumn::make('is_active')->label('Active')->boolean(),
+                IconColumn::make('goorder_published')->label('GoOrder')->boolean(),
             ])
             ->filters([
                 SelectFilter::make('menu_category_id')

@@ -30,7 +30,9 @@ class OrderForm
                                     'waiting_gopos_acceptance' => 'Czeka na potwierdzenie w GoPOS',
                                     'sent_to_gopos' => 'Wysłane do GoPOS',
                                     'gopos_error' => 'Błąd GoPOS',
+                                    ...trans('tracking.states', [], 'pl'),
                                 ])
+                                ->disabled(fn ($record): bool => filled($record?->tracking_token))
                                 ->required(),
                         ]),
                         Textarea::make('gopos_error')
@@ -38,6 +40,9 @@ class OrderForm
                             ->rows(3)
                             ->disabled()
                             ->visible(fn ($record): bool => filled($record?->gopos_error)),
+                        TextInput::make('goorder_id')->label('GoOrder ID')->disabled()->visible(fn ($record): bool => filled($record?->tracking_token)),
+                        TextInput::make('goorder_error')->label('GoOrder: diagnostyka')->disabled()->visible(fn ($record): bool => filled($record?->goorder_error)),
+                        TextInput::make('expected_ready_at')->label('Przewidywany czas (UTC)')->disabled()->visible(fn ($record): bool => filled($record?->tracking_token)),
                     ]),
                 Section::make('Klient')
                     ->schema([

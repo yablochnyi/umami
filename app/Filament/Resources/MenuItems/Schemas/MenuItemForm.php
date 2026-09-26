@@ -18,6 +18,13 @@ class MenuItemForm
     {
         return $schema
             ->components([
+                \App\Filament\Schemas\MenuSchedule::make(),
+                Section::make('GoOrder')->schema([
+                    Toggle::make('goorder_published')->label('Present on storefront')->disabled()->dehydrated(false),
+                    TextInput::make('goorder_synced_at')->label('Last synchronization')->disabled()->dehydrated(false),
+                    Textarea::make('storefront_schedule')->label('Availability hours (GoOrder and local)')->disabled()->dehydrated(false)
+                        ->formatStateUsing(fn ($record) => $record ? app(\App\Services\GoOrder\MenuAvailability::class)->label($record) : ''),
+                ]),
                 Section::make('Category')
                     ->schema([
                         Select::make('menu_category_id')

@@ -48,6 +48,9 @@
 
         <form class="checkout-layout" method="post" action="{{ $submitUrl }}" id="checkoutForm">
             @csrf
+            @if($submissionKey)
+                <input type="hidden" name="submission_key" value="{{ $submissionKey }}">
+            @endif
             <input type="hidden" name="cart_json" id="cartJson">
 
             <section class="checkout-panel">

@@ -3,6 +3,15 @@
 use App\Support\UmamiSitemapFactory;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schedule;
+
+Schedule::command('goorder:sync-status')->everyMinute()->withoutOverlapping();
+Schedule::command('goorder:sync-menu')
+    ->dailyAt(config('goorder.menu_sync_time'))
+    ->timezone('Europe/Warsaw')
+    ->when(fn () => config('goorder.menu_sync_enabled'))
+    ->withoutOverlapping(30)
+    ->appendOutputTo(storage_path('logs/goorder-menu-sync.log'));
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());

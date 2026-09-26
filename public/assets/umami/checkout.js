@@ -42,10 +42,6 @@ if (document.body.dataset.clearCart === '1') {
     window.localStorage.removeItem(cartStorageKey);
 }
 
-try {
-    window.localStorage.removeItem('umami_last_order_status');
-} catch (error) {}
-
 if (desktopBackground) {
     document.body.style.setProperty('--umami-bg-desktop', `url('${desktopBackground}')`);
 }
@@ -166,10 +162,12 @@ function renderCart() {
     itemsNode.innerHTML = '';
     emptyNode.hidden = items.length > 0;
     submitButton.disabled = items.length === 0
+        || items.some((item) => !window.umamiMenu?.available(item.id))
         || (deliveryType() === 'delivery' && minimumDeliveryAmount > 0 && subtotal < minimumDeliveryAmount);
     cartJsonNode.value = JSON.stringify(items.map((item) => ({
         id: item.id,
         quantity: Number(item.quantity || 0),
+        modifiers: item.modifiers || {},
     })));
 
     items.forEach((item) => {
@@ -187,6 +185,26 @@ function renderCart() {
         const price = document.createElement('p');
         price.textContent = item.price || '';
         body.append(title, price);
+        const state = window.umamiMenu?.items[item.id];
+        const availability = document.createElement('p');
+        availability.className = 'summary-hint' + (!state?.available || window.umamiMenu?.failed ? ' error' : '');
+        availability.textContent = window.umamiMenu?.pending ? window.umamiMenu.copy.checking
+            : window.umamiMenu?.failed ? window.umamiMenu.copy.error
+            : !state?.available ? [window.umamiMenu?.copy.unavailable, state?.label].filter(Boolean).join(': ') : (state?.label || '');
+        if (availability.textContent) body.append(availability);
+        (state?.choices || []).forEach((choice) => {
+            const label = document.createElement('label');
+            label.textContent = choice.name;
+            const select = document.createElement('select');
+            select.required = true;
+            select.dataset.modifierItem = item.id;
+            select.dataset.modifierGroup = choice.id;
+            select.append(new Option(window.umamiMenu.copy.select, ''));
+            choice.options.forEach((option) => select.append(new Option(option.name, option.id)));
+            select.value = item.modifiers?.[choice.id] || '';
+            label.append(select);
+            body.append(label);
+        });
 
         const remove = document.createElement('button');
         remove.className = 'remove-item';
@@ -485,6 +503,11 @@ document.querySelectorAll('input[name="scheduled_day"], input[name="scheduled_ti
 document.getElementById('checkoutForm').addEventListener('submit', (event) => {
     const items = sortedItems(readCart());
     const subtotal = cartSubtotal(items);
+    if (items.some((item) => !window.umamiMenu?.available(item.id))) {
+        event.preventDefault();
+        window.umamiMenu?.refresh();
+        return;
+    }
 
     if (items.length === 0) {
         event.preventDefault();
@@ -521,7 +544,21 @@ document.getElementById('checkoutForm').addEventListener('submit', (event) => {
     document.getElementById('cartJson').value = JSON.stringify(items.map((item) => ({
         id: item.id,
         quantity: Number(item.quantity || 0),
+        modifiers: item.modifiers || {},
     })));
+    document.getElementById('submitOrder').disabled = true;
+});
+
+window.addEventListener('pageshow', () => renderCart());
+document.addEventListener('menu-availability', () => renderCart());
+document.addEventListener('change', (event) => {
+    const select = event.target.closest('[data-modifier-item]');
+    if (!select) return;
+    const cart = readCart();
+    const item = cart[select.dataset.modifierItem];
+    if (!item) return;
+    item.modifiers = { ...(item.modifiers || {}), [select.dataset.modifierGroup]: select.value };
+    writeCart(cart);
 });
 
 setupStreetAutocomplete();

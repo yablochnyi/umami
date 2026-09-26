@@ -15,6 +15,7 @@ class MenuCategoryForm
     {
         return $schema
             ->components([
+                \App\Filament\Schemas\MenuSchedule::make(),
                 Section::make('Name')
                     ->schema([
                         Grid::make(3)->schema([
@@ -25,6 +26,7 @@ class MenuCategoryForm
                     ]),
                 Section::make('Settings')
                     ->schema([
+                        Toggle::make('goorder_import_enabled')->label('Include this GoOrder category')->default(true),
                         Grid::make(3)->schema([
                             TextInput::make('slug')->required()->maxLength(255),
                             TextInput::make('sort_order')->label('Sort')->numeric()->default(0)->required(),

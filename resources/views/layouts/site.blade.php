@@ -40,7 +40,7 @@
         <meta name="twitter:description" content="{{ $metaDescription }}">
     @endisset
     <link rel="icon" href="{{ $siteLayout['settings']['logo'] }}">
-    @if($siteLayout['settings']['googleAnalyticsId'])
+    @if($siteLayout['settings']['googleAnalyticsId'] && ! ($privatePage ?? false))
         <script>
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -70,7 +70,7 @@
     @stack('head')
 </head>
 <body
-    data-google-analytics-id="{{ $siteLayout['settings']['googleAnalyticsId'] }}"
+    data-google-analytics-id="{{ ($privatePage ?? false) ? '' : $siteLayout['settings']['googleAnalyticsId'] }}"
     @if($showCart ?? true)
         data-ordering-open="{{ $siteLayout['cart']['isOrderingOpen'] ? '1' : '0' }}"
         data-ordering-unavailable-message="{{ $siteLayout['cart']['orderingUnavailableMessage'] }}"
@@ -90,13 +90,18 @@
 >
     @include('partials.site-header', ['showCart' => $showCart ?? true])
 
+    <a id="activeOrderLink" href="#" hidden data-copy="{{ json_encode(__('tracking', [], $locale)) }}" style="position:fixed;bottom:16px;left:16px;z-index:40;padding:12px 18px;background:#151312;color:#fff;border-radius:6px;text-decoration:none;max-width:calc(100% - 32px);font-size:14px;overflow-wrap:anywhere">{{ __('tracking.return', [], $locale) }}</a>
+
     @yield('content')
 
     @include('partials.site-footer')
 
     @yield('afterFooter')
 
+    <script id="menuAvailabilityData" type="application/json">{!! \Illuminate\Support\Js::encode($menuAvailability) !!}</script>
+    <script src="/assets/umami/menu-availability.js?v={{ filemtime(public_path('assets/umami/menu-availability.js')) }}" defer></script>
     <script src="{{ $siteLayout['assets']['js'] }}" defer></script>
+    <script src="/assets/umami/active-order.js" defer></script>
     @stack('scripts')
 </body>
 </html>

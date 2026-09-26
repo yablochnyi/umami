@@ -41,14 +41,14 @@ class HomeController extends Controller
             ->all();
 
         $categories = MenuCategory::query()
-            ->where('is_active', true)
-            ->with(['items' => fn ($query) => $query->where('is_active', true)->orderBy('sort_order')])
+            ->visible()
+            ->with(['items' => fn ($query) => $query->visible()->orderBy('sort_order')])
             ->orderBy('sort_order')
             ->get();
 
         $bestsellers = MenuItem::query()
             ->with('category')
-            ->where('is_active', true)
+            ->visible()
             ->where('is_bestseller', true)
             ->orderBy('sort_order')
             ->get();

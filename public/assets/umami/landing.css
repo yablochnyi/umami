@@ -1399,3 +1399,6 @@ footer {
 }
 
 .map-frame { margin-top: 18px; }
+
+.menu-availability-label { font-size: 12px; line-height: 1.5; color: #75685e; margin: 8px 0 0; overflow-wrap: anywhere; }
+.cart-control button:disabled { opacity: .45; cursor: not-allowed; }

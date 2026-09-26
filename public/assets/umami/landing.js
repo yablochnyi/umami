@@ -104,11 +104,7 @@ function showCartNotice(message) {
 }
 
 function applyOrderingState() {
-    document.querySelectorAll('[data-cart-add], [data-cart-increase]').forEach((button) => {
-        button.classList.remove('is-unavailable');
-        button.setAttribute('aria-disabled', 'false');
-        button.setAttribute('title', button.getAttribute('aria-label') || '');
-    });
+    window.umamiMenu?.apply();
 }
 
 function parsePriceAmount(price) {
@@ -147,6 +143,7 @@ function setCartItem(control, quantity) {
     const nextQuantity = Math.max(0, Number(quantity || 0));
     if (nextQuantity > 0) {
         cart[id] = {
+            ...cart[id],
             id,
             name: control.dataset.cartName || '',
             price: control.dataset.cartPrice || '',
@@ -345,6 +342,10 @@ document.addEventListener('click', (event) => {
     if (cartButton.matches('[data-cart-decrease]')) {
         setCartItem(control, currentQuantity - 1);
     } else {
+        if (!window.umamiMenu?.available(control.dataset.cartId)) {
+            showCartNotice(window.umamiMenu?.copy.unavailable);
+            return;
+        }
         setCartItem(control, currentQuantity + 1);
     }
 });

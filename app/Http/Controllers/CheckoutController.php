@@ -7,6 +7,9 @@ use App\Models\MenuItem;
 use App\Models\Order;
 use App\Models\SiteSetting;
 use App\Services\Delivery\DeliveryQuoteCalculator;
+use App\Services\GoOrder\GoOrderService;
+use App\Services\GoOrder\MenuAvailability;
+use App\Services\GoOrder\GoOrderModifiers;
 use App\Services\GoPos\GoPosOrderSender;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
@@ -25,6 +28,18 @@ class CheckoutController extends Controller
         $settings = $this->settings();
         $copy = $this->copy($locale);
 
+        $submissionKey = null;
+        if (config('goorder.enabled')) {
+            if (request()->boolean('new')) {
+                session()->forget('checkout_submission_key');
+            }
+            $submissionKey = session('checkout_submission_key', (string) Str::uuid());
+            session(['checkout_submission_key' => $submissionKey]);
+            if ($existing = Order::query()->where('submission_key', $submissionKey)->first()) {
+                return redirect($existing->trackingUrl());
+            }
+        }
+
         return view('checkout', [
             'locale' => $locale,
             'copy' => $copy,
@@ -34,6 +49,7 @@ class CheckoutController extends Controller
             'success' => session('checkout_success'),
             'purchaseEventJson' => json_encode(session('checkout_purchase'), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '',
             'error' => session('checkout_error'),
+            'submissionKey' => $submissionKey,
         ]);
     }
 
@@ -44,6 +60,14 @@ class CheckoutController extends Controller
 
         $copy = $this->copy($locale);
         $settings = $this->settings();
+
+        if (config('goorder.enabled')) {
+            $request->validate(['submission_key' => ['required', 'uuid']]);
+            abort_unless(hash_equals((string) session('checkout_submission_key'), $request->string('submission_key')->toString()), 419);
+            if ($existing = Order::query()->where('submission_key', $request->input('submission_key'))->first()) {
+                return redirect($existing->trackingUrl());
+            }
+        }
 
         $data = $request->validate([
             'cart_json' => ['required', 'string'],
@@ -65,11 +89,18 @@ class CheckoutController extends Controller
         ]);
 
         $cart = json_decode($data['cart_json'], true);
-        if (! is_array($cart)) {
+        if (! is_array($cart) || ! array_is_list($cart) || count($cart) > 100
+            || collect($cart)->contains(fn ($row) => ! is_array($row)
+                || ! filter_var($row['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])
+                || ! filter_var($row['quantity'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 100]]))
+            || collect($cart)->pluck('id')->unique()->count() !== count($cart)) {
             return back()->withInput()->with('checkout_error', $copy['invalidCart']);
         }
 
         $items = $this->resolveCartItems($cart, $locale);
+        if ($items->count() !== count($cart)) {
+            return back()->withInput()->with('checkout_error', $copy['invalidCart']);
+        }
         if ($items->isEmpty()) {
             return back()->withInput()->with('checkout_error', $copy['emptyCart']);
         }
@@ -87,6 +118,13 @@ class CheckoutController extends Controller
             }
         }
 
+        $availabilityAt = $data['fulfillment_type'] === 'scheduled' ? $scheduledAt : CarbonImmutable::now('Europe/Warsaw');
+        $orderType = $data['delivery_type'] === 'delivery' ? 'DELIVERY' : 'PICK_UP';
+        $unavailable = $items->filter(fn ($row) => ! app(MenuAvailability::class)->check($row['menu_item'], $availabilityAt, $orderType));
+        if ($unavailable->isNotEmpty()) {
+            return back()->withInput()->with('checkout_error', __('availability.cart', ['items' => $unavailable->pluck('name')->implode(', ')]));
+        }
+
         $quote = $data['delivery_type'] === 'delivery'
             ? $deliveryQuote->quote($settings, $data['city'] ?? null, $data['street'] ?? null, $data['building_number'] ?? null)
             : ['cost' => 0.0, 'distance_km' => null];
@@ -97,7 +135,7 @@ class CheckoutController extends Controller
 
         $phone = $this->normalizePhone($data['phone']);
 
-        $order = DB::transaction(function () use ($data, $items, $subtotal, $deliveryCost, $settings, $phone, $scheduledAt, $quote): Order {
+        $order = DB::transaction(function () use ($data, $items, $subtotal, $deliveryCost, $settings, $phone, $scheduledAt, $quote, $request, $locale): Order {
             $customer = Customer::query()->updateOrCreate(
                 ['phone' => $phone],
                 [
@@ -115,9 +153,15 @@ class CheckoutController extends Controller
                 'customer_id' => $customer->id,
                 'number' => 'UMAMI-'.now('Europe/Warsaw')->format('Ymd-His').'-'.Str::upper(Str::random(4)),
                 'status' => 'new',
+                'submission_key' => config('goorder.enabled') ? $request->input('submission_key') : null,
+                'tracking_token' => config('goorder.enabled') ? Str::random(64) : null,
+                'locale' => $locale,
+                'goorder_checkout' => config('goorder.enabled') ? [
+                    'contact' => ['name' => $data['name'], 'email' => $data['email'], 'phone' => $phone],
+                ] : null,
                 'delivery_type' => $data['delivery_type'],
                 'fulfillment_type' => $data['fulfillment_type'],
-                'scheduled_at' => $scheduledAt,
+                'scheduled_at' => config('goorder.enabled') ? $scheduledAt?->utc() : $scheduledAt,
                 'payment_type' => $data['payment_type'],
                 'wants_invoice' => (bool) ($data['wants_invoice'] ?? false),
                 'nip' => $data['nip'] ?? null,
@@ -147,12 +191,19 @@ class CheckoutController extends Controller
                     'payload' => [
                         'gopos_tax_id' => $item['menu_item']->gopos_tax_id,
                         'gopos_payload' => $item['menu_item']->gopos_payload,
+                        'modifiers' => $item['modifiers'],
                     ],
                 ]);
             }
 
             return $order;
         });
+
+        if (config('goorder.enabled')) {
+            app(GoOrderService::class)->send($order);
+
+            return redirect($order->trackingUrl());
+        }
 
         try {
             $sender->send($order);
@@ -268,9 +319,10 @@ class CheckoutController extends Controller
     {
         $ids = collect($cart)->pluck('id')->filter()->map(fn ($id) => (int) $id)->unique()->values();
         $menuItems = MenuItem::query()
+            ->with('category')
             ->whereIn('id', $ids)
-            ->where('is_active', true)
-            ->whereNotNull('gopos_id')
+            ->visible()
+            ->whereNotNull(config('goorder.enabled') ? 'goorder_id' : 'gopos_id')
             ->get()
             ->keyBy('id');
 
@@ -282,9 +334,14 @@ class CheckoutController extends Controller
             }
 
             $price = $this->priceAmount($menuItem->price);
+            $modifiers = app(GoOrderModifiers::class)->validate($menuItem->goorder_payload['choices'] ?? [], $row['modifiers'] ?? []);
+            if (! config('goorder.enabled') && collect($modifiers)->contains(fn ($m) => empty($m['option']['gopos_id']) || empty($m['option']['gopos_group_id']))) {
+                throw \Illuminate\Validation\ValidationException::withMessages(['cart_json' => __('availability.unavailable')]);
+            }
 
             return [
                 'menu_item' => $menuItem,
+                'modifiers' => $modifiers,
                 'name' => $menuItem->getTranslation('name', $locale, false) ?: $menuItem->getTranslation('name', 'pl', false),
                 'unit_price' => $price,
                 'quantity' => $quantity,
@@ -729,5 +786,4 @@ class CheckoutController extends Controller
             ? $path
             : asset('storage/'.$path);
     }
-
 }

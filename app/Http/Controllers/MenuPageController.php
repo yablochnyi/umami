@@ -20,8 +20,8 @@ class MenuPageController extends Controller
         $siteUrl = $this->siteUrl();
         $category = MenuCategory::query()
             ->where('slug', $categorySlug)
-            ->where('is_active', true)
-            ->with(['items' => fn ($query) => $query->where('is_active', true)->orderBy('sort_order')])
+            ->visible()
+            ->with(['items' => fn ($query) => $query->visible()->orderBy('sort_order')])
             ->firstOrFail();
 
         app()->setLocale($locale);
@@ -60,13 +60,13 @@ class MenuPageController extends Controller
         $siteUrl = $this->siteUrl();
         $category = MenuCategory::query()
             ->where('slug', $categorySlug)
-            ->where('is_active', true)
+            ->visible()
             ->firstOrFail();
 
         $item = MenuItem::query()
             ->where('menu_category_id', $category->id)
             ->where('slug', $itemSlug)
-            ->where('is_active', true)
+            ->visible()
             ->firstOrFail();
 
         app()->setLocale($locale);
@@ -81,7 +81,7 @@ class MenuPageController extends Controller
         $similarItems = MenuItem::query()
             ->where('menu_category_id', $category->id)
             ->where('id', '!=', $item->id)
-            ->where('is_active', true)
+            ->visible()
             ->orderByDesc('is_bestseller')
             ->orderBy('sort_order')
             ->limit(4)
@@ -118,8 +118,8 @@ class MenuPageController extends Controller
         $siteUrl = rtrim($siteUrl, '/');
 
         $categories = MenuCategory::query()
-            ->where('is_active', true)
-            ->with(['items' => fn ($query) => $query->where('is_active', true)])
+            ->visible()
+            ->with(['items' => fn ($query) => $query->visible()])
             ->orderBy('sort_order')
             ->get();
 

@@ -12,6 +12,14 @@ class MenuItem extends Model
 
     protected $fillable = [
         'gopos_id',
+        'goorder_id',
+        'goorder_reference_id',
+        'goorder_published',
+        'goorder_synced_at',
+        'goorder_rules',
+        'goorder_payload',
+        'schedule_enabled',
+        'schedule_hours',
         'menu_category_id',
         'gopos_category_id',
         'gopos_tax_id',
@@ -33,6 +41,12 @@ class MenuItem extends Model
     ];
 
     protected $casts = [
+        'goorder_published' => 'boolean',
+        'goorder_synced_at' => 'datetime',
+        'goorder_rules' => 'array',
+        'goorder_payload' => 'array',
+        'schedule_enabled' => 'boolean',
+        'schedule_hours' => 'array',
         'is_bestseller' => 'boolean',
         'is_active' => 'boolean',
         'gopos_payload' => 'array',
@@ -40,6 +54,13 @@ class MenuItem extends Model
     ];
 
     public array $translatable = ['name', 'description', 'marketing_description', 'seo_title', 'seo_description'];
+
+    public function scopeVisible($query)
+    {
+        return $query->where('is_active', true)
+            ->where(fn ($q) => $q->whereNull('goorder_published')->orWhere('goorder_published', true))
+            ->whereHas('category', fn ($q) => $q->visible());
+    }
 
     public function category(): BelongsTo
     {

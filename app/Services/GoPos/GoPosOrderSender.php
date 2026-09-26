@@ -141,6 +141,13 @@ class GoPosOrderSender
             ];
 
             $taxId = data_get($item->payload, 'gopos_tax_id');
+            if ($modifiers = data_get($item->payload, 'modifiers', [])) {
+                $payload['sub_items'] = array_map(fn ($m) => [
+                    'quantity' => 1, 'item_id' => $m['option']['gopos_id'],
+                    'modifier_group_id' => $m['option']['gopos_group_id'],
+                    'unit_price' => ['amount' => 0, 'currency' => 'PLN'],
+                ], $modifiers);
+            }
             if ($taxId) {
                 $payload['tax'] = ['id' => (int) $taxId];
             }

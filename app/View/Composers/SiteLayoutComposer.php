@@ -20,6 +20,7 @@ class SiteLayoutComposer
         $locale = $this->locale($data['locale'] ?? app()->getLocale());
 
         app()->setLocale($locale);
+        $view->with('menuAvailability', app(\App\Services\GoOrder\MenuAvailability::class)->snapshot());
 
         if (! isset(self::$commonCache[$locale])) {
             self::$commonCache[$locale] = $this->commonLayoutData($locale);
