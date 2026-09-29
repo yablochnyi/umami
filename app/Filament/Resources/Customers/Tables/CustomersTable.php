@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Customers\Tables;
 
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -14,33 +15,35 @@ class CustomersTable
             ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('name')
-                    ->label('Klient')
+                    ->label(__('Klient'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('phone')
-                    ->label('Telefon')
+                    ->label(__('Telefon'))
                     ->searchable(),
                 TextColumn::make('email')
-                    ->label('E-mail')
+                    ->label(__('E-mail'))
                     ->searchable()
                     ->toggleable(),
                 TextColumn::make('city')
-                    ->label('Miasto')
+                    ->label(__('Miasto'))
                     ->searchable()
                     ->toggleable(),
                 TextColumn::make('orders_count')
-                    ->label('Zamówienia')
+                    ->visible(fn () => auth()->user()?->hasAdminPermission('orders.view'))
+                    ->label(__('Zamówienia'))
                     ->counts('orders')
                     ->sortable(),
                 TextColumn::make('gopos_id')
-                    ->label('GoPOS ID')
+                    ->label(__('GoPOS ID'))
                     ->toggleable(),
                 TextColumn::make('created_at')
-                    ->label('Dodano')
+                    ->label(__('Dodano'))
                     ->dateTime('d.m.Y H:i')
                     ->sortable(),
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
             ]);
     }

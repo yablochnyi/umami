@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Orders\Tables;
 
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -16,38 +17,38 @@ class OrdersTable
             ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('created_at')
-                    ->label('Data')
+                    ->label(__('Data'))
                     ->dateTime('d.m.Y H:i')
                     ->sortable(),
                 TextColumn::make('gopos_number')
-                    ->label('Nr GoPOS')
+                    ->label(__('Nr GoPOS'))
                     ->placeholder('-')
                     ->searchable(),
                 TextColumn::make('number')
-                    ->label('Nr wewn.')
+                    ->label(__('Nr wewn.'))
                     ->searchable()
                     ->toggleable(),
                 TextColumn::make('customer.name')
-                    ->label('Klient')
+                    ->label(__('Klient'))
                     ->searchable(),
                 TextColumn::make('customer.phone')
-                    ->label('Telefon')
+                    ->label(__('Telefon'))
                     ->searchable(),
                 TextColumn::make('total')
-                    ->label('Razem')
+                    ->label(__('Razem'))
                     ->money('PLN')
                     ->sortable(),
                 TextColumn::make('delivery_type')
-                    ->label('Typ')
-                    ->formatStateUsing(fn (?string $state): string => $state === 'delivery' ? 'Dostawa' : 'Na wynos'),
+                    ->label(__('Typ'))
+                    ->formatStateUsing(fn (?string $state): string => $state === 'delivery' ? __('Dostawa') : __('Na wynos')),
                 TextColumn::make('payment_type')
-                    ->label('Płatność')
-                    ->formatStateUsing(fn (?string $state): string => $state === 'cash' ? 'Gotówka' : 'Karta'),
+                    ->label(__('Płatność'))
+                    ->formatStateUsing(fn (?string $state): string => $state === 'cash' ? __('Gotówka') : __('Karta')),
                 IconColumn::make('wants_invoice')
-                    ->label('Faktura')
+                    ->label(__('Faktura'))
                     ->boolean(),
                 TextColumn::make('status')
-                    ->label('Status')
+                    ->label(__('Status'))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'waiting_gopos_acceptance' => 'info',
@@ -58,31 +59,32 @@ class OrdersTable
                         default => 'warning',
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'waiting_gopos_acceptance' => 'Czeka w GoPOS',
-                        'sent_to_gopos' => 'Wysłane',
-                        'gopos_error' => 'Błąd',
-                        default => trans('tracking.states.'.$state, [], 'pl'),
+                        'waiting_gopos_acceptance' => __('Czeka w GoPOS'),
+                        'sent_to_gopos' => __('Wysłane'),
+                        'gopos_error' => __('Błąd'),
+                        default => trans('tracking.states.'.$state),
                     }),
             ])
             ->filters([
                 SelectFilter::make('status')
-                    ->label('Status')
+                    ->label(__('Status'))
                     ->options([
-                        'new' => 'Nowe lokalnie',
-                        'waiting_gopos_acceptance' => 'Czeka na potwierdzenie w GoPOS',
-                        'sent_to_gopos' => 'Wysłane do GoPOS',
-                        'gopos_error' => 'Błąd GoPOS',
-                        ...trans('tracking.states', [], 'pl'),
+                        'new' => __('Nowe lokalnie'),
+                        'waiting_gopos_acceptance' => __('Czeka na potwierdzenie w GoPOS'),
+                        'sent_to_gopos' => __('Wysłane do GoPOS'),
+                        'gopos_error' => __('Błąd GoPOS'),
+                        ...trans('tracking.states'),
                     ]),
                 SelectFilter::make('delivery_type')
-                    ->label('Typ')
+                    ->label(__('Typ'))
                     ->options([
-                        'pickup' => 'Na wynos',
-                        'delivery' => 'Dostawa',
+                        'pickup' => __('Na wynos'),
+                        'delivery' => __('Dostawa'),
                     ]),
             ])
             ->recordActions([
-                EditAction::make()->label('Podgląd'),
+                ViewAction::make(),
+                EditAction::make(),
             ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\MenuCategories\Schemas;
 
+use App\Filament\Schemas\MenuSchedule;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -15,38 +16,38 @@ class MenuCategoryForm
     {
         return $schema
             ->components([
-                \App\Filament\Schemas\MenuSchedule::make(),
-                Section::make('Name')
+                MenuSchedule::make(),
+                Section::make(__('Name'))
                     ->schema([
                         Grid::make(3)->schema([
-                            TextInput::make('name.pl')->label('PL')->required(),
-                            TextInput::make('name.uk')->label('UA')->required(),
-                            TextInput::make('name.en')->label('EN')->required(),
+                            TextInput::make('name.pl')->label(__('PL'))->required(),
+                            TextInput::make('name.uk')->label(__('UA'))->required(),
+                            TextInput::make('name.en')->label(__('EN'))->required(),
                         ]),
                     ]),
-                Section::make('Settings')
+                Section::make(__('Settings'))
                     ->schema([
-                        Toggle::make('goorder_import_enabled')->label('Include this GoOrder category')->default(true),
+                        Toggle::make('goorder_import_enabled')->label(__('Include this GoOrder category'))->default(true),
                         Grid::make(3)->schema([
-                            TextInput::make('slug')->required()->maxLength(255),
-                            TextInput::make('sort_order')->label('Sort')->numeric()->default(0)->required(),
-                            Toggle::make('is_active')->label('Active')->default(true),
+                            TextInput::make('slug')->label(__('Slug'))->required()->maxLength(255),
+                            TextInput::make('sort_order')->label(__('Sort'))->numeric()->default(0)->required(),
+                            Toggle::make('is_active')->label(__('Active'))->default(true),
                         ]),
                     ]),
-                Section::make('SEO intro before dishes')
+                Section::make(__('SEO intro before dishes'))
                     ->schema([
                         Grid::make(3)->schema([
-                            Textarea::make('intro_text.pl')->label('PL')->rows(4),
-                            Textarea::make('intro_text.uk')->label('UA')->rows(4),
-                            Textarea::make('intro_text.en')->label('EN')->rows(4),
+                            Textarea::make('intro_text.pl')->label(__('PL'))->rows(4),
+                            Textarea::make('intro_text.uk')->label(__('UA'))->rows(4),
+                            Textarea::make('intro_text.en')->label(__('EN'))->rows(4),
                         ]),
                     ]),
-                Section::make('SEO text after dishes')
+                Section::make(__('SEO text after dishes'))
                     ->schema([
                         Grid::make(3)->schema([
-                            Textarea::make('seo_text.pl')->label('PL')->rows(7),
-                            Textarea::make('seo_text.uk')->label('UA')->rows(7),
-                            Textarea::make('seo_text.en')->label('EN')->rows(7),
+                            Textarea::make('seo_text.pl')->label(__('PL'))->rows(7),
+                            Textarea::make('seo_text.uk')->label(__('UA'))->rows(7),
+                            Textarea::make('seo_text.en')->label(__('EN'))->rows(7),
                         ]),
                     ]),
             ]);

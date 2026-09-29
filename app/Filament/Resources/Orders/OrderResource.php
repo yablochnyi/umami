@@ -2,32 +2,24 @@
 
 namespace App\Filament\Resources\Orders;
 
+use App\Filament\Resources\AdminResource;
 use App\Filament\Resources\Orders\Pages\EditOrder;
 use App\Filament\Resources\Orders\Pages\ListOrders;
+use App\Filament\Resources\Orders\Pages\ViewOrder;
 use App\Filament\Resources\Orders\Schemas\OrderForm;
 use App\Filament\Resources\Orders\Tables\OrdersTable;
 use App\Models\Order;
 use BackedEnum;
-use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use UnitEnum;
 
-class OrderResource extends Resource
+class OrderResource extends AdminResource
 {
     protected static ?string $model = Order::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShoppingBag;
-
-    protected static ?string $navigationLabel = 'Zamówienia';
-
-    protected static ?string $modelLabel = 'Zamówienie';
-
-    protected static ?string $pluralModelLabel = 'Zamówienia';
-
-    protected static string|UnitEnum|null $navigationGroup = 'Zamówienia';
 
     protected static ?int $navigationSort = 10;
 
@@ -50,6 +42,7 @@ class OrderResource extends Resource
     {
         return [
             'index' => ListOrders::route('/'),
+            'view' => ViewOrder::route('/{record}'),
             'edit' => EditOrder::route('/{record}/edit'),
         ];
     }

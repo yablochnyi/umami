@@ -2,23 +2,26 @@
 
 namespace App\Filament\Resources\MenuCategories;
 
+use App\Filament\Resources\AdminResource;
 use App\Filament\Resources\MenuCategories\Pages\CreateMenuCategory;
 use App\Filament\Resources\MenuCategories\Pages\EditMenuCategory;
 use App\Filament\Resources\MenuCategories\Pages\ListMenuCategories;
+use App\Filament\Resources\MenuCategories\Pages\ViewMenuCategory;
 use App\Filament\Resources\MenuCategories\Schemas\MenuCategoryForm;
 use App\Filament\Resources\MenuCategories\Tables\MenuCategoriesTable;
 use App\Models\MenuCategory;
 use BackedEnum;
-use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
-class MenuCategoryResource extends Resource
+class MenuCategoryResource extends AdminResource
 {
     protected static ?string $model = MenuCategory::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static ?int $navigationSort = 40;
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSquares2x2;
 
     public static function form(Schema $schema): Schema
     {
@@ -42,6 +45,7 @@ class MenuCategoryResource extends Resource
         return [
             'index' => ListMenuCategories::route('/'),
             'create' => CreateMenuCategory::route('/create'),
+            'view' => ViewMenuCategory::route('/{record}'),
             'edit' => EditMenuCategory::route('/{record}/edit'),
         ];
     }

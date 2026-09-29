@@ -6,6 +6,7 @@ use App\Filament\Resources\MenuCategories\Pages\EditMenuCategory;
 use App\Filament\Resources\MenuItems\Pages\EditMenuItem;
 use App\Models\MenuCategory;
 use App\Models\MenuItem;
+use App\Models\Role;
 use App\Models\User;
 use App\Services\GoOrder\GoOrderCatalog;
 use App\Services\GoOrder\GoOrderMenuSynchronizer;
@@ -228,7 +229,7 @@ class GoOrderMenuSyncTest extends TestCase
     public function test_admin_can_edit_category_and_item_hours(): void
     {
         $this->sync();
-        $this->actingAs(User::factory()->create());
+        $this->actingAs(User::factory()->create(['role_id' => Role::query()->where('is_admin', true)->value('id')]));
         $item = MenuItem::first();
         $hours = [['days' => [1, 2, 3], 'from' => '12:30', 'to' => '15:30']];
         Livewire::test(EditMenuItem::class, ['record' => $item->id])

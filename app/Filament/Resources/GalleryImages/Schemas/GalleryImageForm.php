@@ -15,26 +15,26 @@ class GalleryImageForm
     {
         return $schema
             ->components([
-                Section::make('Title')
+                Section::make(__('Title'))
                     ->schema([
                         Grid::make(3)->schema([
-                            TextInput::make('title.pl')->label('PL')->required(),
-                            TextInput::make('title.uk')->label('UA')->required(),
-                            TextInput::make('title.en')->label('EN')->required(),
+                            TextInput::make('title.pl')->label(__('PL'))->required(),
+                            TextInput::make('title.uk')->label(__('UA'))->required(),
+                            TextInput::make('title.en')->label(__('EN'))->required(),
                         ]),
                     ]),
-                Section::make('Alt text')
+                Section::make(__('Alt text'))
                     ->schema([
                         Grid::make(3)->schema([
-                            TextInput::make('alt.pl')->label('PL'),
-                            TextInput::make('alt.uk')->label('UA'),
-                            TextInput::make('alt.en')->label('EN'),
+                            TextInput::make('alt.pl')->label(__('PL')),
+                            TextInput::make('alt.uk')->label(__('UA')),
+                            TextInput::make('alt.en')->label(__('EN')),
                         ]),
                     ]),
-                Section::make('Image')
+                Section::make(__('Image'))
                     ->schema([
                         FileUpload::make('image')
-                            ->label('Image')
+                            ->label(__('Image'))
                             ->disk('public')
                             ->directory('umami/gallery')
                             ->visibility('public')
@@ -42,8 +42,8 @@ class GalleryImageForm
                             ->required()
                             ->maxSize(4096),
                         Grid::make(2)->schema([
-                            TextInput::make('sort_order')->label('Sort')->numeric()->default(0)->required(),
-                            Toggle::make('is_active')->label('Active')->default(true),
+                            TextInput::make('sort_order')->label(__('Sort'))->numeric()->default(0)->required(),
+                            Toggle::make('is_active')->label(__('Active'))->default(true),
                         ]),
                     ]),
             ]);

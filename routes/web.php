@@ -1,10 +1,11 @@
 <?php
 
+use App\Http\Controllers\AdminLocaleController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LegalPageController;
-use App\Http\Controllers\MenuPageController;
 use App\Http\Controllers\MenuAvailabilityController;
+use App\Http\Controllers\MenuPageController;
 use App\Http\Controllers\OrderTrackingController;
 use App\Models\SiteSetting;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -15,6 +16,9 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+
+Route::post('/admin/language', AdminLocaleController::class)
+    ->middleware('throttle:30,1')->name('admin.language');
 
 Route::get('/robots.txt', function () {
     $siteUrl = rtrim(

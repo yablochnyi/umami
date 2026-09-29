@@ -6,6 +6,7 @@ use App\Models\MenuCategory;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -18,34 +19,35 @@ class MenuItemsTable
     {
         return $table
             ->columns([
-                ImageColumn::make('image')->label('Photo')->disk('public')->square(),
+                ImageColumn::make('image')->label(__('Photo'))->disk('public')->square(),
                 TextColumn::make('name')
-                    ->label('Name')
-                    ->getStateUsing(fn ($record) => $record->getTranslation('name', 'pl'))
+                    ->label(__('Name'))
+                    ->getStateUsing(fn ($record) => $record->getTranslation('name', app()->getLocale()))
                     ->searchable(),
                 TextColumn::make('slug')
-                    ->label('Slug')
+                    ->label(__('Slug'))
                     ->searchable()
                     ->toggleable(),
                 TextColumn::make('category')
-                    ->label('Category')
-                    ->getStateUsing(fn ($record) => $record->category?->getTranslation('name', 'pl')),
-                TextColumn::make('price')->label('Price')->sortable(),
-                TextColumn::make('sort_order')->label('Sort')->sortable(),
-                IconColumn::make('is_bestseller')->label('Best')->boolean(),
-                IconColumn::make('is_active')->label('Active')->boolean(),
-                IconColumn::make('goorder_published')->label('GoOrder')->boolean(),
+                    ->label(__('Category'))
+                    ->getStateUsing(fn ($record) => $record->category?->getTranslation('name', app()->getLocale())),
+                TextColumn::make('price')->label(__('Price'))->sortable(),
+                TextColumn::make('sort_order')->label(__('Sort'))->sortable(),
+                IconColumn::make('is_bestseller')->label(__('Best'))->boolean(),
+                IconColumn::make('is_active')->label(__('Active'))->boolean(),
+                IconColumn::make('goorder_published')->label(__('GoOrder'))->boolean(),
             ])
             ->filters([
                 SelectFilter::make('menu_category_id')
-                    ->label('Category')
+                    ->label(__('Category'))
                     ->options(fn () => MenuCategory::query()
                         ->orderBy('sort_order')
                         ->get()
-                        ->mapWithKeys(fn (MenuCategory $category) => [$category->id => $category->getTranslation('name', 'pl')])
+                        ->mapWithKeys(fn (MenuCategory $category) => [$category->id => $category->getTranslation('name', app()->getLocale())])
                         ->all()),
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([

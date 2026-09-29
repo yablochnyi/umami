@@ -1,0 +1,8 @@
+<?php
+
+// Translations: Laravel-Lang/lang (MIT). See ../LARAVEL-LANG-LICENSE.
+return [
+    'failed' => 'Вказані облікові дані не збігаються з нашими записами.',
+    'password' => 'Пароль невірний.',
+    'throttle' => 'Забагато спроб входу. Будь ласка, спробуйте ще раз, через :seconds секунд.',
+];

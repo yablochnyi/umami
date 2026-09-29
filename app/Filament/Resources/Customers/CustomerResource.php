@@ -2,32 +2,24 @@
 
 namespace App\Filament\Resources\Customers;
 
+use App\Filament\Resources\AdminResource;
 use App\Filament\Resources\Customers\Pages\EditCustomer;
 use App\Filament\Resources\Customers\Pages\ListCustomers;
+use App\Filament\Resources\Customers\Pages\ViewCustomer;
 use App\Filament\Resources\Customers\RelationManagers\OrdersRelationManager;
 use App\Filament\Resources\Customers\Schemas\CustomerForm;
 use App\Filament\Resources\Customers\Tables\CustomersTable;
 use App\Models\Customer;
 use BackedEnum;
-use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use UnitEnum;
 
-class CustomerResource extends Resource
+class CustomerResource extends AdminResource
 {
     protected static ?string $model = Customer::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
-
-    protected static ?string $navigationLabel = 'Klienci';
-
-    protected static ?string $modelLabel = 'Klient';
-
-    protected static ?string $pluralModelLabel = 'Klienci';
-
-    protected static string|UnitEnum|null $navigationGroup = 'Zamówienia';
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
     protected static ?int $navigationSort = 20;
 
@@ -45,6 +37,7 @@ class CustomerResource extends Resource
     {
         return [
             'index' => ListCustomers::route('/'),
+            'view' => ViewCustomer::route('/{record}'),
             'edit' => EditCustomer::route('/{record}/edit'),
         ];
     }

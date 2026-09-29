@@ -2,23 +2,38 @@
 
 namespace App\Filament\Resources\SiteSettings;
 
-use App\Filament\Resources\SiteSettings\Pages\CreateSiteSetting;
+use App\Filament\Resources\AdminResource;
 use App\Filament\Resources\SiteSettings\Pages\EditSiteSetting;
 use App\Filament\Resources\SiteSettings\Pages\ListSiteSettings;
+use App\Filament\Resources\SiteSettings\Pages\ViewSiteSetting;
 use App\Filament\Resources\SiteSettings\Schemas\SiteSettingForm;
 use App\Filament\Resources\SiteSettings\Tables\SiteSettingsTable;
 use App\Models\SiteSetting;
+use App\Support\SiteSettingCatalog;
 use BackedEnum;
-use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
-class SiteSettingResource extends Resource
+class SiteSettingResource extends AdminResource
 {
     protected static ?string $model = SiteSetting::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static ?int $navigationSort = 100;
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedAdjustmentsHorizontal;
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->whereIn('key', array_keys(SiteSettingCatalog::FIELDS));
+    }
+
+    public static function getRecordTitle(?Model $record): ?string
+    {
+        return $record ? SiteSettingCatalog::label($record) : static::getModelLabel();
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -41,7 +56,7 @@ class SiteSettingResource extends Resource
     {
         return [
             'index' => ListSiteSettings::route('/'),
-            'create' => CreateSiteSetting::route('/create'),
+            'view' => ViewSiteSetting::route('/{record}'),
             'edit' => EditSiteSetting::route('/{record}/edit'),
         ];
     }

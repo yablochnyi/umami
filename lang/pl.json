@@ -1,0 +1,22 @@
+{
+    "Category": "Kategoria", "Price": "Cena", "Sort": "Kolejność", "Active": "Aktywne",
+    "Name": "Nazwa", "Title": "Tytuł", "Description": "Opis", "Settings": "Ustawienia",
+    "Show in bestsellers": "Bestseller", "SEO slug": "Adres SEO", "Slug": "Adres URL",
+    "Appetizing SEO description": "Opis marketingowy SEO", "SEO meta tags": "Metadane SEO",
+    "Meta title PL": "Tytuł SEO PL", "Meta title UA": "Tytuł SEO UA", "Meta title EN": "Tytuł SEO EN",
+    "Meta description PL": "Opis SEO PL", "Meta description UA": "Opis SEO UA", "Meta description EN": "Opis SEO EN",
+    "Images": "Zdjęcia", "Image": "Zdjęcie", "Photo": "Zdjęcie", "Source image URL": "Adres zdjęcia źródłowego",
+    "Present on storefront": "W menu GoOrder", "Last synchronization": "Ostatnia synchronizacja",
+    "Availability hours (GoOrder and local)": "Godziny dostępności (GoOrder i lokalne)",
+    "Include this GoOrder category": "Synchronizuj tę kategorię GoOrder",
+    "SEO intro before dishes": "Wprowadzenie SEO nad daniami", "SEO text after dishes": "Tekst SEO pod daniami",
+    "Best": "Bestseller", "Alt text": "Tekst alternatywny", "Meta": "Dane podstawowe", "Value": "Wartość",
+    "Link": "Link", "Icon": "Ikona", "Video": "Wideo", "Group": "Grupa", "Key": "Klucz",
+    "Label": "Etykieta", "Type": "Typ", "URL": "Adres URL", "Created at": "Utworzono", "Updated at": "Zaktualizowano",
+    "PL value": "Treść", "Local availability (Europe/Warsaw)": "Dostępność lokalna (Europe/Warsaw)",
+    "Restrict ordering to these hours": "Ogranicz zamawianie do wybranych godzin",
+    "Additional local hours; GoOrder limits still apply": "Godziny lokalne z uwzględnieniem ograniczeń GoOrder",
+    "Days": "Dni", "From": "Od", "Until": "Do", "Monday": "Poniedziałek", "Tuesday": "Wtorek",
+    "Wednesday": "Środa", "Thursday": "Czwartek", "Friday": "Piątek", "Saturday": "Sobota", "Sunday": "Niedziela",
+    "asap": "Jak najszybciej", "scheduled": "Na wybraną godzinę", "cash": "Gotówka", "card": "Karta", "pickup": "Na wynos", "delivery": "Dostawa"
+}

@@ -3,8 +3,8 @@
 namespace App\Filament\Resources\SiteSettings\Pages;
 
 use App\Filament\Resources\SiteSettings\SiteSettingResource;
-use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Database\Eloquent\Model;
 
 class EditSiteSetting extends EditRecord
 {
@@ -13,7 +13,19 @@ class EditSiteSetting extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make(),
         ];
+    }
+
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        return ['value' => $data['value']];
+    }
+
+    protected function handleRecordUpdate(Model $record, array $data): Model
+    {
+        static::getResource()::authorizeEdit($record);
+        $record->update(['value' => $data['value'] ?? null]);
+
+        return $record;
     }
 }
