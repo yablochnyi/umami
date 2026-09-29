@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Models\AnalyticsItem;
 use App\Models\AnalyticsOrder;
 use App\Models\AnalyticsSyncRun;
+use App\Services\AdminAudit;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
@@ -76,6 +77,7 @@ class SalesAnalytics extends Page implements HasTable
     {
         abort_unless(static::canAccess(), 403);
         Cache::put('analytics.sync.requested', true, now()->addDay());
+        app(AdminAudit::class)->record('sync_requested', 'sales_analytics');
         Notification::make()->success()->title(__('analytics.queued'))->send();
     }
 
@@ -124,6 +126,10 @@ class SalesAnalytics extends Page implements HasTable
             ->recordActions([
                 Action::make('details')->label(__('analytics.details'))->icon(Heroicon::OutlinedEye)->iconButton()
                     ->modalHeading(fn (AnalyticsOrder $record) => __('analytics.order').' '.$record->number)
+                    ->mountUsing(function (AnalyticsOrder $record) {
+                        abort_unless(static::canAccess(), 403);
+                        app(AdminAudit::class)->record('viewed', 'sales_analytics', ['subject_id' => (string) $record->id, 'subject_label' => $record->number, 'page' => 'view']);
+                    })
                     ->modalContent(function (AnalyticsOrder $record) {
                         abort_unless(static::canAccess(), 403);
 
@@ -172,6 +178,7 @@ class SalesAnalytics extends Page implements HasTable
     {
         abort_unless(static::canAccess(), 403);
         $query = $this->getFilteredSortedTableQuery();
+        app(AdminAudit::class)->record('exported', 'sales_analytics');
 
         return response()->streamDownload(function () use ($query): void {
             $out = fopen('php://output', 'w');

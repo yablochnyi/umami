@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Pages\Dashboard;
 use App\Filament\Pages\SiteSettings;
 use App\Http\Middleware\AdminLocale;
+use App\Http\Middleware\AuditAdminActivity;
 use Filament\Actions\Action;
 use Filament\FontProviders\LocalFontProvider;
 use Filament\Http\Middleware\Authenticate;
@@ -48,6 +49,7 @@ class AdminPanelProvider extends PanelProvider
             ))
             ->renderHook(PanelsRenderHook::TOPBAR_END, fn () => view('filament.partials.language'))
             ->renderHook(PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE, fn () => view('filament.partials.language'))
+            ->renderHook(PanelsRenderHook::AUTH_LOGIN_FORM_AFTER, fn () => view('filament.partials.audit-notice'))
             ->userMenuItems([
                 Action::make('website')->label(fn () => __('admin.visit_site'))->url('/')->openUrlInNewTab()->icon('heroicon-o-arrow-top-right-on-square'),
             ])
@@ -74,7 +76,7 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            ->middleware([AdminLocale::class], isPersistent: true)
+            ->middleware([AdminLocale::class, AuditAdminActivity::class], isPersistent: true)
             ->authMiddleware([
                 Authenticate::class,
             ], isPersistent: true);

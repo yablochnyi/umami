@@ -7,6 +7,7 @@ use App\Http\Controllers\LegalPageController;
 use App\Http\Controllers\MenuAvailabilityController;
 use App\Http\Controllers\MenuPageController;
 use App\Http\Controllers\OrderTrackingController;
+use App\Http\Middleware\AuditAdminActivity;
 use App\Models\SiteSetting;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 Route::post('/admin/language', AdminLocaleController::class)
-    ->middleware('throttle:30,1')->name('admin.language');
+    ->middleware(['throttle:30,1', AuditAdminActivity::class])->name('admin.language');
 
 Route::get('/robots.txt', function () {
     $siteUrl = rtrim(

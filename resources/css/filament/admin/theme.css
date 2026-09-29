@@ -201,3 +201,15 @@
 }
 @media (max-width: 370px) { .fi-fo-checkbox-list { grid-template-columns: minmax(0, 1fr); } }
 @media (prefers-reduced-motion: reduce) { .umami-dish, .fi-sidebar-item-btn { transition: none; } }
+
+.umami-audit-meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-bottom: 24px; }
+.umami-audit-meta dt { font-size: 12px; color: #71717a; margin-bottom: 6px; }
+.umami-audit-meta dd { font-size: 14px; overflow-wrap: anywhere; }
+.umami-audit-changes { width: 100%; table-layout: fixed; }
+.umami-audit-changes th:first-child { width: 22%; }
+.umami-audit-changes pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; font-size: 13px; margin: 0; max-height: 340px; overflow-y: auto; }
+.umami-audit-changes td, .umami-audit-changes th { vertical-align: top; }
+@media (max-width: 640px) {
+    .umami-audit-meta { grid-template-columns: minmax(0, 1fr); }
+    .umami-audit-changes { min-width: 580px; }
+}
