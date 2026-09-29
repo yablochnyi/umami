@@ -40,33 +40,9 @@
         <meta name="twitter:description" content="{{ $metaDescription }}">
     @endisset
     <link rel="icon" href="{{ $siteLayout['settings']['logo'] }}">
-    @if($siteLayout['settings']['googleAnalyticsId'] && ! ($privatePage ?? false))
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('consent', 'default', {
-                analytics_storage: 'denied',
-                ad_storage: 'denied',
-                ad_user_data: 'denied',
-                ad_personalization: 'denied'
-            });
-            try {
-                if (window.localStorage.getItem('umami_cookie_consent') === 'accepted') {
-                    gtag('consent', 'update', {
-                        analytics_storage: 'granted',
-                        ad_storage: 'granted',
-                        ad_user_data: 'granted',
-                        ad_personalization: 'granted'
-                    });
-                }
-            } catch (error) {}
-            gtag('js', new Date());
-            gtag('config', @json($siteLayout['settings']['googleAnalyticsId']));
-        </script>
-        <script async src="https://www.googletagmanager.com/gtag/js?id={{ urlencode($siteLayout['settings']['googleAnalyticsId']) }}"></script>
-    @endif
     @stack('preload')
     <link rel="stylesheet" href="{{ $siteLayout['assets']['css'] }}">
+    <link rel="stylesheet" href="/assets/umami/privacy.css?v={{ filemtime(public_path('assets/umami/privacy.css')) }}">
     @stack('head')
 </head>
 <body
@@ -95,11 +71,13 @@
     @yield('content')
 
     @include('partials.site-footer')
+    @include('partials.cookie-consent')
 
     @yield('afterFooter')
 
     <script id="menuAvailabilityData" type="application/json">{!! \Illuminate\Support\Js::encode($menuAvailability) !!}</script>
     <script src="/assets/umami/menu-availability.js?v={{ filemtime(public_path('assets/umami/menu-availability.js')) }}" defer></script>
+    <script src="/assets/umami/privacy.js?v={{ filemtime(public_path('assets/umami/privacy.js')) }}" defer></script>
     <script src="{{ $siteLayout['assets']['js'] }}" defer></script>
     <script src="/assets/umami/active-order.js" defer></script>
     @stack('scripts')

@@ -3,14 +3,12 @@ const mobileBackground = document.body.dataset.backgroundMobile;
 const heroVideoDesktop = document.body.dataset.heroVideoDesktop;
 const heroVideoMobile = document.body.dataset.heroVideoMobile;
 const heroPoster = document.body.dataset.heroPoster;
-const googleAnalyticsId = document.body.dataset.googleAnalyticsId;
 const isOrderingOpen = document.body.dataset.orderingOpen === '1';
 const orderingUnavailableMessage = document.body.dataset.orderingUnavailableMessage || '';
 const freeDeliveryFrom = Number.parseFloat(document.body.dataset.freeDeliveryFrom || '0') || 0;
 const freeDeliveryMissingTemplate = document.body.dataset.cartFreeDeliveryMissing || '';
 const freeDeliveryReadyText = document.body.dataset.cartFreeDeliveryReady || '';
 const checkoutUrl = document.body.dataset.checkoutUrl || '/koszyk';
-const cookieConsentKey = 'umami_cookie_consent';
 const cartStorageKey = 'umami_cart';
 let cart = readCart();
 let isCartModalOpen = false;
@@ -18,57 +16,6 @@ const cartPopoverNode = document.getElementById('cartPopover');
 const cartPopoverOriginalParent = cartPopoverNode?.parentNode || null;
 const cartPopoverOriginalNext = cartPopoverNode?.nextSibling || null;
 const cartMobileQuery = window.matchMedia('(max-width: 620px)');
-
-function getStoredCookieConsent() {
-    try {
-        return window.localStorage.getItem(cookieConsentKey);
-    } catch (error) {
-        const cookieValue = document.cookie
-            .split('; ')
-            .find((item) => item.startsWith(cookieConsentKey + '='))
-            ?.split('=')[1];
-
-        return cookieValue ? decodeURIComponent(cookieValue) : null;
-    }
-}
-
-function storeCookieConsent(value) {
-    try {
-        window.localStorage.setItem(cookieConsentKey, value);
-    } catch (error) {
-        document.cookie = cookieConsentKey + '=' + encodeURIComponent(value) + '; path=/; max-age=31536000; SameSite=Lax';
-    }
-}
-
-function loadGoogleAnalytics() {
-    if (!/^G-[A-Z0-9]+$/i.test(googleAnalyticsId || '') || typeof window.gtag !== 'function') return;
-
-    window.gtag('consent', 'update', {
-        analytics_storage: 'granted',
-        ad_storage: 'granted',
-        ad_user_data: 'granted',
-        ad_personalization: 'granted',
-    });
-}
-
-function setCookieConsent(value) {
-    storeCookieConsent(value);
-    const consentBanner = document.getElementById('cookieConsent');
-    if (consentBanner) consentBanner.hidden = true;
-    if (value === 'accepted') loadGoogleAnalytics();
-}
-
-const savedCookieConsent = getStoredCookieConsent();
-
-if (savedCookieConsent === 'accepted') {
-    loadGoogleAnalytics();
-} else if (!savedCookieConsent) {
-    const consentBanner = document.getElementById('cookieConsent');
-    if (consentBanner) consentBanner.hidden = false;
-}
-
-document.getElementById('cookieAccept')?.addEventListener('click', () => setCookieConsent('accepted'));
-document.getElementById('cookieDecline')?.addEventListener('click', () => setCookieConsent('declined'));
 
 function readCart() {
     try {

@@ -12,7 +12,6 @@
         'hero-video-mobile' => $settings['heroVideoMobile'],
         'hero-poster' => $settings['heroPoster'],
         'show-photo-label' => $copy['showPhoto'],
-        'google-analytics-id' => $settings['googleAnalyticsId'],
         'delivery-cost' => $settings['deliveryCost'],
         'free-delivery-from' => $settings['freeDeliveryFrom'],
         'minimum-delivery-amount' => $settings['minimumDeliveryAmount'],
@@ -204,7 +203,11 @@
             </div>
             @if($settings['mapEmbedUrl'])
                 <div class="map-frame">
-                    <iframe src="{{ $settings['mapEmbedUrl'] }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa Umami Sushi & Food Toruń"></iframe>
+                    <div class="map-consent" data-map-notice>
+                        <p>{{ __('legal.map_notice') }}</p>
+                        <button type="button" class="cookie-button secondary" data-map-load>{{ __('legal.map_load') }}</button>
+                    </div>
+                    <iframe data-map-src="{{ $settings['mapEmbedUrl'] }}" loading="lazy" referrerpolicy="no-referrer" title="{{ __('legal.map_load') }}" hidden></iframe>
                 </div>
             @endif
         </section>
@@ -213,17 +216,6 @@
 @endsection
 
 @section('afterFooter')
-    <section class="cookie-consent" id="cookieConsent" aria-labelledby="cookieConsentTitle" hidden>
-        <div>
-            <h2 id="cookieConsentTitle">{{ $cookieConsent['title'] }}</h2>
-            <p>{{ $cookieConsent['text'] }}</p>
-        </div>
-        <div class="cookie-actions">
-            <button type="button" class="cookie-button secondary" id="cookieDecline">{{ $cookieConsent['decline'] }}</button>
-            <button type="button" class="cookie-button primary" id="cookieAccept">{{ $cookieConsent['accept'] }}</button>
-        </div>
-    </section>
-
     <div class="modal" id="modal" aria-hidden="true">
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
             <button class="close" type="button" aria-label="{{ $copy['close'] }}" id="modalClose">×</button>

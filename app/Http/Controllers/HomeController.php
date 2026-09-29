@@ -268,7 +268,6 @@ class HomeController extends Controller
             'bestsellers' => $bestsellerCards,
             'galleryImages' => $gallery,
             'socialLinks' => $socialLinks,
-            'cookieConsent' => trans('site.cookie'),
             'menuDetailsLabel' => trans('site.ui.details'),
             'seo' => [
                 'canonicalUrl' => $canonicalUrl,
