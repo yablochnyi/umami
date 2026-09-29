@@ -5,6 +5,12 @@ use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
 
+Schedule::command('analytics:sync')->dailyAt(config('analytics.time', '03:40'))->timezone('Europe/Warsaw')
+    ->when(fn () => config('analytics.enabled', true))->withoutOverlapping(120)
+    ->appendOutputTo(storage_path('logs/analytics-sync.log'));
+Schedule::command('analytics:sync --requested')->everyMinute()->withoutOverlapping(120)
+    ->appendOutputTo(storage_path('logs/analytics-sync.log'));
+
 Schedule::command('goorder:sync-status')->everyMinute()->withoutOverlapping();
 Schedule::command('goorder:sync-menu')
     ->dailyAt(config('goorder.menu_sync_time'))

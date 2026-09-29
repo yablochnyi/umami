@@ -128,6 +128,29 @@
 .fi-simple-main .umami-language { justify-self: center; margin-inline: auto; }
 
 .umami-setting-preview { display: grid; gap: 12px; }
+.umami-analytics-meta { display: flex; flex-wrap: wrap; gap: 8px 24px; color: #70767b; font-size: 12px; }
+.umami-analytics-meta strong { color: #a3322b; }
+.umami-analytics-filters { border-block: 1px solid var(--umami-line); padding-block: 16px; }
+.umami-analytics-filters summary { cursor: pointer; font-size: 14px; font-weight: 600; }
+.umami-analytics-filters[open] summary { margin-bottom: 20px; }
+.umami-analytics-note { max-width: 1000px; font-size: 12px; line-height: 1.7; color: #70767b; }
+.umami-analytics-metrics dd { font-size: 24px; }
+.umami-analytics-section { min-width: 0; display: grid; grid-template-columns: minmax(0,1fr); align-content: start; gap: 16px; }
+.umami-analytics-section h2 { font-size: 16px; font-weight: 600; }
+.umami-analytics-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
+.umami-analytics-chart { display: flex; align-items: end; gap: 8px; overflow-x: auto; padding: 16px 0; border-bottom: 1px solid var(--umami-line); }
+.umami-analytics-bar { flex: 1 0 36px; display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 10px; }
+.umami-analytics-bar i { display: block; width: 100%; max-width: 40px; border-radius: 4px 4px 0 0; background: #b84a44; }
+.umami-analytics-bar:nth-child(even) i { background: #649284; }
+.umami-analytics-bar small { white-space: nowrap; font-size: 10px; }
+.umami-analytics-distribution { display: grid; gap: 18px; }
+.umami-analytics-distribution > div { display: grid; grid-template-columns: 110px minmax(0,1fr) 45px; align-items: center; gap: 12px; font-size: 12px; }
+.umami-analytics-distribution meter { width: 100%; height: 14px; accent-color: #649284; }
+.umami-analytics-hour-grid { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 8px; }
+.umami-analytics-hour-grid > div { display: grid; gap: 8px; padding: 10px; border-radius: 8px; background: rgba(100,146,132,calc(.07 + var(--activity) * .3)); font-size: 11px; }
+.umami-analytics-hour-grid strong { font-size: 16px; }
+.umami-orders-table .umami-analytics-name { white-space: normal; min-width: 120px; }
+@media (max-width: 1100px) { .umami-analytics-grid { grid-template-columns: minmax(0,1fr); } }
 .umami-settings-tabs > .fi-tabs { flex-wrap: wrap; }
 .umami-setting-preview figcaption { font-size: 13px; color: #70767b; }
 .umami-setting-preview video { width: 100%; max-width: 640px; max-height: 360px; aspect-ratio: 16 / 9; object-fit: contain; border-radius: 8px; background: #242628; }
