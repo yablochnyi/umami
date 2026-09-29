@@ -20,7 +20,7 @@ final class AdminPermissions
     public static function actions(string $resource): array
     {
         return match ($resource) {
-            'orders', 'customers', 'site_settings' => ['view', 'update'],
+            'orders', 'customers', 'site_settings', 'site_texts' => ['view', 'update'],
             default => ['view', 'create', 'update', 'delete'],
         };
     }

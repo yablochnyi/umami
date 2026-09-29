@@ -13,7 +13,7 @@ the login page uses the session preference. Storefront languages are unchanged.
 - Assign a role in Users. An account without a role or any view permission cannot
   enter the panel. To revoke access, clear its role from another admin account.
 - Role permissions cover view, create, update and delete for content resources.
-  Orders, Customers and Site Settings expose only view and update. Write access includes view.
+  Orders, Customers, Site Settings and Site Texts expose only view and update. Write access includes view.
 - A user cannot demote or delete themselves. The last administrator, the system
   role and roles still assigned to users are protected.
 - Resource policies also protect direct URLs, Livewire mutations and bulk actions.
@@ -29,6 +29,8 @@ npm ci
 npm run build
 php artisan migrate --force
 php artisan optimize:clear
+php artisan filament:clear-cached-components
+php artisan route:cache
 ```
 
 For a fresh installation, migrate before running DatabaseSeeder. Do not run the
@@ -45,6 +47,11 @@ restaurant settings page. GoPOS zone mappings and the legacy flat delivery fee
 remain untouched by that page. Upload labels show the effective PHP/Livewire size
 limit; the default local PHP configuration limits uploads to 2 MB.
 
+Site Texts displays localized block descriptions instead of technical metadata.
+Only Polish, Ukrainian and English content values can be edited; keys, groups,
+internal labels, types and sorting are preserved on the server. Creation and
+deletion are denied even for administrators and legacy role permissions.
+
 ```sh
-php artisan test --filter='AdminPanelTest|GoOrderMenuSyncTest|GoOrderTest'
+php artisan test --filter='AdminPanelTest|SiteTextsAdminTest|SiteSettingsAdminTest|GoOrderMenuSyncTest|GoOrderTest'
 ```

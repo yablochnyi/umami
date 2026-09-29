@@ -2,53 +2,33 @@
 
 namespace App\Filament\Resources\SiteTexts\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
+use App\Models\SiteText;
+use App\Support\SiteTextCatalog;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class SiteTextsTable
 {
     public static function configure(Table $table): Table
     {
-        return $table
+        return $table->defaultSort('sort_order')
             ->columns([
-                TextColumn::make('group')->label(__('Group'))
-                    ->searchable(),
-                TextColumn::make('key')->label(__('Key'))
-                    ->searchable(),
-                TextColumn::make('label')->label(__('Label'))
-                    ->searchable(),
-                TextColumn::make('value')
-                    ->label(__('PL value'))
-                    ->getStateUsing(fn ($record) => str($record->getTranslation('value', app()->getLocale()))->limit(70)),
-                TextColumn::make('type')->label(__('Type'))
-                    ->searchable(),
-                TextColumn::make('sort_order')->label(__('Sort'))
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('created_at')->label(__('Created at'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')->label(__('Updated at'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('block')->label(__('texts.block'))
+                    ->getStateUsing(fn (SiteText $record) => SiteTextCatalog::label($record))->wrap()
+                    ->searchable(query: function (Builder $query, string $search): Builder {
+                        $labels = __('texts.blocks');
+                        $keys = array_keys(array_filter($labels, fn ($label) => Str::contains(Str::lower($label), Str::lower($search))));
+
+                        return $query->whereIn('key', $keys);
+                    }),
+                TextColumn::make('content')->label(__('texts.content'))
+                    ->getStateUsing(fn (SiteText $record) => $record->getTranslation('value', app()->getLocale()))
+                    ->limit(140)->wrap()->placeholder(__('texts.empty')),
             ])
-            ->filters([
-                //
-            ])
-            ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->recordActions([ViewAction::make()->iconButton(), EditAction::make()->iconButton()]);
     }
 }

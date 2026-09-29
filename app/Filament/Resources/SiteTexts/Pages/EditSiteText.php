@@ -3,8 +3,8 @@
 namespace App\Filament\Resources\SiteTexts\Pages;
 
 use App\Filament\Resources\SiteTexts\SiteTextResource;
-use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Database\Eloquent\Model;
 
 class EditSiteText extends EditRecord
 {
@@ -12,8 +12,22 @@ class EditSiteText extends EditRecord
 
     protected function getHeaderActions(): array
     {
-        return [
-            DeleteAction::make(),
-        ];
+        return [];
+    }
+
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        return ['value' => $this->record->getTranslations('value')];
+    }
+
+    protected function handleRecordUpdate(Model $record, array $data): Model
+    {
+        static::getResource()::authorizeEdit($record);
+        foreach (['pl', 'uk', 'en'] as $locale) {
+            $record->setTranslation('value', $locale, $data['value'][$locale]);
+        }
+        $record->save();
+
+        return $record;
     }
 }
