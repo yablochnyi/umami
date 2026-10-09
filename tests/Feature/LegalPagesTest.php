@@ -37,6 +37,7 @@ class LegalPagesTest extends TestCase
             ->assertSee('id="cookieConsent"', false)
             ->assertSee('/assets/umami/privacy.js', false)
             ->assertSee('/assets/umami/privacy.css', false)
+            ->assertSee('<script async src="https://widget.wenetasystent.ai/?code=rBAad0rd"></script>', false)
             ->assertDontSee('<script async src="https://www.googletagmanager.com', false);
 
         foreach ($urls as $language => $alternate) {

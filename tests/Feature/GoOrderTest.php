@@ -178,7 +178,8 @@ class GoOrderTest extends TestCase
         $this->assertSame($first['expected_ready_at'], $second['expected_ready_at']);
         $this->assertNotSame($first['server_now'], $second['server_now']);
         $this->get($order->trackingUrl())->assertOk()->assertHeader('Referrer-Policy', 'no-referrer')
-            ->assertDontSee('private-remote-token')->assertDontSee('test@example.com')->assertDontSee('googletagmanager.com');
+            ->assertDontSee('private-remote-token')->assertDontSee('test@example.com')->assertDontSee('googletagmanager.com')
+            ->assertDontSee('widget.wenetasystent.ai');
     }
 
     public function test_waiting_and_payment_confirmation_do_not_expose_an_estimate(): void

@@ -81,5 +81,10 @@
     <script src="{{ $siteLayout['assets']['js'] }}" defer></script>
     <script src="/assets/umami/active-order.js" defer></script>
     @stack('scripts')
+    @unless($privatePage ?? false)
+        <!-- Asystent Cloud Widget begin -->
+        <script async src="https://widget.wenetasystent.ai/?code=rBAad0rd"></script>
+        <!-- Asystent Cloud Widget end -->
+    @endunless
 </body>
 </html>
