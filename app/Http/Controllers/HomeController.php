@@ -142,7 +142,7 @@ class HomeController extends Controller
             'backgroundMobile' => $this->mediaUrl($settings['background_mobile'] ?? 'umami/tlo4.png'),
             'phone' => $settings['phone'] ?? '+48 513 233 722',
             'phoneHref' => $settings['phone_href'] ?? 'tel:+48513233722',
-            'orderUrl' => $settings['order_url'] ?? 'http://umamisushifood.goorder.pl/',
+            'orderUrl' => $settings['order_url'] ?? 'https://umamisushifood.goorder.pl/',
             'heroVideoDesktop' => $this->mediaUrl($settings['hero_video_desktop'] ?? $settings['hero_video'] ?? 'umami/UMAMI.MP4', 'video-desktop'),
             'heroVideoMobile' => $this->mediaUrl($settings['hero_video_mobile'] ?? $settings['hero_video'] ?? 'umami/UMAMI.MP4', 'video-mobile'),
             'heroPoster' => $this->mediaUrl($settings['hero_poster'] ?? 'umami/res1.png'),

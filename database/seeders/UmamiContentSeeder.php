@@ -542,7 +542,7 @@ class UmamiContentSeeder extends Seeder
       "group": "contact",
       "key": "order_url",
       "label": "Order URL",
-      "value": "http://umamisushifood.goorder.pl/",
+      "value": "https://umamisushifood.goorder.pl/",
       "type": "url",
       "sort_order": 10
     },
