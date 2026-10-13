@@ -12,6 +12,32 @@ class PublicMarkupTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_delivery_data_and_accessible_regions_have_valid_html(): void
+    {
+        $this->seed();
+
+        foreach (['', '/uk', '/en'] as $prefix) {
+            foreach (['/', '/menu/rameny', '/menu/rameny/chashu-ramen', '/koszyk'] as $path) {
+                $html = $this->get($prefix.$path)->assertOk()->getContent();
+                // Check the raw source: DOM parsers silently discard duplicate attributes.
+                $this->assertSame(1, substr_count($html, 'data-free-delivery-from='));
+                $xpath = $this->xpath($html);
+                $body = $xpath->query('//body')->item(0);
+                $this->assertTrue(is_numeric($body->getAttribute('data-free-delivery-from')));
+                $panel = $xpath->query('//*[@id="cartPopover"]')->item(0);
+                if ($path !== '/koszyk') {
+                    $this->assertNotNull($panel);
+                    $this->assertSame('region', $panel->getAttribute('role'));
+                    $this->assertSame('cartPopoverTitle', $panel->getAttribute('aria-labelledby'));
+                    $this->assertNotEmpty($xpath->query('//*[@id="cartPopoverTitle"]')->item(0)->textContent);
+                }
+                $cookies = $xpath->query('//section[@id="cookieConsent"]')->item(0);
+                $this->assertSame('cookieConsentTitle', $cookies->getAttribute('aria-labelledby'));
+                $this->assertFalse($cookies->hasAttribute('role'));
+            }
+        }
+    }
+
     public function test_public_templates_use_external_styles_and_preserve_the_order_link(): void
     {
         $this->seed();

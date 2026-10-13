@@ -1,4 +1,4 @@
-<section class="cookie-consent" id="cookieConsent" aria-labelledby="cookieConsentTitle" role="region" hidden>
+<section class="cookie-consent" id="cookieConsent" aria-labelledby="cookieConsentTitle" hidden>
     <div>
         <h2 id="cookieConsentTitle">{{ __('site.cookie.title') }}</h2>
         <p>{{ __('site.cookie.text') }}</p>

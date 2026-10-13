@@ -37,7 +37,7 @@
                     </svg>
                     <span class="cart-badge" id="cartBadge" hidden>0</span>
                 </button>
-                <div class="cart-popover" id="cartPopover" aria-labelledby="cartOpen" hidden>
+                <div class="cart-popover" id="cartPopover" role="region" aria-labelledby="cartPopoverTitle" hidden>
                     <div class="cart-popover-head">
                         <h3 id="cartPopoverTitle">{{ $siteLayout['cart']['copy']['cart'] }}</h3>
                         <button class="cart-popover-close" type="button" aria-label="{{ trans('site.ui.close') }}" id="cartClose">×</button>

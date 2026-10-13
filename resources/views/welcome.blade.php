@@ -12,7 +12,6 @@
         'hero-video-mobile' => $settings['heroVideoMobile'],
         'show-photo-label' => $copy['showPhoto'],
         'delivery-cost' => $settings['deliveryCost'],
-        'free-delivery-from' => $settings['freeDeliveryFrom'],
         'minimum-delivery-amount' => $settings['minimumDeliveryAmount'],
     ],
 ])
