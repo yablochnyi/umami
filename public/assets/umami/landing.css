@@ -56,12 +56,12 @@ button {
     top: 16px;
     left: 50%;
     z-index: 20;
-    width: min(1120px, calc(100% - 28px));
+    width: min(1240px, calc(100% - 28px));
     transform: translateX(-50%);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: 12px;
     padding: 10px 12px;
     border: 1px solid rgba(255,255,255,.44);
     border-radius: 8px;
@@ -90,7 +90,8 @@ button {
     align-items: center;
     justify-content: center;
     gap: 4px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
 }
 
 .nav a, .social-link, .pill {
@@ -102,7 +103,8 @@ button {
 }
 
 .nav a {
-    padding: 0 12px;
+    padding: 0 10px;
+    white-space: nowrap;
     color: #3d3833;
     font-size: 14px;
     font-weight: 650;
@@ -277,11 +279,23 @@ button {
     align-items: flex-end;
     overflow: hidden;
     color: white;
-    background: #151312 var(--umami-hero-poster, url('/storage/umami/res1.webp')) center / cover no-repeat;
+    background: #151312;
 }
 
-.hero.video-ready {
-    background-image: none;
+.hero-poster {
+    position: absolute;
+    inset: 0;
+}
+
+.hero-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: .72;
+}
+
+.hero.video-ready .hero-poster {
+    visibility: hidden;
 }
 
 .hero video {
@@ -293,9 +307,11 @@ button {
     min-width: 100%;
     min-height: 100%;
     object-fit: cover;
-    opacity: .72;
+    opacity: 0;
     background: #151312;
 }
+
+.hero.video-ready video { opacity: .72; }
 
 .hero::after {
     content: "";
@@ -1235,6 +1251,16 @@ footer {
     font-size: 24px;
 }
 
+@media (max-width: 1220px) {
+    .topbar .brand span { display: none; }
+}
+
+@media (max-width: 1050px) {
+    .top-actions > .social-link { display: none; }
+    .topbar .nav { gap: 2px; }
+    .topbar .nav a { padding: 0 4px; }
+}
+
 @media (max-width: 900px) {
     .topbar { align-items: flex-start; }
     .nav { display: none; }
@@ -1343,6 +1369,15 @@ footer {
     .legal-document { padding: 22px; }
     .menu-page { padding-top: 112px; }
     .product-media img { min-height: 320px; }
+}
+
+@media (max-width: 390px) {
+    .topbar { gap: 6px; padding: 8px; align-items: center; }
+    .topbar .brand img { width: 32px; height: 32px; }
+    .topbar .top-actions { gap: 4px; }
+    .topbar .language-switcher { gap: 2px; padding: 2px; }
+    .topbar .language-switcher a { min-width: 24px; }
+    .topbar .top-actions > .pill { padding: 0 5px; font-size: 12px; white-space: nowrap; }
 }
 
 .map-frame { margin-top: 18px; }

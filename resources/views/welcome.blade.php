@@ -10,7 +10,6 @@
         'background-mobile' => $settings['backgroundMobile'],
         'hero-video-desktop' => $settings['heroVideoDesktop'],
         'hero-video-mobile' => $settings['heroVideoMobile'],
-        'hero-poster' => $settings['heroPoster'],
         'show-photo-label' => $copy['showPhoto'],
         'delivery-cost' => $settings['deliveryCost'],
         'free-delivery-from' => $settings['freeDeliveryFrom'],
@@ -19,8 +18,8 @@
 ])
 
 @push('preload')
-    <link rel="preload" as="image" href="{{ $settings['heroPoster'] }}" fetchpriority="high">
-    <link rel="preload" as="image" href="{{ $settings['backgroundMobile'] }}" media="(max-width: 900px)">
+    <link rel="preload" as="image" href="{{ $settings['heroPoster'] }}" media="(min-width: 901px)" fetchpriority="high">
+    <link rel="preload" as="image" href="{{ $settings['heroPosterMobile'] }}" media="(max-width: 900px)" fetchpriority="high">
 @endpush
 
 @push('head')
@@ -30,8 +29,11 @@
 @section('content')
     <main id="top">
         <section class="hero">
-            <video class="bg-video" autoplay muted loop playsinline poster="{{ $settings['heroPoster'] }}">
-            </video>
+            <picture class="hero-poster" aria-hidden="true">
+                <source media="(max-width: 900px)" srcset="{{ $settings['heroPosterMobile'] }}">
+                <img src="{{ $settings['heroPoster'] }}" alt="" fetchpriority="high" decoding="async" width="1600" height="900">
+            </picture>
+            <video class="bg-video" muted loop playsinline preload="none" aria-hidden="true"></video>
             <div class="hero-inner">
                 <img class="hero-logo" src="{{ $settings['logo'] }}" alt="Umami Sushi & Food">
                 <div class="eyebrow">{{ $copy['heroEyebrow'] }}</div>
@@ -53,7 +55,7 @@
                     <article class="dish-card" data-modal-card data-cart-id="{{ $dish['id'] }}" data-name="{{ $dish['name'] }}" data-category="{{ $dish['category'] }}" data-price="{{ $dish['price'] }}" data-desc="{{ $dish['description'] }}" data-image="{{ $dish['image'] }}" data-url="{{ $dish['url'] }}">
                         @if($dish['image'])
                             <button class="dish-image-button" type="button" data-modal-trigger aria-label="{{ $menuDetailsLabel }}: {{ $dish['name'] }}">
-                                <img src="{{ $dish['image'] }}" alt="{{ $dish['name'] }}" loading="lazy">
+                                <img src="{{ $dish['thumbnail'] }}" alt="{{ $dish['name'] }}" loading="lazy" decoding="async">
                             </button>
                         @endif
                         <div class="dish-body">
@@ -64,7 +66,7 @@
                             <p class="dish-desc">{{ $dish['description'] }}</p>
                             <div class="dish-actions">
                                 <a class="details-button" href="{{ $dish['url'] }}">{{ $menuDetailsLabel }}</a>
-                                <div class="cart-control" data-cart-control data-cart-id="{{ $dish['id'] }}" data-cart-name="{{ $dish['name'] }}" data-cart-price="{{ $dish['price'] }}" data-cart-image="{{ $dish['image'] }}">
+                                <div class="cart-control" data-cart-control data-cart-id="{{ $dish['id'] }}" data-cart-name="{{ $dish['name'] }}" data-cart-price="{{ $dish['price'] }}" data-cart-image="{{ $dish['thumbnail'] }}">
                                     <button class="cart-step decrease" type="button" data-cart-decrease aria-label="{{ trans('site.cart.decrease') }}">−</button>
                                     <span class="cart-quantity" data-cart-quantity>0</span>
                                     <button class="cart-add" type="button" data-cart-add aria-label="{{ trans('site.cart.add') }}">
@@ -111,7 +113,7 @@
                                 <article class="dish-card menu-item" data-modal-card data-cart-id="{{ $dish['id'] }}" data-name="{{ $dish['name'] }}" data-category="{{ $dish['category'] }}" data-price="{{ $dish['price'] }}" data-desc="{{ $dish['description'] }}" data-image="{{ $dish['image'] }}" data-url="{{ $dish['url'] }}">
                                     @if($dish['image'])
                                         <button class="dish-image-button" type="button" data-modal-trigger aria-label="{{ $menuDetailsLabel }}: {{ $dish['name'] }}">
-                                            <img src="{{ $dish['image'] }}" alt="{{ $dish['name'] }}" loading="lazy">
+                                            <img src="{{ $dish['thumbnail'] }}" alt="{{ $dish['name'] }}" loading="lazy" decoding="async">
                                         </button>
                                     @endif
                                     <div class="dish-body">
@@ -122,7 +124,7 @@
                                         <p class="dish-desc">{{ $dish['description'] }}</p>
                                         <div class="dish-actions">
                                             <a class="details-button" href="{{ $dish['url'] }}">{{ $menuDetailsLabel }}</a>
-                                            <div class="cart-control" data-cart-control data-cart-id="{{ $dish['id'] }}" data-cart-name="{{ $dish['name'] }}" data-cart-price="{{ $dish['price'] }}" data-cart-image="{{ $dish['image'] }}">
+                                            <div class="cart-control" data-cart-control data-cart-id="{{ $dish['id'] }}" data-cart-name="{{ $dish['name'] }}" data-cart-price="{{ $dish['price'] }}" data-cart-image="{{ $dish['thumbnail'] }}">
                                                 <button class="cart-step decrease" type="button" data-cart-decrease aria-label="{{ trans('site.cart.decrease') }}">−</button>
                                                 <span class="cart-quantity" data-cart-quantity>0</span>
                                                 <button class="cart-add" type="button" data-cart-add aria-label="{{ trans('site.cart.add') }}">
@@ -161,7 +163,7 @@
                 <div class="gallery-track" id="galleryTrack">
                     @foreach($galleryImages as $image)
                         <button type="button" class="gallery-slide" data-modal-card data-name="{{ $image['title'] }}" data-category="{{ $copy['galleryTitle'] }}" data-price="" data-desc="{{ $copy['galleryDesc'] }}" data-image="{{ $image['image'] }}">
-                            <img src="{{ $image['image'] }}" alt="{{ $image['alt'] }}" loading="lazy">
+                            <img src="{{ $image['image'] }}" alt="{{ $image['alt'] }}" loading="lazy" decoding="async">
                         </button>
                     @endforeach
                 </div>

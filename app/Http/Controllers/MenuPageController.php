@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\MenuCategory;
 use App\Models\MenuItem;
 use App\Models\SiteSetting;
+use App\Support\OptimizedMedia;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
@@ -187,7 +188,7 @@ class MenuPageController extends Controller
             'description' => $this->translated($item, 'description') ?: $this->fallbackDescription($locale, $this->translated($item, 'name'), $this->translated($category, 'name')),
             'category' => $this->translated($category, 'name'),
             'price' => $item->price,
-            'image' => $this->mediaUrl($item->image),
+            'image' => $this->mediaUrl($item->image, 'card'),
             'url' => $this->relativePageUrl($locale, $category, $item),
         ];
     }
@@ -272,10 +273,14 @@ class MenuPageController extends Controller
         return (string) ($model->getTranslation($field, app()->getLocale(), false) ?: $model->getTranslation($field, 'pl', false) ?: '');
     }
 
-    private function mediaUrl(?string $path): string
+    private function mediaUrl(?string $path, string $profile = 'image'): string
     {
         if (blank($path)) {
             return '';
+        }
+
+        if ($optimized = app(OptimizedMedia::class)->url($path, $profile)) {
+            return $optimized;
         }
 
         if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://') || str_starts_with($path, '/storage/') || str_starts_with($path, '/assets/')) {
@@ -414,5 +419,4 @@ class MenuPageController extends Controller
             'en' => ['back' => 'Back to menu', 'similar' => 'Similar dishes', 'details' => 'Ingredients', 'taste' => 'Why it is worth trying', 'close' => 'Close'],
         ][$locale];
     }
-
 }

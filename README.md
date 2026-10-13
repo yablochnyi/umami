@@ -7,6 +7,16 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Umami Media Optimization
+
+After deployment, menu imports, or replacing media in the admin panel, run as the application user:
+
+```bash
+php artisan site:optimize-media
+```
+
+Requires PHP GD with WebP and FFmpeg with libx264. Use `--images-only` to omit video encoding or `--ffmpeg=/path/to/ffmpeg` for a custom executable. Generated files live in `storage/app/public/umami/optimized`; keep the public storage symlink available. The command is repeatable and never updates the database or replaces original media. New or changed originals use the existing fallback until their optimized copies are generated. No image or video conversion runs during page requests.
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

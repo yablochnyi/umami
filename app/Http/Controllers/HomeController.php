@@ -8,6 +8,7 @@ use App\Models\MenuItem;
 use App\Models\SiteSetting;
 use App\Models\SiteText;
 use App\Models\SocialLink;
+use App\Support\OptimizedMedia;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -141,9 +142,10 @@ class HomeController extends Controller
             'phone' => $settings['phone'] ?? '+48 513 233 722',
             'phoneHref' => $settings['phone_href'] ?? 'tel:+48513233722',
             'orderUrl' => $settings['order_url'] ?? 'http://umamisushifood.goorder.pl/',
-            'heroVideoDesktop' => $this->mediaUrl($settings['hero_video_desktop'] ?? $settings['hero_video'] ?? 'umami/UMAMI.MP4'),
-            'heroVideoMobile' => $this->mediaUrl($settings['hero_video_mobile'] ?? $settings['hero_video'] ?? 'umami/UMAMI.MP4'),
+            'heroVideoDesktop' => $this->mediaUrl($settings['hero_video_desktop'] ?? $settings['hero_video'] ?? 'umami/UMAMI.MP4', 'video-desktop'),
+            'heroVideoMobile' => $this->mediaUrl($settings['hero_video_mobile'] ?? $settings['hero_video'] ?? 'umami/UMAMI.MP4', 'video-mobile'),
             'heroPoster' => $this->mediaUrl($settings['hero_poster'] ?? 'umami/res1.png'),
+            'heroPosterMobile' => $this->mediaUrl($settings['hero_poster'] ?? 'umami/res1.png', 'poster-mobile'),
             'aboutImage' => $this->mediaUrl($settings['about_image'] ?? 'umami/res8.png'),
             'mapEmbedUrl' => $settings['map_embed_url'] ?? '',
             'address' => $settings['address'] ?? '',
@@ -241,6 +243,7 @@ class HomeController extends Controller
             'category' => $dish->category ? $translated($dish->category, 'name') : '',
             'price' => $dish->price,
             'image' => $this->mediaUrl($dish->image),
+            'thumbnail' => $this->mediaUrl($dish->image, 'card'),
             'url' => $dish->category ? $this->menuItemUrl($viewSettings['siteUrl'], $locale, $dish->category, $dish) : '',
         ]);
 
@@ -255,6 +258,7 @@ class HomeController extends Controller
                 'category' => $translated($category, 'name'),
                 'price' => $dish->price,
                 'image' => $this->mediaUrl($dish->image),
+                'thumbnail' => $this->mediaUrl($dish->image, 'card'),
                 'url' => $this->menuItemUrl($viewSettings['siteUrl'], $locale, $category, $dish),
             ]),
         ]);
@@ -347,10 +351,14 @@ class HomeController extends Controller
         return rtrim(rtrim(number_format($value, 2, '.', ''), '0'), '.');
     }
 
-    private function mediaUrl(?string $path): string
+    private function mediaUrl(?string $path, string $profile = 'image'): string
     {
         if (blank($path)) {
             return '';
+        }
+
+        if ($optimized = app(OptimizedMedia::class)->url($path, $profile)) {
+            return $optimized;
         }
 
         if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {

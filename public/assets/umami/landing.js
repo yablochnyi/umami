@@ -2,7 +2,6 @@ const desktopBackground = document.body.dataset.backgroundDesktop;
 const mobileBackground = document.body.dataset.backgroundMobile;
 const heroVideoDesktop = document.body.dataset.heroVideoDesktop;
 const heroVideoMobile = document.body.dataset.heroVideoMobile;
-const heroPoster = document.body.dataset.heroPoster;
 const isOrderingOpen = document.body.dataset.orderingOpen === '1';
 const orderingUnavailableMessage = document.body.dataset.orderingUnavailableMessage || '';
 const freeDeliveryFrom = Number.parseFloat(document.body.dataset.freeDeliveryFrom || '0') || 0;
@@ -351,14 +350,15 @@ if (mobileBackground) {
     document.body.style.setProperty('--umami-bg-mobile', `url('${mobileBackground}')`);
 }
 
-if (heroPoster) {
-    document.body.style.setProperty('--umami-hero-poster', `url('${heroPoster}')`);
-}
-
 const heroVideo = document.querySelector('.bg-video');
 if (heroVideo) {
     const hero = heroVideo.closest('.hero');
+    const poster = hero?.querySelector('.hero-poster img');
     const mobileVideoQuery = window.matchMedia('(max-width: 900px)');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const connection = navigator.connection;
+    let posterReady = !poster;
+    let heroVisible = hero ? hero.getBoundingClientRect().bottom > 0 : true;
 
     heroVideo.muted = true;
     heroVideo.playsInline = true;
@@ -366,44 +366,63 @@ if (heroVideo) {
     heroVideo.setAttribute('playsinline', '');
     heroVideo.setAttribute('webkit-playsinline', '');
 
-    const markHeroVideoReady = () => {
-        if (heroVideo.readyState >= 2) {
-            hero?.classList.add('video-ready');
+    const updateHeroPlayback = () => {
+        const disabled = reducedMotion.matches || connection?.saveData;
+        if (disabled || !posterReady || !heroVisible || document.hidden) {
+            heroVideo.pause();
+            if (disabled) {
+                hero?.classList.remove('video-ready');
+                if (heroVideo.hasAttribute('src')) {
+                    heroVideo.removeAttribute('src');
+                    delete heroVideo.dataset.currentSource;
+                    heroVideo.load();
+                }
+            }
+            return;
         }
-    };
-
-    const startHeroVideo = () => {
-        const playPromise = heroVideo.play();
-        if (playPromise && typeof playPromise.catch === 'function') {
-            playPromise.catch(() => {});
-        }
-    };
-
-    const selectHeroVideoSource = () => {
         const selectedSource = mobileVideoQuery.matches
             ? (heroVideoMobile || heroVideoDesktop)
             : (heroVideoDesktop || heroVideoMobile);
 
-        if (!selectedSource || heroVideo.dataset.currentSource === selectedSource) return;
-
-        heroVideo.dataset.currentSource = selectedSource;
-        hero?.classList.remove('video-ready');
-        heroVideo.pause();
-        heroVideo.src = selectedSource;
-        heroVideo.load();
-        startHeroVideo();
+        if (!selectedSource) return;
+        if (heroVideo.dataset.currentSource !== selectedSource) {
+            heroVideo.dataset.currentSource = selectedSource;
+            hero?.classList.remove('video-ready');
+            heroVideo.pause();
+            heroVideo.src = selectedSource;
+            heroVideo.load();
+        }
+        const playPromise = heroVideo.play();
+        playPromise?.catch(() => {});
     };
 
-    heroVideo.addEventListener('loadeddata', markHeroVideoReady);
-    heroVideo.addEventListener('playing', markHeroVideoReady);
+    heroVideo.addEventListener('playing', () => hero?.classList.add('video-ready'));
     heroVideo.addEventListener('error', () => hero?.classList.remove('video-ready'));
 
-    selectHeroVideoSource();
-    markHeroVideoReady();
-    startHeroVideo();
-    mobileVideoQuery.addEventListener('change', selectHeroVideoSource);
-    window.addEventListener('pageshow', startHeroVideo, { once: true });
-    document.addEventListener('touchstart', startHeroVideo, { once: true, passive: true });
+    // Paint the selected lightweight poster before starting the background video transfer.
+    const startAfterPoster = async () => {
+        try { await poster?.decode?.(); } catch (_) {}
+        posterReady = true;
+        window.requestAnimationFrame(updateHeroPlayback);
+    };
+    if (!poster || poster.complete) {
+        startAfterPoster();
+    } else {
+        poster.addEventListener('load', startAfterPoster, { once: true });
+        poster.addEventListener('error', startAfterPoster, { once: true });
+    }
+    if (hero && 'IntersectionObserver' in window) {
+        new IntersectionObserver(([entry]) => {
+            heroVisible = entry.isIntersecting;
+            updateHeroPlayback();
+        }).observe(hero);
+    }
+    mobileVideoQuery.addEventListener('change', updateHeroPlayback);
+    reducedMotion.addEventListener('change', updateHeroPlayback);
+    connection?.addEventListener?.('change', updateHeroPlayback);
+    document.addEventListener('visibilitychange', updateHeroPlayback);
+    window.addEventListener('pageshow', updateHeroPlayback);
+    document.addEventListener('pointerdown', updateHeroPlayback, { once: true, passive: true });
 }
 
 const modal = document.getElementById('modal');
