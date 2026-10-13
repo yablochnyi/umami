@@ -11,6 +11,7 @@ use App\Models\SocialLink;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class HomeController extends Controller
 {
@@ -19,6 +20,14 @@ class HomeController extends Controller
      */
     public function __invoke(Request $request, ?string $locale = null)
     {
+        // The front controller may already be stripped from Laravel's route path.
+        if (in_array($request->method(), ['GET', 'HEAD'], true)
+            && explode('?', $request->getRequestUri(), 2)[0] === '/index.php') {
+            $query = (string) $request->server('QUERY_STRING', '');
+
+            return new RedirectResponse('/'.($query !== '' ? '?'.$query : ''), 301);
+        }
+
         $supportedLocales = ['pl', 'uk', 'en'];
         $siteUrl = rtrim(SiteSetting::query()->where('key', 'site_url')->value('value') ?: 'https://umamisushifood.pl', '/');
 

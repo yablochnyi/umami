@@ -74,6 +74,7 @@ Route::get('/{locale}/{slug}', LegalPageController::class)
     ->whereIn('slug', ['polityka-konfidentsiynosti', 'polityka-cookie', 'pravila-korystuvannya', 'privacy-policy', 'cookie-policy', 'terms'])
     ->name('legal.localized');
 Route::get('/', HomeController::class)->name('home');
+Route::get('/index.php', HomeController::class);
 Route::get('/{locale}', HomeController::class)
     ->whereIn('locale', ['uk', 'en'])
     ->name('home.localized');
