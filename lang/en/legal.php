@@ -6,9 +6,10 @@ return [
     'contents' => 'Contents',
     'related' => 'Related documents',
     'cookie_settings' => 'Cookie settings',
-    'map_load' => 'Show Google map',
-    'map_notice' => 'Enabling the map sends your IP address and browser data to Google. The map may use cookies under Google’s policy.',
+    'map_title' => 'Umami Sushi & Food on the map - Gen. Andersa 72, Toruń',
     'privacy' => [
+        'updated' => '13 October 2026',
+        'updated_iso' => '2026-10-13',
         'title' => 'Privacy policy',
         'description' => 'How we use data when you browse the menu, place an order or contact Umami Sushi & Food in Toruń.',
         'sections' => [
@@ -27,7 +28,7 @@ return [
             ['heading' => '4. Service providers and data transfers', 'body' => [
                 'Authorised staff, hosting and technical service providers, GoPOS and GoOrder where used for the order, delivery providers and accounting support may access data as necessary. Competent authorities may also receive data.',
                 'To calculate delivery, the town, street and building number may be sent to Nominatim (OpenStreetMap) to determine coordinates. This request does not include your name, email, phone or apartment number; results are cached for one month.',
-                'Google receives technical data after analytics consent or when you explicitly enable the map. Google services may involve processing outside the EEA. For processing locations and transfer safeguards, see https://policies.google.com/privacy. Visiting Wolt, Pyszne or social networks is also subject to the chosen service’s policies.',
+                'Google receives technical data after analytics consent and when the embedded map in the contact section loads automatically. The map does not require a separate click or analytics consent; loading it sends Google information including your IP address and browser data. Google services may involve processing outside the EEA. For processing locations and transfer safeguards, see https://policies.google.com/privacy. Visiting Wolt, Pyszne or social networks is also subject to the chosen service’s policies.',
             ]],
             ['heading' => '5. Retention', 'body' => [
                 'Retention depends on the purpose: completing an order, handling complaints, mandatory accounting retention periods and limitation periods for claims. Not all data needs the same retention period. Completing an order does not automatically delete its history.',
@@ -40,6 +41,8 @@ return [
         ],
     ],
     'cookies' => [
+        'updated' => '13 October 2026',
+        'updated_iso' => '2026-10-13',
         'title' => 'Cookie policy',
         'description' => 'What we store in your browser, why we use it and how to change your choice.',
         'sections' => [
@@ -60,7 +63,7 @@ return [
                 'On withdrawal we disable further collection and remove _ga cookies accessible to this site. The change may reload the page, so finish editing any form first. It does not remove data already sent to Google. Clearing all site data in your browser also removes your basket and saved order link. Your choice applies to the current browser.',
             ]],
             ['heading' => '5. Maps and external websites', 'body' => [
-                'The Google map does not load automatically. Enable it separately using the button beside the map after reading the data transfer notice. Withdrawing analytics consent does not erase earlier map data; reloading the page blocks the map again.',
+                'The Google map in the contact section loads automatically, without a separate button. Your browser may defer loading until you approach that section. Loading the map sends your IP address and browser data to Google; the map may use cookies under Google’s policy: https://policies.google.com/privacy. Analytics preferences do not control the map. Declining or withdrawing analytics consent does not block the map or remove data already sent to Google.',
                 'External links open services with their own cookie rules. Our privacy policy explains personal data processing and how to contact the restaurant.',
             ]],
         ],

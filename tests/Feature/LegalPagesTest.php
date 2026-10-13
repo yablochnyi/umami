@@ -32,7 +32,7 @@ class LegalPagesTest extends TestCase
             ->assertSee('<a class="legal-back" href="'.($locale === 'pl' ? '/' : '/'.$locale).'">', false)
             ->assertSee(trans('legal.'.$page.'.title', [], $locale))
             ->assertSee(trans('legal.updated_label', [], $locale))
-            ->assertSee('datetime="2026-09-29"', false)
+            ->assertSee('datetime="'.($page === 'terms' ? '2026-09-29' : '2026-10-13').'"', false)
             ->assertSee('data-cookie-settings', false)
             ->assertSee('id="cookieConsent"', false)
             ->assertSee('/assets/umami/privacy.js', false)

@@ -85,16 +85,5 @@
     window.addEventListener('storage', event => {
         if (event.key === key || event.key === null) applyConsent(event.newValue);
     });
-    document.querySelectorAll('[data-map-load]').forEach(button => {
-        button.addEventListener('click', () => {
-            const notice = button.closest('[data-map-notice]');
-            const frame = notice?.parentElement.querySelector('[data-map-src]');
-            if (!frame) return;
-            frame.src = frame.dataset.mapSrc;
-            frame.hidden = false;
-            notice.hidden = true;
-            frame.focus();
-        });
-    });
     applyConsent(readConsent());
 })();

@@ -6,9 +6,10 @@ return [
     'contents' => 'Spis treści',
     'related' => 'Powiązane dokumenty',
     'cookie_settings' => 'Ustawienia cookies',
-    'map_load' => 'Pokaż mapę Google',
-    'map_notice' => 'Po włączeniu mapy Google otrzyma Twój adres IP i dane przeglądarki. Mapa może korzystać z cookies zgodnie z polityką Google.',
+    'map_title' => 'Umami Sushi & Food na mapie - ul. Gen. Andersa 72, Toruń',
     'privacy' => [
+        'updated' => '13 października 2026',
+        'updated_iso' => '2026-10-13',
         'title' => 'Polityka prywatności',
         'description' => 'Jak korzystamy z danych podczas przeglądania menu, składania zamówień i kontaktu z Umami Sushi & Food w Toruniu.',
         'sections' => [
@@ -27,7 +28,7 @@ return [
             ['heading' => '4. Dostawcy usług i przekazywanie danych', 'body' => [
                 'Dostęp w niezbędnym zakresie mogą mieć upoważnieni pracownicy, dostawcy hostingu i obsługi technicznej, system GoPOS oraz GoOrder, gdy obsługuje dane zamówienie, dostawcy realizujący dostawę i obsługa księgowa. Dane mogą otrzymać również uprawnione organy.',
                 'Przy wycenie dostawy miejscowość, ulica i numer budynku mogą zostać przesłane do Nominatim (OpenStreetMap) w celu ustalenia współrzędnych. W tym zapytaniu nie przesyłamy nazwiska, e-maila, telefonu ani numeru mieszkania; wynik jest buforowany przez miesiąc.',
-                'Google otrzymuje dane techniczne po zgodzie na analitykę lub po samodzielnym włączeniu mapy. Usługi Google mogą wiązać się z przetwarzaniem poza EOG. Informacje o lokalizacjach i zabezpieczeniach transferu znajdziesz w polityce Google: https://policies.google.com/privacy. Przejście do Wolt, Pyszne lub mediów społecznościowych podlega również zasadom wybranego serwisu.',
+                'Google otrzymuje dane techniczne po zgodzie na analitykę oraz podczas automatycznego ładowania osadzonej mapy w sekcji kontaktowej. Mapa nie wymaga osobnego kliknięcia ani zgody na analitykę; jej załadowanie przekazuje Google m.in. adres IP i dane przeglądarki. Usługi Google mogą wiązać się z przetwarzaniem poza EOG. Informacje o lokalizacjach i zabezpieczeniach transferu znajdziesz w polityce Google: https://policies.google.com/privacy. Przejście do Wolt, Pyszne lub mediów społecznościowych podlega również zasadom wybranego serwisu.',
             ]],
             ['heading' => '5. Jak długo przechowujemy dane', 'body' => [
                 'Okres przechowywania zależy od celu: realizacji zamówienia, rozpatrzenia reklamacji, obowiązkowych terminów przechowywania dokumentów księgowych i przedawnienia roszczeń. Nie wszystkie dane wymagają tak samo długiego przechowywania. Zakończenie zamówienia nie usuwa automatycznie jego historii.',
@@ -40,6 +41,8 @@ return [
         ],
     ],
     'cookies' => [
+        'updated' => '13 października 2026',
+        'updated_iso' => '2026-10-13',
         'title' => 'Polityka plików cookie',
         'description' => 'Co zapisujemy w przeglądarce, do czego służą te dane i jak zmienić swoją decyzję.',
         'sections' => [
@@ -60,7 +63,7 @@ return [
                 'Przy wycofaniu wyłączamy dalsze zbieranie i usuwamy dostępne dla tej strony cookies _ga. Zmiana może odświeżyć stronę, dlatego najpierw dokończ edycję formularza. Nie usuwa to danych przesłanych wcześniej do Google. Pełną pamięć strony możesz usunąć w przeglądarce; usuwa to także koszyk i zapamiętany odnośnik do zamówienia. Wybór obowiązuje w danej przeglądarce.',
             ]],
             ['heading' => '5. Mapy i zewnętrzne strony', 'body' => [
-                'Mapa Google nie ładuje się automatycznie. Włączasz ją osobnym przyciskiem przy mapie, po zapoznaniu się z informacją o przesłaniu danych do Google. Wycofanie zgody na analitykę nie usuwa wcześniejszych danych mapy; odświeżenie strony ponownie blokuje mapę.',
+                'Mapa Google w sekcji kontaktowej ładuje się automatycznie, bez osobnego przycisku. Przeglądarka może odroczyć jej pobranie do momentu zbliżenia się do tej sekcji. Załadowanie mapy przekazuje Google adres IP i dane przeglądarki; mapa może korzystać z cookies zgodnie z polityką Google: https://policies.google.com/privacy. Wybór dotyczący analityki nie steruje mapą. Odrzucenie lub wycofanie zgody na analitykę nie blokuje mapy ani nie usuwa danych już przekazanych Google.',
                 'Linki do innych stron otwierają usługi z własnymi zasadami cookies. Szczegóły przetwarzania danych i kontakt do restauracji podajemy w polityce prywatności.',
             ]],
         ],

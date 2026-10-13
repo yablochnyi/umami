@@ -30,7 +30,8 @@ class LegalPageController extends Controller
         return view('legal', [
             ...$content,
             'locale' => $locale,
-            'updatedAt' => trans('legal.updated', [], $locale),
+            'updatedAt' => $content['updated'] ?? trans('legal.updated', [], $locale),
+            'updatedAtIso' => $content['updated_iso'] ?? '2026-09-29',
             'localizedUrls' => $localizedUrls,
             'canonicalUrl' => $localizedUrls[$locale],
         ]);

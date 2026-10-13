@@ -14,7 +14,7 @@
             <a class="legal-back" href="{{ $siteLayout['homeUrl'] }}">Umami Sushi & Food</a>
             <h1>{{ $title }}</h1>
             <p class="legal-lead">{{ $description }}</p>
-            <p class="legal-updated">{{ __('legal.updated_label') }} <time datetime="2026-09-29">{{ $updatedAt }}</time></p>
+            <p class="legal-updated">{{ __('legal.updated_label') }} <time datetime="{{ $updatedAtIso }}">{{ $updatedAt }}</time></p>
             <nav class="legal-contents" aria-label="{{ __('legal.contents') }}">
                 @foreach($sections as $section)
                     <a href="#section-{{ $loop->iteration }}">{{ $section['heading'] }}</a>

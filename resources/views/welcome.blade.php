@@ -204,11 +204,7 @@
             </div>
             @if($settings['mapEmbedUrl'])
                 <div class="map-frame">
-                    <div class="map-consent" data-map-notice>
-                        <p>{{ __('legal.map_notice') }}</p>
-                        <button type="button" class="cookie-button secondary" data-map-load>{{ __('legal.map_load') }}</button>
-                    </div>
-                    <iframe data-map-src="{{ $settings['mapEmbedUrl'] }}" loading="lazy" referrerpolicy="no-referrer" title="{{ __('legal.map_load') }}" hidden></iframe>
+                    <iframe src="{{ $settings['mapEmbedUrl'] }}" loading="lazy" referrerpolicy="no-referrer" title="{{ __('legal.map_title') }}" allowfullscreen></iframe>
                 </div>
             @endif
         </section>
