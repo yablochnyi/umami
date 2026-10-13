@@ -454,7 +454,7 @@ function openModalCard(card) {
 
     if (card.dataset.image) {
         modalImage.src = card.dataset.image;
-        modalImage.alt = card.dataset.name || '';
+        modalImage.alt = card.dataset.imageAlt || card.dataset.name || '';
         modalImage.hidden = false;
     } else {
         modalImage.removeAttribute('src');

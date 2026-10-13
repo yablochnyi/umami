@@ -46,7 +46,7 @@
                         <button class="cart-step decrease" type="button" data-cart-decrease aria-label="{{ trans('site.cart.decrease') }}">−</button>
                         <span class="cart-quantity" data-cart-quantity>0</span>
                         <button class="cart-add" type="button" data-cart-add aria-label="{{ trans('site.cart.add') }}">
-                            <img src="/cart-svgrepo-com.svg" alt="">
+                            <span class="cart-add-icon" aria-hidden="true"></span>
                         </button>
                         <button class="cart-step increase" type="button" data-cart-increase aria-label="{{ trans('site.cart.increase') }}">+</button>
                     </div>

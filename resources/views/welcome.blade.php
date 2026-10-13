@@ -35,7 +35,7 @@
             </picture>
             <video class="bg-video" muted loop playsinline preload="none" aria-hidden="true"></video>
             <div class="hero-inner">
-                <img class="hero-logo" src="{{ $settings['logo'] }}" alt="Umami Sushi & Food">
+                <img class="hero-logo" src="{{ $settings['logo'] }}" alt="{{ __('images.logo') }}">
                 <div class="eyebrow">{{ $copy['heroEyebrow'] }}</div>
                 <h1>UMAMI Sushi & Food</h1>
                 <p>{{ $copy['heroText'] }}</p>
@@ -70,7 +70,7 @@
                                     <button class="cart-step decrease" type="button" data-cart-decrease aria-label="{{ trans('site.cart.decrease') }}">−</button>
                                     <span class="cart-quantity" data-cart-quantity>0</span>
                                     <button class="cart-add" type="button" data-cart-add aria-label="{{ trans('site.cart.add') }}">
-                                        <img src="/cart-svgrepo-com.svg" alt="">
+                                        <span class="cart-add-icon" aria-hidden="true"></span>
                                     </button>
                                     <button class="cart-step increase" type="button" data-cart-increase aria-label="{{ trans('site.cart.increase') }}">+</button>
                                 </div>
@@ -128,7 +128,7 @@
                                                 <button class="cart-step decrease" type="button" data-cart-decrease aria-label="{{ trans('site.cart.decrease') }}">−</button>
                                                 <span class="cart-quantity" data-cart-quantity>0</span>
                                                 <button class="cart-add" type="button" data-cart-add aria-label="{{ trans('site.cart.add') }}">
-                                                    <img src="/cart-svgrepo-com.svg" alt="">
+                                                    <span class="cart-add-icon" aria-hidden="true"></span>
                                                 </button>
                                                 <button class="cart-step increase" type="button" data-cart-increase aria-label="{{ trans('site.cart.increase') }}">+</button>
                                             </div>
@@ -149,7 +149,7 @@
                     <h2>{{ $copy['aboutTitle'] }}</h2>
                 </div>
                 <div>
-                    <img src="{{ $settings['aboutImage'] }}" alt="Sushi w Umami" loading="lazy" decoding="async">
+                    <img src="{{ $settings['aboutImage'] }}" alt="{{ $settings['aboutImageAlt'] }}" loading="lazy" decoding="async">
                     <p>{{ $copy['aboutText'] }}</p>
                 </div>
             </div>
@@ -162,7 +162,7 @@
             <div class="gallery-slider" id="gallerySlider">
                 <div class="gallery-track" id="galleryTrack">
                     @foreach($galleryImages as $image)
-                        <button type="button" class="gallery-slide" data-modal-card data-name="{{ $image['title'] }}" data-category="{{ $copy['galleryTitle'] }}" data-price="" data-desc="{{ $copy['galleryDesc'] }}" data-image="{{ $image['image'] }}">
+                        <button type="button" class="gallery-slide" data-modal-card data-name="{{ $image['title'] }}" data-category="{{ $copy['galleryTitle'] }}" data-price="" data-desc="{{ $copy['galleryDesc'] }}" data-image="{{ $image['image'] }}" data-image-alt="{{ $image['alt'] }}">
                             <img src="{{ $image['image'] }}" alt="{{ $image['alt'] }}" loading="lazy" decoding="async">
                         </button>
                     @endforeach
@@ -191,7 +191,7 @@
                         @foreach($socialLinks as $link)
                             <a class="social-link" href="{{ $link->url }}" target="_blank" rel="noopener" aria-label="{{ $link->label }}">
                                 @if($link->icon)
-                                    <img src="{{ $link->icon }}" alt="" width="18" height="18">
+                                    <img src="{{ $link->icon }}" alt="{{ $link->label }}" width="18" height="18">
                                 @endif
                             </a>
                         @endforeach
@@ -234,7 +234,7 @@
                         <button class="cart-step decrease" type="button" data-cart-decrease aria-label="{{ trans('site.cart.decrease') }}">−</button>
                         <span class="cart-quantity" data-cart-quantity>0</span>
                         <button class="cart-add" type="button" data-cart-add aria-label="{{ trans('site.cart.add') }}">
-                            <img src="/cart-svgrepo-com.svg" alt="">
+                            <span class="cart-add-icon" aria-hidden="true"></span>
                         </button>
                         <button class="cart-step increase" type="button" data-cart-increase aria-label="{{ trans('site.cart.increase') }}">+</button>
                     </div>

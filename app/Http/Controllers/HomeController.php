@@ -8,6 +8,7 @@ use App\Models\MenuItem;
 use App\Models\SiteSetting;
 use App\Models\SiteText;
 use App\Models\SocialLink;
+use App\Support\ImageAlternativeText;
 use App\Support\OptimizedMedia;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
@@ -147,6 +148,7 @@ class HomeController extends Controller
             'heroPoster' => $this->mediaUrl($settings['hero_poster'] ?? 'umami/res1.png'),
             'heroPosterMobile' => $this->mediaUrl($settings['hero_poster'] ?? 'umami/res1.png', 'poster-mobile'),
             'aboutImage' => $this->mediaUrl($settings['about_image'] ?? 'umami/res8.png'),
+            'aboutImageAlt' => app(ImageAlternativeText::class)->forImage($settings['about_image'] ?? 'umami/res8.png', fallback: 'images.about'),
             'mapEmbedUrl' => $settings['map_embed_url'] ?? '',
             'address' => $settings['address'] ?? '',
             'googleAnalyticsId' => $settings['google_analytics_id'] ?? '',
@@ -265,7 +267,7 @@ class HomeController extends Controller
 
         $gallery = $galleryImages->map(fn (GalleryImage $image) => [
             'title' => $translated($image, 'title'),
-            'alt' => $translated($image, 'alt', $translated($image, 'title')),
+            'alt' => app(ImageAlternativeText::class)->forImage($image->image, $translated($image, 'alt'), $translated($image, 'title')),
             'image' => $this->mediaUrl($image->image),
         ]);
 

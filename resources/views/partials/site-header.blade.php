@@ -1,6 +1,6 @@
 <header class="topbar">
-    <a class="brand" href="{{ $siteLayout['homeUrl'] }}#top" aria-label="{{ $siteLayout['settings']['siteUrl'] }}">
-        <img src="{{ $siteLayout['settings']['logo'] }}" alt="Umami logo">
+    <a class="brand" href="{{ $siteLayout['homeUrl'] }}#top" aria-label="{{ __('images.home') }}">
+        <img src="{{ $siteLayout['settings']['logo'] }}" alt="{{ __('images.logo') }}">
         <span>{{ trans('site.brand') }}</span>
     </a>
 
@@ -16,7 +16,7 @@
         @foreach($siteLayout['socialLinks'] as $link)
             <a class="social-link" href="{{ $link->url }}" target="_blank" rel="noopener" aria-label="{{ $link->label }}">
                 @if($link->icon)
-                    <img src="{{ $link->icon }}" alt="" width="18" height="18">
+                    <img src="{{ $link->icon }}" alt="{{ $link->label }}" width="18" height="18">
                 @endif
             </a>
         @endforeach
