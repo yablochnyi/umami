@@ -47,7 +47,7 @@
         @endif
 
         <form class="checkout-layout" method="post" action="{{ $submitUrl }}" id="checkoutForm">
-            @csrf
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
             @if($submissionKey)
                 <input type="hidden" name="submission_key" value="{{ $submissionKey }}">
             @endif

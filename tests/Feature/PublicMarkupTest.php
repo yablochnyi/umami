@@ -34,6 +34,12 @@ class PublicMarkupTest extends TestCase
                 $cookies = $xpath->query('//section[@id="cookieConsent"]')->item(0);
                 $this->assertSame('cookieConsentTitle', $cookies->getAttribute('aria-labelledby'));
                 $this->assertFalse($cookies->hasAttribute('role'));
+                if ($path === '/koszyk') {
+                    $token = $xpath->query('//input[@type="hidden" and @name="_token"]')->item(0);
+                    $this->assertNotNull($token);
+                    $this->assertSame(csrf_token(), $token->getAttribute('value'));
+                    $this->assertFalse($token->hasAttribute('autocomplete'));
+                }
             }
         }
     }
