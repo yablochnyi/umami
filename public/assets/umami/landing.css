@@ -1384,5 +1384,20 @@ footer {
 
 .map-frame { margin-top: 18px; }
 
+.active-order-link {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    z-index: 40;
+    padding: 12px 18px;
+    background: #151312;
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    max-width: calc(100% - 32px);
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
 .menu-availability-label { font-size: 12px; line-height: 1.5; color: #75685e; margin: 8px 0 0; overflow-wrap: anywhere; }
 .cart-control button:disabled { opacity: .45; cursor: not-allowed; }

@@ -66,7 +66,7 @@
 >
     @include('partials.site-header', ['showCart' => $showCart ?? true])
 
-    <a id="activeOrderLink" href="#" hidden data-copy="{{ json_encode(__('tracking', [], $locale)) }}" style="position:fixed;bottom:16px;left:16px;z-index:40;padding:12px 18px;background:#151312;color:#fff;border-radius:6px;text-decoration:none;max-width:calc(100% - 32px);font-size:14px;overflow-wrap:anywhere">{{ __('tracking.return', [], $locale) }}</a>
+    <a id="activeOrderLink" class="active-order-link" href="#" hidden data-copy="{{ json_encode(__('tracking', [], $locale)) }}">{{ __('tracking.return', [], $locale) }}</a>
 
     @yield('content')
 

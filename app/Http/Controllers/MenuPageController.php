@@ -235,7 +235,6 @@ class MenuPageController extends Controller
                     'description' => $description,
                     'image' => $this->absoluteUrl($image, $siteUrl),
                     'url' => $this->localizedPageUrl($siteUrl, $locale, $category, $item),
-                    'menuAddOn' => $this->translated($category, 'name'),
                     'offers' => [
                         '@type' => 'Offer',
                         'priceCurrency' => 'PLN',
