@@ -1399,3 +1399,5 @@ footer {
 
 .menu-availability-label { font-size: 12px; line-height: 1.5; color: #75685e; margin: 8px 0 0; overflow-wrap: anywhere; }
 .cart-control button:disabled { opacity: .45; cursor: not-allowed; }
+
+.vendra-credit{margin:12px 0 0;font-size:13px;line-height:1.6}.vendra-credit a{color:inherit;text-decoration:underline;text-underline-offset:3px}.vendra-credit a:focus-visible{outline:2px solid currentColor;outline-offset:4px}

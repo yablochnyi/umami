@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'developed_by' => 'Розроблено',
     'updated_label' => 'Останнє оновлення:',
     'updated' => '29 вересня 2026',
     'contents' => 'Зміст',

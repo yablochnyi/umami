@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'developed_by' => 'Projekt i realizacja',
     'updated_label' => 'Ostatnia aktualizacja:',
     'updated' => '29 września 2026',
     'contents' => 'Spis treści',

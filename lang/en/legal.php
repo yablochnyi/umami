@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'developed_by' => 'Developed by',
     'updated_label' => 'Last updated:',
     'updated' => '29 September 2026',
     'contents' => 'Contents',
