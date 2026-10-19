@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\AdminAuditLog;
 use App\Models\User;
 use App\Support\AdminPermissions;
+use App\Support\HolidayDecorations;
 use App\Support\SiteSettingCatalog;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
@@ -94,6 +95,7 @@ final class AdminAudit
     private function publicSetting(string $key): bool
     {
         return isset(SiteSettingCatalog::FIELDS[$key])
+            || in_array($key, array_column(HolidayDecorations::CATALOG, 'setting'), true)
             || in_array($key, ['opening_time', 'closing_time', 'delivery_opening_time', 'minimum_delivery_amount', 'free_delivery_from', 'restaurant_latitude', 'restaurant_longitude'], true)
             || preg_match('/^delivery_tier_[123]_(cost|max_km|streets)$/', $key) === 1;
     }

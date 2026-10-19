@@ -11,7 +11,6 @@ class ListSiteSettings extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [
-        ];
+        return [];
     }
 }

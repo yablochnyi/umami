@@ -3,6 +3,19 @@
 @source '../../../../app/Filament/**/*';
 @source '../../../views/filament/**/*';
 
+.umami-holidays { border-block: 1px solid var(--umami-line); }
+.umami-holiday { display: flex; align-items: center; gap: 24px; padding: 24px 16px; }
+.umami-holiday + .umami-holiday { border-top: 1px solid var(--umami-line); }
+.umami-holiday-art { width: 160px; height: 107px; object-fit: contain; flex-shrink: 0; }
+.umami-holiday-name { flex: 1; min-width: 0; }
+.umami-holiday-name h2 { font-size: 18px; font-weight: 600; overflow-wrap: anywhere; }
+.umami-holiday-name span { display: block; margin-top: 6px; font-size: 14px; color: var(--umami-muted); }
+@media (max-width: 640px) {
+    .umami-holiday { gap: 16px; padding: 20px 0; }
+    .umami-holiday-art { width: 80px; height: 64px; }
+    .umami-holiday-name h2 { font-size: 16px; }
+}
+
 :root {
     --umami-red: #b82421;
     --umami-ink: #242628;

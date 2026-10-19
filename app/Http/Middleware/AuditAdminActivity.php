@@ -38,6 +38,7 @@ class AuditAdminActivity
                 $audit->record('viewed', match (substr($name, strlen('filament.admin.pages.'))) {
                     'dashboard' => 'dashboard',
                     'ustawienia-strony' => 'restaurant_settings',
+                    'holiday-decorations' => 'holiday_decorations',
                     'sales-analytics' => 'sales_analytics',
                     'activity-log' => 'activity_log',
                     default => 'profile',

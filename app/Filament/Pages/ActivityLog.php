@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Models\AdminAuditLog;
 use App\Models\User;
+use App\Support\HolidayDecorations;
 use Carbon\CarbonImmutable;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
@@ -122,7 +123,7 @@ class ActivityLog extends Page implements HasTable
 
     public static function resourceLabel(string $resource): string
     {
-        return __('admin.resources')[$resource] ?? __('audit.resources')[$resource] ?? $resource;
+        return $resource === 'holiday_decorations' ? __('holidays.title') : (__('admin.resources')[$resource] ?? __('audit.resources')[$resource] ?? $resource);
     }
 
     public static function subjectLabel(AdminAuditLog $entry): string
@@ -131,7 +132,8 @@ class ActivityLog extends Page implements HasTable
             return __('texts.blocks')[$entry->subject_label] ?? __('texts.other_block');
         }
         if ($entry->resource === 'site_settings' && $entry->subject_label) {
-            return __('settings.labels')[$entry->subject_label] ?? __('settings.operational')[$entry->subject_label] ?? '#'.$entry->subject_id;
+            return HolidayDecorations::settingLabel($entry->subject_label)
+                ?? __('settings.labels')[$entry->subject_label] ?? __('settings.operational')[$entry->subject_label] ?? '#'.$entry->subject_id;
         }
 
         return $entry->subject_label ?: ($entry->subject_id ? '#'.$entry->subject_id : '');

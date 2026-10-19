@@ -1,0 +1,125 @@
+.halloween-decor {
+    position: fixed;
+    inset: 0;
+    z-index: 8;
+    overflow: hidden;
+    pointer-events: none;
+    user-select: none;
+    contain: layout paint;
+}
+.halloween-decor * { pointer-events: none; }
+.hw-web { position: absolute; top: -6px; width: 210px; height: auto; opacity: .86; }
+.hw-web-left { left: -5px; }
+.hw-web-right { right: -5px; transform: scaleX(-1); width: 180px; }
+
+body[data-halloween] .hero::before {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    right: max(24px, calc((100% - 1350px) / 2));
+    bottom: 12px;
+    width: 340px;
+    height: 227px;
+    background: url('./pumpkins.webp') center / contain no-repeat;
+    pointer-events: none;
+}
+body[data-halloween] .hero-inner { z-index: 2; }
+
+.hw-hover { position: absolute; width: 76px; height: 38px; animation: hw-hover 4.6s ease-in-out infinite; }
+.hw-hover-one { top: 24%; left: 24px; }
+.hw-hover-two { top: 38%; right: 28px; width: 62px; height: 31px; animation-duration: 5.8s; animation-delay: -2s; }
+.hw-flight { position: absolute; top: 0; left: 0; width: 86px; height: 43px; opacity: .9; }
+.hw-flight-small { width: 62px; height: 31px; opacity: .75; }
+.hw-profile { position: relative; display: block; width: 100%; height: 100%; }
+.hw-flight-left .hw-profile { transform: scaleX(-1); }
+.hw-profile i { position: absolute; inset: 0; background: url('./bat-profile.webp') center / contain no-repeat; }
+.hw-profile-body { clip-path: polygon(0 75%, 68% 56%, 78% 40%, 100% 40%, 100% 100%, 0 100%); }
+.hw-profile-wing { clip-path: polygon(0 0, 78% 0, 78% 48%, 68% 65%, 0 80%); transform-origin: 68% 65%; animation: hw-profile-flap .25s ease-in-out infinite alternate; }
+.hw-bat { position: relative; display: block; width: 100%; height: 100%; perspective: 240px; }
+.hw-bat i { position: absolute; inset: 0; background: url('./bat.webp') center / contain no-repeat; }
+.hw-wing-left { clip-path: polygon(0 0, 47% 0, 47% 100%, 0 100%); transform-origin: 47% 65%; animation: hw-wing-left .38s ease-in-out infinite alternate; }
+.hw-wing-right { clip-path: polygon(53% 0, 100% 0, 100% 100%, 53% 100%); transform-origin: 53% 65%; animation: hw-wing-right .38s ease-in-out infinite alternate; }
+.hw-bat-body { clip-path: polygon(46% 0, 54% 0, 54% 100%, 46% 100%); }
+.hw-hover-two i { animation-duration: .3s; }
+.hw-leaf { position: absolute; top: -65px; width: 34px; height: 34px; background: url('./leaf.webp') center / contain no-repeat; animation: hw-fall 24s linear infinite; }
+.hw-leaf-1 { left: 1%; animation-delay: -9s; }
+.hw-leaf-2 { right: 2%; animation-duration: 29s; animation-delay: -17s; }
+.hw-leaf-3 { left: 6%; animation-duration: 32s; animation-delay: -3s; }
+.hw-leaf-4 { right: 7%; animation-duration: 27s; animation-delay: -21s; }
+.hw-leaf-5 { left: 4%; animation-duration: 25s; animation-delay: -18s; }
+.hw-leaf-6 { right: 4%; animation-duration: 31s; animation-delay: -8s; }
+.hw-leaf-7 { left: 7%; animation-duration: 28s; animation-delay: -13s; }
+.hw-leaf-8 { right: 1%; animation-duration: 23s; animation-delay: -2s; }
+.hw-leaf-9 { left: 2%; animation-duration: 33s; animation-delay: -24s; }
+.hw-leaf-10 { right: 6%; animation-duration: 26s; animation-delay: -12s; }
+.hw-leaf-11 { left: 5%; animation-duration: 30s; animation-delay: -5s; }
+.hw-leaf-12 { right: 3%; animation-duration: 24s; animation-delay: -20s; }
+.hw-leaf-13 { left: 0; animation-duration: 27s; animation-delay: -16s; }
+.hw-leaf-14 { right: 5%; animation-duration: 34s; animation-delay: -29s; }
+.hw-leaf-15 { left: 3%; animation-duration: 29s; animation-delay: -2s; }
+.hw-leaf-16 { right: 0; animation-duration: 22s; animation-delay: -11s; }
+.hw-leaf:nth-of-type(3n) { width: 24px; height: 24px; filter: hue-rotate(24deg) saturate(.85); }
+.hw-leaf:nth-of-type(4n) { width: 40px; height: 40px; filter: hue-rotate(40deg) saturate(.9); }
+.halloween-decor:not(.is-ready) .hw-flight, .halloween-decor:not(.is-ready) .hw-hover, .halloween-decor:not(.is-ready) .hw-leaf { visibility: hidden; }
+.halloween-decor:not(.is-ready) *, .halloween-decor.is-paused * { animation-play-state: paused; }
+body.cart-open .halloween-decor { visibility: hidden; }
+
+@keyframes hw-hover {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(-5deg); }
+    30% { transform: translate3d(9px, -15px, 0) rotate(5deg); }
+    65% { transform: translate3d(-5px, 9px, 0) rotate(-2deg); }
+}
+@keyframes hw-profile-flap { from { transform: scaleY(1); } to { transform: scaleY(.38); } }
+@keyframes hw-wing-left { from { transform: rotateY(0deg); } to { transform: rotateY(-65deg); } }
+@keyframes hw-wing-right { from { transform: rotateY(0deg); } to { transform: rotateY(65deg); } }
+@keyframes hw-fall {
+    0% { transform: translate3d(0, -40px, 0) rotate(0deg); opacity: 0; }
+    8% { opacity: .8; }
+    35% { transform: translate3d(22px, 35vh, 0) rotate(105deg); }
+    65% { transform: translate3d(-16px, 70vh, 0) rotate(240deg); opacity: .8; }
+    90%, 100% { transform: translate3d(8px, calc(100vh + 100px), 0) rotate(360deg); opacity: 0; }
+}
+@keyframes hw-fall-edge {
+    0% { transform: translate3d(0, -40px, 0) rotate(0deg); opacity: 0; }
+    8% { opacity: .7; }
+    45% { transform: translate3d(2px, 45vh, 0) rotate(135deg); opacity: .7; }
+    90%, 100% { transform: translate3d(-2px, calc(100vh + 100px), 0) rotate(360deg); opacity: 0; }
+}
+@keyframes hw-fall-mobile {
+    0% { transform: translate3d(0, -40px, 0) rotate(0deg); opacity: 0; }
+    8% { opacity: .82; }
+    45% { transform: translate3d(7px, 45vh, 0) rotate(135deg); opacity: .82; }
+    80% { opacity: .82; }
+    100% { transform: translate3d(0, calc(100vh + 100px), 0) rotate(360deg); opacity: 0; }
+}
+@media (max-width: 1200px) {
+    .hw-web { width: 140px; }
+    .hw-web-right { width: 125px; }
+    body[data-halloween] .hero::before { width: 240px; height: 160px; right: 14px; bottom: 8px; }
+    .hw-leaf, .hw-leaf:nth-of-type(n) { width: 18px; height: 18px; animation-name: hw-fall-edge; }
+    .hw-leaf:nth-of-type(odd) { left: -6px; right: auto; }
+    .hw-leaf:nth-of-type(even) { right: -6px; left: auto; }
+    .hw-leaf:nth-of-type(n+9) { display: none; }
+}
+@media (max-width: 900px) {
+    .hw-web { width: 140px; top: var(--hw-header-bottom, 84px); opacity: .95; }
+    .hw-web-right { width: 128px; }
+    .hw-leaf, .hw-leaf:nth-of-type(n) { width: 26px; height: 26px; animation-name: hw-fall-mobile; }
+    .hw-leaf:nth-of-type(odd) { left: 7px; }
+    .hw-leaf:nth-of-type(even) { right: 12px; }
+    .hw-leaf:nth-of-type(3n) { width: 30px; height: 30px; }
+    body[data-halloween] .hero::before { width: 170px; height: 114px; top: 125px; bottom: auto; }
+    .hw-hover-one { left: auto; right: 12px; top: 23%; width: 48px; height: 24px; }
+    .hw-hover-two { display: none; }
+    .hw-flight { width: 64px; height: 32px; }
+    .hw-flight-small { width: 48px; height: 24px; }
+}
+@media (max-width: 620px) {
+    .hw-web { width: 126px; }
+    .hw-web-right { width: 116px; }
+    body[data-halloween] .hero::before { width: 145px; height: 97px; top: 100px; right: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .halloween-decor * { animation: none !important; }
+    .hw-flight, .hw-hover, .hw-leaf { display: none; }
+}

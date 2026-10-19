@@ -43,9 +43,13 @@
     @stack('preload')
     <link rel="stylesheet" href="{{ $siteLayout['assets']['css'] }}">
     <link rel="stylesheet" href="/assets/umami/privacy.css?v={{ filemtime(public_path('assets/umami/privacy.css')) }}">
+    @if($halloweenEnabled)
+        <link rel="stylesheet" href="/assets/umami/halloween/halloween.css?v={{ filemtime(public_path('assets/umami/halloween/halloween.css')) }}">
+    @endif
     @stack('head')
 </head>
 <body
+    @if($halloweenEnabled) data-halloween="true" @endif
     data-google-analytics-id="{{ ($privatePage ?? false) ? '' : $siteLayout['settings']['googleAnalyticsId'] }}"
     @if($showCart ?? true)
         data-ordering-open="{{ $siteLayout['cart']['isOrderingOpen'] ? '1' : '0' }}"
@@ -72,6 +76,11 @@
 
     @include('partials.site-footer')
     @include('partials.cookie-consent')
+
+    @if($halloweenEnabled)
+        @include('partials.halloween')
+        <script src="/assets/umami/halloween/halloween.js?v={{ filemtime(public_path('assets/umami/halloween/halloween.js')) }}" defer></script>
+    @endif
 
     @yield('afterFooter')
 

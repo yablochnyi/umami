@@ -4,6 +4,8 @@ namespace App\View\Composers;
 
 use App\Models\SiteSetting;
 use App\Models\SocialLink;
+use App\Services\GoOrder\MenuAvailability;
+use App\Support\HalloweenDecor;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -20,7 +22,14 @@ class SiteLayoutComposer
         $locale = $this->locale($data['locale'] ?? app()->getLocale());
 
         app()->setLocale($locale);
-        $view->with('menuAvailability', app(\App\Services\GoOrder\MenuAvailability::class)->snapshot());
+        $view->with('menuAvailability', app(MenuAvailability::class)->snapshot());
+
+        // Read the switch fresh, outside the shared layout cache, so disabling takes effect on the next request.
+        if ($view->name() === 'layouts.site') {
+            $view->with('halloweenEnabled', ! ($data['privatePage'] ?? false)
+                && request()->routeIs('home', 'home.localized', 'menu.*')
+                && HalloweenDecor::enabled());
+        }
 
         if (! isset(self::$commonCache[$locale])) {
             self::$commonCache[$locale] = $this->commonLayoutData($locale);
