@@ -50,6 +50,9 @@
     @if($newyearEnabled)
         <link rel="stylesheet" href="/assets/umami/newyear/newyear.css?v={{ filemtime(public_path('assets/umami/newyear/newyear.css')) }}">
     @endif
+    @if($womensDayEnabled)
+        <link rel="stylesheet" href="/assets/umami/womens-day/womens-day.css?v={{ filemtime(public_path('assets/umami/womens-day/womens-day.css')) }}">
+    @endif
 </head>
 <body
     @if($halloweenEnabled) data-halloween="true" @endif
@@ -89,6 +92,10 @@
     @if($newyearEnabled)
         @include('partials.newyear')
         <script src="/assets/umami/newyear/newyear.js?v={{ filemtime(public_path('assets/umami/newyear/newyear.js')) }}" defer></script>
+    @endif
+    @if($womensDayEnabled)
+        @include('partials.womens-day')
+        <script src="/assets/umami/womens-day/womens-day.js?v={{ filemtime(public_path('assets/umami/womens-day/womens-day.js')) }}" defer></script>
     @endif
 
     <script id="menuAvailabilityData" type="application/json">{!! \Illuminate\Support\Js::encode($menuAvailability) !!}</script>

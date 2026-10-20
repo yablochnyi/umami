@@ -16,6 +16,11 @@ final class HolidayDecorations
             'handler' => NewYearDecor::class,
             'preview' => 'assets/umami/newyear/evergreen.webp',
         ],
+        'womens_day' => [
+            'setting' => WomensDayDecor::KEY,
+            'handler' => WomensDayDecor::class,
+            'preview' => 'assets/umami/womens-day/ribbon-eight.webp',
+        ],
     ];
 
     public static function settingLabel(string $key): ?string

@@ -1,0 +1,106 @@
+.womens-day-decor {
+    position: fixed;
+    inset: 0;
+    z-index: 19;
+    pointer-events: none;
+    overflow: hidden;
+    contain: layout paint;
+}
+.womens-day-decor[hidden] {
+    display: none;
+}
+.womens-day-decor * {
+    pointer-events: none;
+    box-sizing: border-box;
+}
+.wd-accent {
+    position: absolute;
+    right: 24px;
+    bottom: max(84px, env(safe-area-inset-bottom));
+    width: 176px;
+    aspect-ratio: 2 / 3;
+}
+.wd-ribbon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    animation: wd-float 7s ease-in-out infinite alternate;
+}
+.wd-orbit {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    animation: wd-orbit 9s ease-in-out infinite alternate;
+}
+.wd-orbit-first {
+    top: 16%;
+    left: -12%;
+    rotate: -30deg;
+}
+.wd-orbit-second {
+    right: -5%;
+    bottom: 4%;
+    width: 18px;
+    height: 18px;
+    rotate: 80deg;
+    animation-delay: -5s;
+}
+.wd-petal {
+    position: absolute;
+    top: -40px;
+    width: var(--wd-size);
+    height: var(--wd-size);
+    animation: wd-fall var(--wd-duration) var(--wd-delay) linear infinite;
+}
+.wd-petal img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    animation: wd-flutter var(--wd-flutter) var(--wd-delay) ease-in-out infinite alternate;
+}
+.womens-day-decor.is-paused * {
+    animation-play-state: paused !important;
+}
+@keyframes wd-float {
+    from { transform: translateY(0) rotate(-5deg); }
+    to { transform: translateY(-10px) rotate(1deg); }
+}
+@keyframes wd-orbit {
+    from { transform: translate(0, 0) rotate(0); opacity: .5; }
+    to { transform: translate(-12px, -25px) rotate(55deg); opacity: .9; }
+}
+@keyframes wd-fall {
+    0% { transform: translate3d(0, -40px, 0); opacity: 0; }
+    8% { opacity: .75; }
+    90% { opacity: .75; }
+    100% { transform: translate3d(var(--wd-drift), calc(100svh + 100px), 0); opacity: 0; }
+}
+@keyframes wd-flutter {
+    from { transform: translateX(-8px) rotate(-35deg) rotateY(10deg); }
+    to { transform: translateX(8px) rotate(110deg) rotateY(65deg); }
+}
+@media (max-width: 700px) {
+    .wd-accent {
+        right: 6px;
+        bottom: max(94px, env(safe-area-inset-bottom));
+        width: 94px;
+    }
+    .wd-orbit {
+        width: 18px;
+        height: 18px;
+    }
+    .wd-orbit-second {
+        width: 12px;
+        height: 12px;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .womens-day-decor * {
+        animation: none !important;
+    }
+    .wd-petal,
+    .wd-orbit {
+        display: none;
+    }
+}

@@ -7,6 +7,7 @@ use App\Models\SocialLink;
 use App\Services\GoOrder\MenuAvailability;
 use App\Support\HalloweenDecor;
 use App\Support\NewYearDecor;
+use App\Support\WomensDayDecor;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -33,6 +34,9 @@ class SiteLayoutComposer
             $view->with('newyearEnabled', ! ($data['privatePage'] ?? false)
                 && request()->routeIs('home', 'home.localized', 'menu.*')
                 && NewYearDecor::enabled());
+            $view->with('womensDayEnabled', ! ($data['privatePage'] ?? false)
+                && request()->routeIs('home', 'home.localized', 'menu.*')
+                && WomensDayDecor::enabled());
         }
 
         if (! isset(self::$commonCache[$locale])) {
