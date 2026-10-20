@@ -11,6 +11,11 @@ final class HolidayDecorations
             'handler' => HalloweenDecor::class,
             'preview' => 'assets/umami/halloween/pumpkins.webp',
         ],
+        'newyear' => [
+            'setting' => NewYearDecor::KEY,
+            'handler' => NewYearDecor::class,
+            'preview' => 'assets/umami/newyear/evergreen.webp',
+        ],
     ];
 
     public static function settingLabel(string $key): ?string

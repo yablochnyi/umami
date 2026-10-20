@@ -1,0 +1,334 @@
+.newyear-decor {
+    position: fixed;
+    inset: 0;
+    z-index: 19;
+    pointer-events: none;
+    overflow: hidden;
+    contain: layout paint;
+    --ny-top: 100px;
+}
+.newyear-decor[hidden] {
+    display: none;
+}
+.newyear-decor *,
+.newyear-decor *::before {
+    pointer-events: none;
+    box-sizing: border-box;
+}
+.newyear-decor .ny-evergreen {
+    position: absolute;
+    top: 0;
+    width: 200px;
+    height: auto;
+    max-width: 19vw;
+    filter: drop-shadow(0 3px 5px #08190c30);
+}
+.newyear-decor .ny-left {
+    left: -8px;
+}
+.newyear-decor .ny-right {
+    right: -8px;
+    transform: scaleX(-1);
+}
+.newyear-decor .ny-lights {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 18px;
+    display: flex;
+    justify-content: space-around;
+    border-top: 1px solid #35503f90;
+}
+.newyear-decor .ny-bulb {
+    --ny-light: #ff4949;
+    position: relative;
+    display: block;
+    flex: 0 0 7px;
+    height: 10px;
+    margin-top: 3px;
+    border-radius: 3px 3px 5px 5px;
+    background: var(--ny-light);
+    box-shadow: 0 0 5px 2px var(--ny-light), 0 0 13px 3px var(--ny-light);
+    animation: ny-glow 3.2s ease-in-out infinite;
+}
+.newyear-decor .ny-bulb::before {
+    content: "";
+    position: absolute;
+    top: 1px;
+    left: 2px;
+    width: 2px;
+    height: 4px;
+    border-radius: 2px;
+    background: #ffffffb3;
+}
+.newyear-decor .ny-bulb:nth-child(8n + 2) { --ny-light: #ffd84a; }
+.newyear-decor .ny-bulb:nth-child(8n + 3) { --ny-light: #45ed88; }
+.newyear-decor .ny-bulb:nth-child(8n + 4) { --ny-light: #40daff; }
+.newyear-decor .ny-bulb:nth-child(8n + 5) { --ny-light: #568cff; }
+.newyear-decor .ny-bulb:nth-child(8n + 6) { --ny-light: #ff69ba; }
+.newyear-decor .ny-bulb:nth-child(8n + 7) { --ny-light: #ff9a46; }
+.newyear-decor .ny-bulb:nth-child(8n) { --ny-light: #c58bff; }
+.newyear-decor .ny-bulb:nth-child(3n) { animation-duration: 2.6s; animation-delay: -1.7s; }
+.newyear-decor .ny-bulb:nth-child(3n + 1) { animation-delay: -.9s; }
+.newyear-decor .ny-bulb:nth-child(5n) { animation-duration: 3.8s; animation-delay: -2.3s; }
+.newyear-decor .ny-snow {
+    position: absolute;
+    top: 0;
+    width: var(--ny-size);
+    height: var(--ny-size);
+    max-width: none;
+    object-fit: contain;
+    filter: drop-shadow(0 0 1px #526b8050);
+    opacity: 0.8;
+    animation: ny-snowfall var(--ny-duration) linear var(--ny-delay) infinite;
+}
+.newyear-decor.is-paused * {
+    animation-play-state: paused !important;
+}
+.newyear-decor .ny-snowman {
+    position: absolute;
+    bottom: max(var(--ny-character-bottom, 8px), env(safe-area-inset-bottom));
+    left: 12px;
+    width: 104px;
+    height: 156px;
+    object-fit: contain;
+}
+.newyear-decor .ny-story {
+    position: absolute;
+    inset: 0;
+    --ny-fox-size: 144px;
+    --ny-stop: calc(64vw - var(--ny-fox-size));
+    --ny-cycle: 34s;
+}
+.newyear-decor .ny-fox {
+    position: absolute;
+    bottom: max(var(--ny-character-bottom, 8px), env(safe-area-inset-bottom));
+    left: 0;
+    width: var(--ny-fox-size);
+    height: calc(var(--ny-fox-size) * 2 / 3);
+    animation: ny-visit var(--ny-cycle) linear infinite;
+}
+.newyear-decor .ny-fox-run,
+.newyear-decor .ny-fox-eat {
+    position: absolute;
+    inset: 0;
+}
+.newyear-decor .ny-fox-run {
+    animation: ny-running var(--ny-cycle) step-end infinite;
+}
+.newyear-decor .ny-fox-eat {
+    animation: ny-eating var(--ny-cycle) step-end infinite;
+}
+.newyear-decor .ny-fox-eat img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform-origin: 70% 90%;
+    animation: ny-munch 0.85s ease-in-out infinite alternate;
+}
+.newyear-decor .ny-fox-frame {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    animation: ny-run-frame 0.64s step-end infinite;
+}
+.newyear-decor .ny-frame-1 {
+    width: 81.6667%;
+    animation-delay: -0.48s;
+}
+.newyear-decor .ny-frame-2 {
+    width: 93.8333%;
+    animation-delay: -0.32s;
+}
+.newyear-decor .ny-frame-3 {
+    width: 79.3333%;
+    animation-delay: -0.16s;
+}
+.newyear-decor .ny-snack {
+    position: absolute;
+    bottom: max(calc(var(--ny-character-bottom, 8px) + 2px), env(safe-area-inset-bottom));
+    left: calc(var(--ny-stop) + var(--ny-fox-size) * 0.9);
+    width: 48px;
+    height: 32px;
+    animation: ny-snack-visit var(--ny-cycle) linear infinite;
+}
+.newyear-decor .ny-sushi {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    animation: ny-sushi-grab var(--ny-cycle) linear infinite;
+}
+.newyear-decor .ny-plate {
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    bottom: 4px;
+    height: 6px;
+    border-radius: 50%;
+    background: #333b3b;
+    border: 1px solid #747d7a;
+}
+@keyframes ny-visit {
+    0% {
+        transform: translateX(calc(-1 * var(--ny-fox-size) - 20px));
+        opacity: 0;
+    }
+    3% {
+        opacity: 1;
+    }
+    19%,
+    37% {
+        transform: translateX(var(--ny-stop));
+        opacity: 1;
+    }
+    55% {
+        transform: translateX(calc(100vw + 20px));
+        opacity: 1;
+    }
+    56%,
+    100% {
+        transform: translateX(calc(100vw + 20px));
+        opacity: 0;
+    }
+}
+@keyframes ny-running {
+    0%,
+    37% {
+        opacity: 1;
+    }
+    19% {
+        opacity: 0;
+    }
+}
+@keyframes ny-eating {
+    0%,
+    37% {
+        opacity: 0;
+    }
+    19% {
+        opacity: 1;
+    }
+}
+@keyframes ny-run-frame {
+    0% {
+        opacity: 1;
+    }
+    25%,
+    100% {
+        opacity: 0;
+    }
+}
+@keyframes ny-munch {
+    from {
+        transform: translateY(0) rotate(-1deg);
+    }
+    to {
+        transform: translateY(2px) rotate(1deg);
+    }
+}
+@keyframes ny-snack-visit {
+    0%,
+    56%,
+    100% {
+        opacity: 0;
+    }
+    4%,
+    52% {
+        opacity: 1;
+    }
+}
+@keyframes ny-sushi-grab {
+    0%,
+    18% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+    19%,
+    100% {
+        opacity: 0;
+        transform: translate(-18px, -24px);
+    }
+}
+@keyframes ny-glow {
+    0%,
+    100% {
+        opacity: 0.45;
+        filter: brightness(0.85);
+    }
+    30%,
+    80% {
+        opacity: 1;
+        filter: brightness(1.15);
+    }
+    55% { opacity: .65; filter: brightness(.95); }
+}
+@keyframes ny-snowfall {
+    0% {
+        transform: translate3d(0, -30px, 0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.8;
+    }
+    90% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate3d(var(--ny-drift), calc(100dvh + 30px), 0)
+            rotate(150deg);
+        opacity: 0;
+    }
+}
+@media (max-width: 700px) {
+    .newyear-decor .ny-snowman,
+    .newyear-decor .ny-story {
+        --ny-character-bottom: 72px;
+    }
+    .newyear-decor .ny-snowman {
+        left: 6px;
+        width: 60px;
+        height: 90px;
+    }
+    .newyear-decor .ny-story {
+        --ny-fox-size: 96px;
+        --ny-stop: calc(70vw - var(--ny-fox-size));
+    }
+    .newyear-decor .ny-snack {
+        width: 34px;
+        height: 23px;
+    }
+    .newyear-decor .ny-evergreen,
+    .newyear-decor .ny-lights {
+        top: var(--ny-top);
+    }
+    .newyear-decor .ny-evergreen {
+        width: 104px;
+        max-width: 27vw;
+    }
+    .newyear-decor .ny-bulb:nth-child(n + 33) {
+        display: none;
+    }
+    .newyear-decor .ny-bulb {
+        flex-basis: 5px;
+        height: 8px;
+        box-shadow: 0 0 4px 1px var(--ny-light), 0 0 9px 2px var(--ny-light);
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .newyear-decor .ny-story {
+        display: none;
+    }
+    .newyear-decor * {
+        animation: none !important;
+    }
+    .newyear-decor .ny-snow {
+        top: var(--ny-static-top);
+        opacity: 0.55;
+    }
+}

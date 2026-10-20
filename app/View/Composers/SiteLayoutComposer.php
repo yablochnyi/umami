@@ -6,6 +6,7 @@ use App\Models\SiteSetting;
 use App\Models\SocialLink;
 use App\Services\GoOrder\MenuAvailability;
 use App\Support\HalloweenDecor;
+use App\Support\NewYearDecor;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -29,6 +30,9 @@ class SiteLayoutComposer
             $view->with('halloweenEnabled', ! ($data['privatePage'] ?? false)
                 && request()->routeIs('home', 'home.localized', 'menu.*')
                 && HalloweenDecor::enabled());
+            $view->with('newyearEnabled', ! ($data['privatePage'] ?? false)
+                && request()->routeIs('home', 'home.localized', 'menu.*')
+                && NewYearDecor::enabled());
         }
 
         if (! isset(self::$commonCache[$locale])) {
