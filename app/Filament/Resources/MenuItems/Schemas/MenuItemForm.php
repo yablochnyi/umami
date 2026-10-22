@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\MenuItems\Schemas;
 
 use App\Filament\Schemas\MenuSchedule;
+use App\Filament\Schemas\TranslationTabs;
 use App\Models\MenuCategory;
 use App\Services\GoOrder\MenuAvailability;
 use Filament\Forms\Components\FileUpload;
@@ -59,32 +60,25 @@ class MenuItemForm
                             ->unique(ignoreRecord: true),
                     ]),
                 Section::make(__('Description'))
+                    ->columnSpanFull()
                     ->schema([
-                        Grid::make(3)->schema([
-                            Textarea::make('description.pl')->label(__('PL'))->rows(5),
-                            Textarea::make('description.uk')->label(__('UA'))->rows(5),
-                            Textarea::make('description.en')->label(__('EN'))->rows(5),
+                        TranslationTabs::make('dish-description', fn (string $locale) => [
+                            Textarea::make('description.'.$locale)->label(__('Description'))->rows(8)->autosize(),
                         ]),
                     ]),
                 Section::make(__('Appetizing SEO description'))
+                    ->columnSpanFull()
                     ->schema([
-                        Grid::make(3)->schema([
-                            Textarea::make('marketing_description.pl')->label(__('PL'))->rows(6),
-                            Textarea::make('marketing_description.uk')->label(__('UA'))->rows(6),
-                            Textarea::make('marketing_description.en')->label(__('EN'))->rows(6),
+                        TranslationTabs::make('dish-marketing', fn (string $locale) => [
+                            Textarea::make('marketing_description.'.$locale)->label(__('Appetizing SEO description'))->rows(8)->autosize(),
                         ]),
                     ]),
                 Section::make(__('SEO meta tags'))
+                    ->columnSpanFull()
                     ->schema([
-                        Grid::make(3)->schema([
-                            TextInput::make('seo_title.pl')->label(__('Meta title PL'))->maxLength(70),
-                            TextInput::make('seo_title.uk')->label(__('Meta title UA'))->maxLength(70),
-                            TextInput::make('seo_title.en')->label(__('Meta title EN'))->maxLength(70),
-                        ]),
-                        Grid::make(3)->schema([
-                            Textarea::make('seo_description.pl')->label(__('Meta description PL'))->rows(3)->maxLength(170),
-                            Textarea::make('seo_description.uk')->label(__('Meta description UA'))->rows(3)->maxLength(170),
-                            Textarea::make('seo_description.en')->label(__('Meta description EN'))->rows(3)->maxLength(170),
+                        TranslationTabs::make('dish-seo', fn (string $locale) => [
+                            TextInput::make('seo_title.'.$locale)->label(__('Meta title '.($locale === 'uk' ? 'UA' : strtoupper($locale))))->maxLength(70),
+                            Textarea::make('seo_description.'.$locale)->label(__('Meta description '.($locale === 'uk' ? 'UA' : strtoupper($locale))))->rows(4)->autosize()->maxLength(170),
                         ]),
                     ]),
                 Section::make(__('Images'))

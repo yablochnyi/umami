@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\MenuCategories\Schemas;
 
 use App\Filament\Schemas\MenuSchedule;
+use App\Filament\Schemas\TranslationTabs;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -35,19 +36,17 @@ class MenuCategoryForm
                         ]),
                     ]),
                 Section::make(__('SEO intro before dishes'))
+                    ->columnSpanFull()
                     ->schema([
-                        Grid::make(3)->schema([
-                            Textarea::make('intro_text.pl')->label(__('PL'))->rows(4),
-                            Textarea::make('intro_text.uk')->label(__('UA'))->rows(4),
-                            Textarea::make('intro_text.en')->label(__('EN'))->rows(4),
+                        TranslationTabs::make('category-intro', fn (string $locale) => [
+                            Textarea::make('intro_text.'.$locale)->label(__('SEO intro before dishes'))->rows(6)->autosize(),
                         ]),
                     ]),
                 Section::make(__('SEO text after dishes'))
+                    ->columnSpanFull()
                     ->schema([
-                        Grid::make(3)->schema([
-                            Textarea::make('seo_text.pl')->label(__('PL'))->rows(7),
-                            Textarea::make('seo_text.uk')->label(__('UA'))->rows(7),
-                            Textarea::make('seo_text.en')->label(__('EN'))->rows(7),
+                        TranslationTabs::make('category-seo', fn (string $locale) => [
+                            Textarea::make('seo_text.'.$locale)->label(__('SEO text after dishes'))->rows(10)->autosize(),
                         ]),
                     ]),
             ]);
