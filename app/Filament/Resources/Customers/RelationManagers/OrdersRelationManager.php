@@ -19,7 +19,7 @@ class OrdersRelationManager extends RelationManager
 
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
-        return __('Zamówienia klienta');
+        return __('labels.customer_orders');
     }
 
     public static function canViewForRecord(Model $ownerRecord, string $pageClass): bool
@@ -33,19 +33,19 @@ class OrdersRelationManager extends RelationManager
             ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('created_at')
-                    ->label(__('Data'))
+                    ->label(__('labels.date'))
                     ->dateTime('d.m.Y H:i'),
                 TextColumn::make('gopos_number')
-                    ->label(__('Nr GoPOS'))
+                    ->label(__('labels.gopos_number'))
                     ->placeholder('-'),
                 TextColumn::make('total')
-                    ->label(__('Razem'))
+                    ->label(__('labels.total'))
                     ->money('PLN'),
                 TextColumn::make('delivery_type')
-                    ->label(__('Typ'))
-                    ->formatStateUsing(fn (?string $state): string => $state === 'delivery' ? __('Dostawa') : __('Na wynos')),
+                    ->label(__('labels.type'))
+                    ->formatStateUsing(fn (?string $state): string => $state === 'delivery' ? __('labels.delivery') : __('labels.takeaway')),
                 TextColumn::make('status')
-                    ->label(__('Status'))
+                    ->label(__('labels.status'))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'waiting_gopos_acceptance' => 'info',
@@ -54,14 +54,14 @@ class OrdersRelationManager extends RelationManager
                         default => 'warning',
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'waiting_gopos_acceptance' => __('Czeka w GoPOS'),
-                        'sent_to_gopos' => __('Wysłane'),
-                        'gopos_error' => __('Błąd'),
+                        'waiting_gopos_acceptance' => __('labels.waiting_in_gopos'),
+                        'sent_to_gopos' => __('labels.sent'),
+                        'gopos_error' => __('labels.error'),
                         default => trans('tracking.states.'.$state),
                     }),
             ])
             ->recordActions([
-                Action::make('view')->label(__('Podgląd'))->icon('heroicon-o-eye')
+                Action::make('view')->label(__('labels.preview'))->icon('heroicon-o-eye')
                     ->url(fn ($record) => OrderResource::getUrl('view', ['record' => $record]))
                     ->authorize('view'),
             ]);

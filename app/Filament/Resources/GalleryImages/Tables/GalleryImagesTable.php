@@ -17,21 +17,21 @@ class GalleryImagesTable
     {
         return $table
             ->columns([
-                ImageColumn::make('image')->label(__('Image'))->disk('public')->square(),
+                ImageColumn::make('image')->label(__('labels.image'))->disk('public')->square(),
                 TextColumn::make('title')
-                    ->label(__('Title'))
+                    ->label(__('labels.title'))
                     ->getStateUsing(fn ($record) => $record->getTranslation('title', app()->getLocale()))
                     ->searchable(),
-                TextColumn::make('sort_order')->label(__('Sort'))
+                TextColumn::make('sort_order')->label(__('labels.sort'))
                     ->numeric()
                     ->sortable(),
-                IconColumn::make('is_active')->label(__('Active'))
+                IconColumn::make('is_active')->label(__('labels.active'))
                     ->boolean(),
-                TextColumn::make('created_at')->label(__('Created at'))
+                TextColumn::make('created_at')->label(__('labels.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')->label(__('Updated at'))
+                TextColumn::make('updated_at')->label(__('labels.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

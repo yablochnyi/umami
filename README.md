@@ -1,68 +1,42 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Umami Sushi & Food
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Restaurant website and administration panel built with Laravel and Filament.
+The public website supports Polish, Ukrainian and English; administration
+supports Polish and Ukrainian.
 
-## Umami Media Optimization
+## Local Development
 
-After deployment, menu imports, or replacing media in the admin panel, run as the application user:
+Requires PHP 8.3+, Composer, Node.js and a database supported by Laravel.
+Configure a local `.env` before running migrations. Do not use production
+credentials or enable order submission to external services in a test environment.
 
-```bash
-php artisan site:optimize-media
+```sh
+composer install
+npm ci
+php artisan migrate
+npm run build
+php artisan serve
 ```
 
-Requires PHP GD with WebP and FFmpeg with libx264. Use `--images-only` to omit video encoding or `--ffmpeg=/path/to/ffmpeg` for a custom executable. Generated files live in `storage/app/public/umami/optimized`; keep the public storage symlink available. The command is repeatable and never updates the database or replaces original media. New or changed originals use the existing fallback until their optimized copies are generated. No image or video conversion runs during page requests.
+## Conventions
 
-## About Laravel
+- HTTP input validation and request authorization belong in `app/Http/Requests`.
+- Reusable input rules belong in `app/Rules`; external integrations and business
+  rules belong in `app/Services`.
+- Interface translations use grouped PHP files in `lang/{locale}` and named keys
+  such as `checkout.name`, `menu.categoryTitle` and `labels.price`.
+- Editable restaurant content remains in database translations. Ingredients and
+  other menu data must not be replaced with interface translation strings.
+- `lang/vendor` overrides, when present, belong to their respective packages.
+- Never commit credentials, database exports or internal operational reports.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Checks
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Tests use an isolated in-memory SQLite database. Integration tests must fake
+outgoing HTTP requests rather than submit real restaurant orders.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```sh
+php -d memory_limit=512M vendor/bin/phpunit
+vendor/bin/pint --dirty --test
+npm run build
 ```
-
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

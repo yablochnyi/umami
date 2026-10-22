@@ -15,20 +15,20 @@ class SocialLinkForm
     {
         return $schema
             ->components([
-                Section::make(__('Link'))
+                Section::make(__('labels.link'))
                     ->schema([
-                        TextInput::make('label')->label(__('Label'))->required(),
-                        TextInput::make('url')->label(__('URL'))->url()->required(),
+                        TextInput::make('label')->label(__('labels.label'))->required(),
+                        TextInput::make('url')->label(__('labels.url'))->url()->required(),
                         FileUpload::make('icon')
-                            ->label(__('Icon'))
+                            ->label(__('labels.icon'))
                             ->disk('public')
                             ->directory('umami/icons')
                             ->visibility('public')
                             ->image()
                             ->maxSize(1024),
                         Grid::make(2)->schema([
-                            TextInput::make('sort_order')->label(__('Sort'))->numeric()->default(0)->required(),
-                            Toggle::make('is_active')->label(__('Active'))->default(true),
+                            TextInput::make('sort_order')->label(__('labels.sort'))->numeric()->default(0)->required(),
+                            Toggle::make('is_active')->label(__('labels.active'))->default(true),
                         ]),
                     ]),
             ]);

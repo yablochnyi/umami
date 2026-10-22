@@ -24,6 +24,7 @@ return [
         'ordering_unavailable' => 'Найближче виконання: :day, :open - :close',
         'day_today' => 'сьогодні',
         'day_tomorrow' => 'завтра',
+        'opening_hours' => 'Доступно: сьогодні, :open - :close',
     ],
     'legal' => [
         'privacy' => 'Політика конфіденційності',

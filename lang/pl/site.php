@@ -24,6 +24,7 @@ return [
         'ordering_unavailable' => 'Najbliższa realizacja: :day, :open - :close',
         'day_today' => 'dzisiaj',
         'day_tomorrow' => 'jutro',
+        'opening_hours' => 'Dostępne: dzisiaj, :open - :close',
     ],
     'legal' => [
         'privacy' => 'Polityka prywatności',

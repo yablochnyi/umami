@@ -15,30 +15,30 @@ class CustomersTable
             ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('name')
-                    ->label(__('Klient'))
+                    ->label(__('labels.customer'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('phone')
-                    ->label(__('Telefon'))
+                    ->label(__('labels.phone'))
                     ->searchable(),
                 TextColumn::make('email')
-                    ->label(__('E-mail'))
+                    ->label(__('labels.email'))
                     ->searchable()
                     ->toggleable(),
                 TextColumn::make('city')
-                    ->label(__('Miasto'))
+                    ->label(__('labels.city'))
                     ->searchable()
                     ->toggleable(),
                 TextColumn::make('orders_count')
                     ->visible(fn () => auth()->user()?->hasAdminPermission('orders.view'))
-                    ->label(__('Zamówienia'))
+                    ->label(__('labels.orders'))
                     ->counts('orders')
                     ->sortable(),
                 TextColumn::make('gopos_id')
                     ->label(__('GoPOS ID'))
                     ->toggleable(),
                 TextColumn::make('created_at')
-                    ->label(__('Dodano'))
+                    ->label(__('labels.added_at'))
                     ->dateTime('d.m.Y H:i')
                     ->sortable(),
             ])

@@ -17,38 +17,38 @@ class OrdersTable
             ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('created_at')
-                    ->label(__('Data'))
+                    ->label(__('labels.date'))
                     ->dateTime('d.m.Y H:i')
                     ->sortable(),
                 TextColumn::make('gopos_number')
-                    ->label(__('Nr GoPOS'))
+                    ->label(__('labels.gopos_number'))
                     ->placeholder('-')
                     ->searchable(),
                 TextColumn::make('number')
-                    ->label(__('Nr wewn.'))
+                    ->label(__('labels.internal_number_short'))
                     ->searchable()
                     ->toggleable(),
                 TextColumn::make('customer.name')
-                    ->label(__('Klient'))
+                    ->label(__('labels.customer'))
                     ->searchable(),
                 TextColumn::make('customer.phone')
-                    ->label(__('Telefon'))
+                    ->label(__('labels.phone'))
                     ->searchable(),
                 TextColumn::make('total')
-                    ->label(__('Razem'))
+                    ->label(__('labels.total'))
                     ->money('PLN')
                     ->sortable(),
                 TextColumn::make('delivery_type')
-                    ->label(__('Typ'))
-                    ->formatStateUsing(fn (?string $state): string => $state === 'delivery' ? __('Dostawa') : __('Na wynos')),
+                    ->label(__('labels.type'))
+                    ->formatStateUsing(fn (?string $state): string => $state === 'delivery' ? __('labels.delivery') : __('labels.takeaway')),
                 TextColumn::make('payment_type')
-                    ->label(__('Płatność'))
-                    ->formatStateUsing(fn (?string $state): string => $state === 'cash' ? __('Gotówka') : __('Karta')),
+                    ->label(__('labels.payment'))
+                    ->formatStateUsing(fn (?string $state): string => $state === 'cash' ? __('labels.cash') : __('labels.card')),
                 IconColumn::make('wants_invoice')
-                    ->label(__('Faktura'))
+                    ->label(__('labels.invoice'))
                     ->boolean(),
                 TextColumn::make('status')
-                    ->label(__('Status'))
+                    ->label(__('labels.status'))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'waiting_gopos_acceptance' => 'info',
@@ -59,27 +59,27 @@ class OrdersTable
                         default => 'warning',
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'waiting_gopos_acceptance' => __('Czeka w GoPOS'),
-                        'sent_to_gopos' => __('Wysłane'),
-                        'gopos_error' => __('Błąd'),
+                        'waiting_gopos_acceptance' => __('labels.waiting_in_gopos'),
+                        'sent_to_gopos' => __('labels.sent'),
+                        'gopos_error' => __('labels.error'),
                         default => trans('tracking.states.'.$state),
                     }),
             ])
             ->filters([
                 SelectFilter::make('status')
-                    ->label(__('Status'))
+                    ->label(__('labels.status'))
                     ->options([
-                        'new' => __('Nowe lokalnie'),
-                        'waiting_gopos_acceptance' => __('Czeka na potwierdzenie w GoPOS'),
-                        'sent_to_gopos' => __('Wysłane do GoPOS'),
-                        'gopos_error' => __('Błąd GoPOS'),
+                        'new' => __('labels.new_locally'),
+                        'waiting_gopos_acceptance' => __('labels.awaiting_gopos_confirmation'),
+                        'sent_to_gopos' => __('labels.sent_to_gopos'),
+                        'gopos_error' => __('labels.gopos_error'),
                         ...trans('tracking.states'),
                     ]),
                 SelectFilter::make('delivery_type')
-                    ->label(__('Typ'))
+                    ->label(__('labels.type'))
                     ->options([
-                        'pickup' => __('Na wynos'),
-                        'delivery' => __('Dostawa'),
+                        'pickup' => __('labels.takeaway'),
+                        'delivery' => __('labels.delivery'),
                     ]),
             ])
             ->recordActions([

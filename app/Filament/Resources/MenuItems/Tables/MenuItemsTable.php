@@ -19,27 +19,27 @@ class MenuItemsTable
     {
         return $table
             ->columns([
-                ImageColumn::make('image')->label(__('Photo'))->disk('public')->square(),
+                ImageColumn::make('image')->label(__('labels.photo'))->disk('public')->square(),
                 TextColumn::make('name')
-                    ->label(__('Name'))
+                    ->label(__('labels.name'))
                     ->getStateUsing(fn ($record) => $record->getTranslation('name', app()->getLocale()))
                     ->searchable(),
                 TextColumn::make('slug')
-                    ->label(__('Slug'))
+                    ->label(__('labels.slug'))
                     ->searchable()
                     ->toggleable(),
                 TextColumn::make('category')
-                    ->label(__('Category'))
+                    ->label(__('labels.category'))
                     ->getStateUsing(fn ($record) => $record->category?->getTranslation('name', app()->getLocale())),
-                TextColumn::make('price')->label(__('Price'))->sortable(),
-                TextColumn::make('sort_order')->label(__('Sort'))->sortable(),
-                IconColumn::make('is_bestseller')->label(__('Best'))->boolean(),
-                IconColumn::make('is_active')->label(__('Active'))->boolean(),
+                TextColumn::make('price')->label(__('labels.price'))->sortable(),
+                TextColumn::make('sort_order')->label(__('labels.sort'))->sortable(),
+                IconColumn::make('is_bestseller')->label(__('labels.best'))->boolean(),
+                IconColumn::make('is_active')->label(__('labels.active'))->boolean(),
                 IconColumn::make('goorder_published')->label(__('GoOrder'))->boolean(),
             ])
             ->filters([
                 SelectFilter::make('menu_category_id')
-                    ->label(__('Category'))
+                    ->label(__('labels.category'))
                     ->options(fn () => MenuCategory::query()
                         ->orderBy('sort_order')
                         ->get()

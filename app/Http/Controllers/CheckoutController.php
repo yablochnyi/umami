@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeliveryQuoteRequest;
+use App\Http\Requests\StreetAutocompleteRequest;
+use App\Http\Requests\SubmitCheckoutRequest;
 use App\Models\Customer;
 use App\Models\MenuItem;
 use App\Models\Order;
 use App\Models\SiteSetting;
 use App\Services\Delivery\DeliveryQuoteCalculator;
+use App\Services\GoOrder\GoOrderModifiers;
 use App\Services\GoOrder\GoOrderService;
 use App\Services\GoOrder\MenuAvailability;
-use App\Services\GoOrder\GoOrderModifiers;
 use App\Services\GoPos\GoPosOrderSender;
 use Carbon\CarbonImmutable;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class CheckoutController extends Controller
 {
@@ -53,7 +55,7 @@ class CheckoutController extends Controller
         ]);
     }
 
-    public function submit(Request $request, GoPosOrderSender $sender, DeliveryQuoteCalculator $deliveryQuote, ?string $locale = null)
+    public function submit(SubmitCheckoutRequest $request, GoPosOrderSender $sender, DeliveryQuoteCalculator $deliveryQuote, ?string $locale = null)
     {
         $locale = $this->locale($locale);
         app()->setLocale($locale);
@@ -61,41 +63,12 @@ class CheckoutController extends Controller
         $copy = $this->copy($locale);
         $settings = $this->settings();
 
-        if (config('goorder.enabled')) {
-            $request->validate(['submission_key' => ['required', 'uuid']]);
-            abort_unless(hash_equals((string) session('checkout_submission_key'), $request->string('submission_key')->toString()), 419);
-            if ($existing = Order::query()->where('submission_key', $request->input('submission_key'))->first()) {
-                return redirect($existing->trackingUrl());
-            }
+        if ($existing = $request->existingOrder()) {
+            return redirect($existing->trackingUrl());
         }
 
-        $data = $request->validate([
-            'cart_json' => ['required', 'string'],
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
-            'phone' => ['required', 'string', 'max:30'],
-            'wants_invoice' => ['nullable', 'boolean'],
-            'nip' => ['nullable', 'required_if:wants_invoice,1', 'string', 'max:32'],
-            'delivery_type' => ['required', 'in:pickup,delivery'],
-            'fulfillment_type' => ['required', 'in:asap,scheduled'],
-            'scheduled_day' => ['nullable', 'required_if:fulfillment_type,scheduled', 'date'],
-            'scheduled_time' => ['nullable', 'required_if:fulfillment_type,scheduled', 'date_format:H:i'],
-            'payment_type' => ['required', 'in:card,cash'],
-            'comment' => ['nullable', 'string', 'max:1000'],
-            'city' => ['nullable', 'required_if:delivery_type,delivery', 'string', Rule::in($this->deliveryCities())],
-            'street' => ['nullable', 'required_if:delivery_type,delivery', 'string', 'max:255'],
-            'building_number' => ['nullable', 'required_if:delivery_type,delivery', 'string', 'max:50'],
-            'apartment_number' => ['nullable', 'string', 'max:50'],
-        ]);
-
-        $cart = json_decode($data['cart_json'], true);
-        if (! is_array($cart) || ! array_is_list($cart) || count($cart) > 100
-            || collect($cart)->contains(fn ($row) => ! is_array($row)
-                || ! filter_var($row['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])
-                || ! filter_var($row['quantity'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 100]]))
-            || collect($cart)->pluck('id')->unique()->count() !== count($cart)) {
-            return back()->withInput()->with('checkout_error', $copy['invalidCart']);
-        }
+        $data = $request->validated();
+        $cart = $request->cart();
 
         $items = $this->resolveCartItems($cart, $locale);
         if ($items->count() !== count($cart)) {
@@ -237,15 +210,15 @@ class CheckoutController extends Controller
             ]);
     }
 
-    public function streetAutocomplete(Request $request)
+    public function streetAutocomplete(StreetAutocompleteRequest $request)
     {
-        $query = trim((string) $request->query('q', ''));
+        $query = trim((string) $request->validated('q', ''));
         if (mb_strlen($query) < 2) {
             return response()->json([]);
         }
 
-        $city = in_array((string) $request->query('city', 'Toruń'), $this->deliveryCities(), true)
-            ? (string) $request->query('city', 'Toruń')
+        $city = in_array($request->validated('city', 'Toruń'), $this->deliveryCities(), true)
+            ? $request->validated('city', 'Toruń')
             : 'Toruń';
         $normalizedQuery = $this->normalizeStreetSearch($query);
         $local = $city === 'Toruń'
@@ -298,14 +271,14 @@ class CheckoutController extends Controller
         return response()->json($local->merge($remote)->unique()->take(8)->values());
     }
 
-    public function deliveryQuote(Request $request, DeliveryQuoteCalculator $deliveryQuote)
+    public function deliveryQuote(DeliveryQuoteRequest $request, DeliveryQuoteCalculator $deliveryQuote)
     {
         $settings = $this->settings();
         $quote = $deliveryQuote->quote(
             $settings,
-            (string) $request->query('city', 'Toruń'),
-            (string) $request->query('street', ''),
-            (string) $request->query('building', ''),
+            $request->validated('city') ?? 'Toruń',
+            $request->validated('street') ?? '',
+            $request->validated('building') ?? '',
         );
 
         return response()->json([
@@ -336,7 +309,7 @@ class CheckoutController extends Controller
             $price = $this->priceAmount($menuItem->price);
             $modifiers = app(GoOrderModifiers::class)->validate($menuItem->goorder_payload['choices'] ?? [], $row['modifiers'] ?? []);
             if (! config('goorder.enabled') && collect($modifiers)->contains(fn ($m) => empty($m['option']['gopos_id']) || empty($m['option']['gopos_group_id']))) {
-                throw \Illuminate\Validation\ValidationException::withMessages(['cart_json' => __('availability.unavailable')]);
+                throw ValidationException::withMessages(['cart_json' => __('availability.unavailable')]);
             }
 
             return [
@@ -427,7 +400,7 @@ class CheckoutController extends Controller
 
     private function deliveryCities(): array
     {
-        return ['Toruń', 'Lubicz Dolny', 'Lubicz Górny', 'Przysiek', 'Kaszczorek'];
+        return config('delivery.cities');
     }
 
     private function publicOrderNumber(Order $order): string
@@ -524,151 +497,7 @@ class CheckoutController extends Controller
 
     private function copy(string $locale): array
     {
-        $copy = [
-            'pl' => [
-                'title' => 'Koszyk i zamówienie',
-                'back' => 'Wróć do menu',
-                'contact' => 'Kontakt',
-                'legalPrivacy' => 'Polityka prywatności',
-                'legalCookies' => 'Polityka plików cookie',
-                'legalTerms' => 'Regulamin',
-                'items' => 'Produkty w koszyku',
-                'emptyCart' => 'Koszyk jest pusty.',
-                'invalidCart' => 'Nie udało się odczytać koszyka.',
-                'details' => 'Dane zamawiającego',
-                'name' => 'Imię i nazwisko',
-                'email' => 'E-mail',
-                'phone' => 'Telefon',
-                'invoice' => 'Chcę otrzymać fakturę',
-                'nip' => 'NIP',
-                'deliveryType' => 'Typ odbioru',
-                'pickup' => 'Na wynos',
-                'delivery' => 'Dostawa',
-                'asap' => 'Jak najszybciej',
-                'scheduled' => 'Wybierz dzień i godzinę',
-                'day' => 'Dzień',
-                'time' => 'Godzina',
-                'payment' => 'Płatność',
-                'card' => 'Karta',
-                'cash' => 'Gotówka',
-                'comment' => 'Komentarz',
-                'address' => 'Adres dostawy',
-                'city' => 'Miasto',
-                'street' => 'Ulica',
-                'streetPlaceholder' => 'Zacznij wpisywać ulicę w Toruniu',
-                'building' => 'Numer domu',
-                'apartment' => 'Numer mieszkania',
-                'subtotal' => 'Produkty',
-                'deliveryCost' => 'Dostawa',
-                'total' => 'Razem',
-                'freeMissing' => 'Do darmowej dostawy brakuje :amount',
-                'freeReady' => 'Dostawa jest darmowa',
-                'minimumMissing' => 'Do minimalnej kwoty dostawy brakuje :amount',
-                'pickupAvailability' => 'Na wynos dostępne od :open.',
-                'deliveryAvailability' => 'Dostawa dostępna w godzinach :open - :close.',
-                'scheduleOutOfHours' => 'Wybierz godzinę w godzinach pracy: :open - :close.',
-                'schedulePastTime' => 'Nie można wybrać minionej godziny.',
-                'submit' => 'Złóż zamówienie',
-                'success' => 'Dziękujemy. Zamówienie zostało przyjęte. Numer zamówienia w restauracji: :number.',
-                'goposError' => 'Nie udało się przekazać zamówienia do systemu restauracji. Spróbuj ponownie albo zadzwoń do nas.',
-            ],
-            'uk' => [
-                'title' => 'Кошик і замовлення',
-                'back' => 'Повернутися до меню',
-                'contact' => 'Контакт',
-                'legalPrivacy' => 'Політика конфіденційності',
-                'legalCookies' => 'Політика cookie',
-                'legalTerms' => 'Правила',
-                'items' => 'Товари в кошику',
-                'emptyCart' => 'Кошик порожній.',
-                'invalidCart' => 'Не вдалося прочитати кошик.',
-                'details' => 'Дані замовника',
-                'name' => "Ім'я та прізвище",
-                'email' => 'E-mail',
-                'phone' => 'Телефон',
-                'invoice' => 'Хочу отримати фактуру',
-                'nip' => 'NIP',
-                'deliveryType' => 'Тип отримання',
-                'pickup' => 'З собою',
-                'delivery' => 'Доставка',
-                'asap' => 'Якнайшвидше',
-                'scheduled' => 'Обрати день і час',
-                'day' => 'День',
-                'time' => 'Час',
-                'payment' => 'Оплата',
-                'card' => 'Картка',
-                'cash' => 'Готівка',
-                'comment' => 'Коментар',
-                'address' => 'Адреса доставки',
-                'city' => 'Місто',
-                'street' => 'Вулиця',
-                'streetPlaceholder' => 'Почніть вводити вулицю в Toruń',
-                'building' => 'Номер будинку',
-                'apartment' => 'Номер квартири',
-                'subtotal' => 'Товари',
-                'deliveryCost' => 'Доставка',
-                'total' => 'Разом',
-                'freeMissing' => 'До безкоштовної доставки залишилось :amount',
-                'freeReady' => 'Доставка безкоштовна',
-                'minimumMissing' => 'До мінімальної суми доставки залишилось :amount',
-                'pickupAvailability' => 'Замовлення з собою доступне з :open.',
-                'deliveryAvailability' => 'Доставка доступна в години роботи: :open - :close.',
-                'scheduleOutOfHours' => 'Оберіть час у межах робочих годин: :open - :close.',
-                'schedulePastTime' => 'Не можна вибрати час, який уже минув.',
-                'submit' => 'Оформити замовлення',
-                'success' => 'Дякуємо. Замовлення прийнято. Номер замовлення в ресторані: :number.',
-                'goposError' => 'Не вдалося передати замовлення до системи ресторану. Спробуйте ще раз або зателефонуйте нам.',
-            ],
-            'en' => [
-                'title' => 'Cart and checkout',
-                'back' => 'Back to menu',
-                'contact' => 'Contact',
-                'legalPrivacy' => 'Privacy policy',
-                'legalCookies' => 'Cookie policy',
-                'legalTerms' => 'Terms',
-                'items' => 'Cart items',
-                'emptyCart' => 'Your cart is empty.',
-                'invalidCart' => 'Could not read the cart.',
-                'details' => 'Customer details',
-                'name' => 'Full name',
-                'email' => 'Email',
-                'phone' => 'Phone',
-                'invoice' => 'I want an invoice',
-                'nip' => 'Tax ID',
-                'deliveryType' => 'Delivery type',
-                'pickup' => 'Takeaway',
-                'delivery' => 'Delivery',
-                'asap' => 'As soon as possible',
-                'scheduled' => 'Choose day and time',
-                'day' => 'Day',
-                'time' => 'Time',
-                'payment' => 'Payment',
-                'card' => 'Card',
-                'cash' => 'Cash',
-                'comment' => 'Comment',
-                'address' => 'Delivery address',
-                'city' => 'City',
-                'street' => 'Street',
-                'streetPlaceholder' => 'Start typing a street in Toruń',
-                'building' => 'Building number',
-                'apartment' => 'Apartment number',
-                'subtotal' => 'Products',
-                'deliveryCost' => 'Delivery',
-                'total' => 'Total',
-                'freeMissing' => ':amount left for free delivery',
-                'freeReady' => 'Delivery is free',
-                'minimumMissing' => ':amount left for delivery minimum',
-                'pickupAvailability' => 'Takeaway is available from :open.',
-                'deliveryAvailability' => 'Delivery is available during opening hours: :open - :close.',
-                'scheduleOutOfHours' => 'Choose a time within opening hours: :open - :close.',
-                'schedulePastTime' => 'You cannot choose a time that has already passed.',
-                'submit' => 'Place order',
-                'success' => 'Thank you. Your order has been received. Restaurant order number: :number.',
-                'goposError' => 'We could not send the order to the restaurant system. Please try again or call us.',
-            ],
-        ];
-
-        return $copy[$locale] ?? $copy['pl'];
+        return trans('checkout', [], $locale);
     }
 
     private function locale(?string $locale): string
@@ -754,14 +583,13 @@ class CheckoutController extends Controller
 
     private function availabilityDayLabel(?string $openingTime, ?string $closingTime): string
     {
-        $copy = trans('site.cart');
         $closingTime = $this->normalizeTime($closingTime);
         $now = CarbonImmutable::now('Europe/Warsaw');
         $close = CarbonImmutable::createFromFormat('Y-m-d H:i', $now->format('Y-m-d').' '.$closingTime, 'Europe/Warsaw');
 
         return $now->gt($close)
-            ? ($copy['day_tomorrow'] ?? 'jutro')
-            : ($copy['day_today'] ?? 'dzisiaj');
+            ? __('site.cart.day_tomorrow')
+            : __('site.cart.day_today');
     }
 
     private function formatPrice(float $amount): string

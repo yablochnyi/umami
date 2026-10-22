@@ -310,8 +310,8 @@ class MenuPageController extends Controller
 
     private function breadcrumbs(string $locale, string $siteUrl, MenuCategory $category, ?MenuItem $item = null): array
     {
-        $homeLabel = ['pl' => 'Strona główna', 'uk' => 'Головна', 'en' => 'Home'][$locale];
-        $menuLabel = ['pl' => 'Menu', 'uk' => 'Меню', 'en' => 'Menu'][$locale];
+        $homeLabel = __('menu.home', [], $locale);
+        $menuLabel = __('menu.menu', [], $locale);
         $homeUrl = $this->homeUrl($locale);
         $categoryUrl = $this->relativePageUrl($locale, $category);
 
@@ -355,67 +355,40 @@ class MenuPageController extends Controller
 
     private function categoryTitle(string $locale, string $name): string
     {
-        return [
-            'pl' => "{$name} Toruń | Menu Umami Sushi & Food",
-            'uk' => "{$name} Торунь | Меню Umami Sushi & Food",
-            'en' => "{$name} Toruń | Umami Sushi & Food menu",
-        ][$locale];
+        return __('menu.categoryTitle', ['name' => $name], $locale);
     }
 
     private function categoryDescription(string $locale, string $name): string
     {
-        return [
-            'pl' => "Sprawdź {$name} w Umami Sushi & Food Toruń. Zobacz skład, zdjęcia, ceny i zamów sushi lub dania azjatyckie online.",
-            'uk' => "Перегляньте {$name} в Umami Sushi & Food Торунь: склад, фото, ціни та онлайн-замовлення суші й азійських страв.",
-            'en' => "Explore {$name} at Umami Sushi & Food Toruń: ingredients, photos, prices and online ordering for sushi and Asian dishes.",
-        ][$locale];
+        return __('menu.categoryDescription', ['name' => $name], $locale);
     }
 
     private function itemTitle(string $locale, string $name, string $category): string
     {
-        return [
-            'pl' => "{$name} | {$category} Toruń | Umami Sushi",
-            'uk' => "{$name} | {$category} Торунь | Umami Sushi",
-            'en' => "{$name} | {$category} Toruń | Umami Sushi",
-        ][$locale];
+        return __('menu.itemTitle', ['name' => $name, 'category' => $category], $locale);
     }
 
     private function itemMetaDescription(string $locale, string $name, string $category, string $ingredients, ?string $price): string
     {
-        $ingredients = str($ingredients)->squish()->limit(82, '')->toString();
-        $priceText = filled($price) ? " {$price}." : '';
-
-        return [
-            'pl' => str("{$name} w Umami Sushi & Food Toruń: {$ingredients}. Cena{$priceText} Zobacz zdjęcie i zamów online lub na wynos.")->limit(160, '')->toString(),
-            'uk' => str("{$name} в Umami Sushi & Food Торунь: {$ingredients}. Ціна{$priceText} Перегляньте фото та замовте онлайн або з собою.")->limit(160, '')->toString(),
-            'en' => str("{$name} at Umami Sushi & Food Toruń: {$ingredients}. Price{$priceText} See photo and order online or takeaway.")->limit(160, '')->toString(),
-        ][$locale];
+        return str(__('menu.itemMetaDescription', [
+            'name' => $name,
+            'ingredients' => str($ingredients)->squish()->limit(82, '')->toString(),
+            'price' => filled($price) ? " {$price}." : '',
+        ], $locale))->limit(160, '')->toString();
     }
 
     private function fallbackDescription(string $locale, string $name, string $category): string
     {
-        return [
-            'pl' => "{$name} z kategorii {$category} w Umami Sushi & Food Toruń. Sprawdź cenę, zdjęcie i szczegóły dania.",
-            'uk' => "{$name} з категорії {$category} в Umami Sushi & Food Торунь. Перегляньте ціну, фото та деталі страви.",
-            'en' => "{$name} from {$category} at Umami Sushi & Food Toruń. Check price, photo and dish details.",
-        ][$locale];
+        return __('menu.fallbackDescription', ['name' => $name, 'category' => $category], $locale);
     }
 
     private function itemMarketingFallback(string $locale, string $name, string $description): string
     {
-        return [
-            'pl' => "{$name} to świeżo przygotowana propozycja Umami Sushi & Food w Toruniu. {$description} Danie dobrze sprawdza się na lunch, kolację albo zamówienie na wynos z odbiorem przy ul. Gen. Andersa 72.",
-            'uk' => "{$name} — свіжа позиція Umami Sushi & Food у Торуні. {$description} Страва добре підходить для обіду, вечері або замовлення з собою з самовивозом на ul. Gen. Andersa 72.",
-            'en' => "{$name} is a freshly prepared choice at Umami Sushi & Food in Toruń. {$description} It works well for lunch, dinner or takeaway pickup at Gen. Andersa 72.",
-        ][$locale];
+        return __('menu.itemMarketingFallback', ['name' => $name, 'description' => $description], $locale);
     }
 
     private function copy(string $locale): array
     {
-        return [
-            'pl' => ['back' => 'Wróć do menu', 'similar' => 'Podobne dania', 'details' => 'Skład', 'taste' => 'Dlaczego warto spróbować', 'close' => 'Zamknij'],
-            'uk' => ['back' => 'Назад до меню', 'similar' => 'Схожі страви', 'details' => 'Склад', 'taste' => 'Чому варто спробувати', 'close' => 'Закрити'],
-            'en' => ['back' => 'Back to menu', 'similar' => 'Similar dishes', 'details' => 'Ingredients', 'taste' => 'Why it is worth trying', 'close' => 'Close'],
-        ][$locale];
+        return trans('menu.copy', [], $locale);
     }
 }

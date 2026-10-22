@@ -17,23 +17,23 @@ class SocialLinksTable
     {
         return $table
             ->columns([
-                TextColumn::make('label')->label(__('Label'))
+                TextColumn::make('label')->label(__('labels.label'))
                     ->searchable(),
-                TextColumn::make('url')->label(__('URL'))
+                TextColumn::make('url')->label(__('labels.url'))
                     ->searchable(),
-                ImageColumn::make('icon')->label(__('Icon'))
+                ImageColumn::make('icon')->label(__('labels.icon'))
                     ->disk('public')
                     ->square(),
-                TextColumn::make('sort_order')->label(__('Sort'))
+                TextColumn::make('sort_order')->label(__('labels.sort'))
                     ->numeric()
                     ->sortable(),
-                IconColumn::make('is_active')->label(__('Active'))
+                IconColumn::make('is_active')->label(__('labels.active'))
                     ->boolean(),
-                TextColumn::make('created_at')->label(__('Created at'))
+                TextColumn::make('created_at')->label(__('labels.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')->label(__('Updated at'))
+                TextColumn::make('updated_at')->label(__('labels.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

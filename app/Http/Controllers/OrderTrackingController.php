@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ConfirmOrderRequest;
 use App\Models\Order;
 use App\Services\GoOrder\GoOrderService;
-use Illuminate\Http\Request;
 
 class OrderTrackingController extends Controller
 {
@@ -38,11 +38,10 @@ class OrderTrackingController extends Controller
         return response()->json($this->state($order->refresh()))->withHeaders(self::HEADERS);
     }
 
-    public function confirm(Request $request, string $token, GoOrderService $service)
+    public function confirm(ConfirmOrderRequest $request, string $token, GoOrderService $service)
     {
-        $order = $this->find($token);
-        abort_unless(hash_equals((string) session('checkout_submission_key'), (string) $order->submission_key), 403);
-        $data = $request->validate(['quote_hash' => ['required', 'string', 'size:64']]);
+        $order = $request->order();
+        $data = $request->validated();
         $service->confirm($order, $data['quote_hash']);
 
         return redirect($order->trackingUrl())->withHeaders(self::HEADERS);

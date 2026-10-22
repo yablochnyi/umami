@@ -15,7 +15,7 @@ class GalleryImageForm
     {
         return $schema
             ->components([
-                Section::make(__('Title'))
+                Section::make(__('labels.title'))
                     ->schema([
                         Grid::make(3)->schema([
                             TextInput::make('title.pl')->label(__('PL'))->required(),
@@ -23,7 +23,7 @@ class GalleryImageForm
                             TextInput::make('title.en')->label(__('EN'))->required(),
                         ]),
                     ]),
-                Section::make(__('Alt text'))
+                Section::make(__('labels.alt_text'))
                     ->schema([
                         Grid::make(3)->schema([
                             TextInput::make('alt.pl')->label(__('PL')),
@@ -31,10 +31,10 @@ class GalleryImageForm
                             TextInput::make('alt.en')->label(__('EN')),
                         ]),
                     ]),
-                Section::make(__('Image'))
+                Section::make(__('labels.image'))
                     ->schema([
                         FileUpload::make('image')
-                            ->label(__('Image'))
+                            ->label(__('labels.image'))
                             ->disk('public')
                             ->directory('umami/gallery')
                             ->visibility('public')
@@ -42,8 +42,8 @@ class GalleryImageForm
                             ->required()
                             ->maxSize(4096),
                         Grid::make(2)->schema([
-                            TextInput::make('sort_order')->label(__('Sort'))->numeric()->default(0)->required(),
-                            Toggle::make('is_active')->label(__('Active'))->default(true),
+                            TextInput::make('sort_order')->label(__('labels.sort'))->numeric()->default(0)->required(),
+                            Toggle::make('is_active')->label(__('labels.active'))->default(true),
                         ]),
                     ]),
             ]);

@@ -135,7 +135,7 @@ class SiteSettings extends Page
         return $schema->components([
             Form::make([EmbeddedSchema::make('form')])->id('form')->livewireSubmitHandler('save')->footer([
                 Actions::make([Action::make('save')->visible(fn () => auth()->user()?->hasAdminPermission('site_settings.update'))
-                    ->label(__('Zapisz'))->submit('save')->keyBindings(['mod+s'])]),
+                    ->label(__('labels.save'))->submit('save')->keyBindings(['mod+s'])]),
             ]),
         ]);
     }
@@ -153,6 +153,6 @@ class SiteSettings extends Page
                 $setting->update(['value' => (string) ($data[$key] ?? '')]);
             }
         });
-        Notification::make()->success()->title(__('Ustawienia zapisane'))->send();
+        Notification::make()->success()->title(__('labels.settings_saved'))->send();
     }
 }

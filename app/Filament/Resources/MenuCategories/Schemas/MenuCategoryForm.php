@@ -18,7 +18,7 @@ class MenuCategoryForm
         return $schema
             ->components([
                 MenuSchedule::make(),
-                Section::make(__('Name'))
+                Section::make(__('labels.name'))
                     ->schema([
                         Grid::make(3)->schema([
                             TextInput::make('name.pl')->label(__('PL'))->required(),
@@ -26,27 +26,27 @@ class MenuCategoryForm
                             TextInput::make('name.en')->label(__('EN'))->required(),
                         ]),
                     ]),
-                Section::make(__('Settings'))
+                Section::make(__('labels.settings'))
                     ->schema([
-                        Toggle::make('goorder_import_enabled')->label(__('Include this GoOrder category'))->default(true),
+                        Toggle::make('goorder_import_enabled')->label(__('labels.include_this_goorder_category'))->default(true),
                         Grid::make(3)->schema([
-                            TextInput::make('slug')->label(__('Slug'))->required()->maxLength(255),
-                            TextInput::make('sort_order')->label(__('Sort'))->numeric()->default(0)->required(),
-                            Toggle::make('is_active')->label(__('Active'))->default(true),
+                            TextInput::make('slug')->label(__('labels.slug'))->required()->maxLength(255),
+                            TextInput::make('sort_order')->label(__('labels.sort'))->numeric()->default(0)->required(),
+                            Toggle::make('is_active')->label(__('labels.active'))->default(true),
                         ]),
                     ]),
-                Section::make(__('SEO intro before dishes'))
+                Section::make(__('labels.seo_intro_before_dishes'))
                     ->columnSpanFull()
                     ->schema([
                         TranslationTabs::make('category-intro', fn (string $locale) => [
-                            Textarea::make('intro_text.'.$locale)->label(__('SEO intro before dishes'))->rows(6)->autosize(),
+                            Textarea::make('intro_text.'.$locale)->label(__('labels.seo_intro_before_dishes'))->rows(6)->autosize(),
                         ]),
                     ]),
-                Section::make(__('SEO text after dishes'))
+                Section::make(__('labels.seo_text_after_dishes'))
                     ->columnSpanFull()
                     ->schema([
                         TranslationTabs::make('category-seo', fn (string $locale) => [
-                            Textarea::make('seo_text.'.$locale)->label(__('SEO text after dishes'))->rows(10)->autosize(),
+                            Textarea::make('seo_text.'.$locale)->label(__('labels.seo_text_after_dishes'))->rows(10)->autosize(),
                         ]),
                     ]),
             ]);

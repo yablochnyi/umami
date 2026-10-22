@@ -12,17 +12,17 @@ class MenuSchedule
 {
     public static function make(): Section
     {
-        return Section::make(__('Local availability (Europe/Warsaw)'))->schema([
-            Toggle::make('schedule_enabled')->label(__('Restrict ordering to these hours'))->live()->default(false),
-            Repeater::make('schedule_hours')->label(__('Additional local hours; GoOrder limits still apply'))
+        return Section::make(__('labels.local_availability_europewarsaw'))->schema([
+            Toggle::make('schedule_enabled')->label(__('labels.restrict_ordering_to_these_hours'))->live()->default(false),
+            Repeater::make('schedule_hours')->label(__('labels.additional_local_hours_goorder_limits_still_apply'))
                 ->visible(fn ($get) => $get('schedule_enabled'))->defaultItems(0)->minItems(1)
                 ->required(fn ($get) => $get('schedule_enabled'))
                 ->schema([
-                    Select::make('days')->label(__('Days'))->multiple()->required()->options([
-                        1 => __('Monday'), 2 => __('Tuesday'), 3 => __('Wednesday'), 4 => __('Thursday'), 5 => __('Friday'), 6 => __('Saturday'), 7 => __('Sunday'),
+                    Select::make('days')->label(__('labels.days'))->multiple()->required()->options([
+                        1 => __('labels.monday'), 2 => __('labels.tuesday'), 3 => __('labels.wednesday'), 4 => __('labels.thursday'), 5 => __('labels.friday'), 6 => __('labels.saturday'), 7 => __('labels.sunday'),
                     ]),
-                    TimePicker::make('from')->label(__('From'))->seconds(false)->format('H:i')->required(),
-                    TimePicker::make('to')->label(__('Until'))->seconds(false)->format('H:i')->different('from')->required(),
+                    TimePicker::make('from')->label(__('labels.from'))->seconds(false)->format('H:i')->required(),
+                    TimePicker::make('to')->label(__('labels.until'))->seconds(false)->format('H:i')->different('from')->required(),
                 ])->columns(3),
         ]);
     }

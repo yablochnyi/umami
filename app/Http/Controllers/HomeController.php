@@ -338,11 +338,7 @@ class HomeController extends Controller
 
     private function orderingUnavailableMessage(string $locale, string $openingTime, string $closingTime): string
     {
-        return [
-            'pl' => "Dostępne: dzisiaj, {$openingTime} - {$closingTime}",
-            'uk' => "Доступно: сьогодні, {$openingTime} - {$closingTime}",
-            'en' => "Available: today, {$openingTime} - {$closingTime}",
-        ][$locale] ?? "Dostępne: dzisiaj, {$openingTime} - {$closingTime}";
+        return __('site.cart.opening_hours', ['open' => $openingTime, 'close' => $closingTime], $locale);
     }
 
     private function normalizeMoney(?string $amount): string

@@ -23,15 +23,15 @@ class MenuItemForm
             ->components([
                 MenuSchedule::make(),
                 Section::make(__('GoOrder'))->schema([
-                    Toggle::make('goorder_published')->label(__('Present on storefront'))->disabled()->dehydrated(false),
-                    TextInput::make('goorder_synced_at')->label(__('Last synchronization'))->disabled()->dehydrated(false),
-                    Textarea::make('storefront_schedule')->label(__('Availability hours (GoOrder and local)'))->disabled()->dehydrated(false)
+                    Toggle::make('goorder_published')->label(__('labels.present_on_storefront'))->disabled()->dehydrated(false),
+                    TextInput::make('goorder_synced_at')->label(__('labels.last_synchronization'))->disabled()->dehydrated(false),
+                    Textarea::make('storefront_schedule')->label(__('labels.availability_hours_goorder_and_local'))->disabled()->dehydrated(false)
                         ->formatStateUsing(fn ($record) => $record ? app(MenuAvailability::class)->label($record) : ''),
                 ]),
-                Section::make(__('Category'))
+                Section::make(__('labels.category'))
                     ->schema([
                         Select::make('menu_category_id')
-                            ->label(__('Category'))
+                            ->label(__('labels.category'))
                             ->options(fn () => MenuCategory::query()
                                 ->orderBy('sort_order')
                                 ->get()
@@ -40,13 +40,13 @@ class MenuItemForm
                             ->searchable()
                             ->required(),
                         Grid::make(3)->schema([
-                            TextInput::make('price')->label(__('Price'))->maxLength(255),
-                            TextInput::make('sort_order')->label(__('Sort'))->numeric()->default(0)->required(),
-                            Toggle::make('is_active')->label(__('Active'))->default(true),
+                            TextInput::make('price')->label(__('labels.price'))->maxLength(255),
+                            TextInput::make('sort_order')->label(__('labels.sort'))->numeric()->default(0)->required(),
+                            Toggle::make('is_active')->label(__('labels.active'))->default(true),
                         ]),
-                        Toggle::make('is_bestseller')->label(__('Show in bestsellers')),
+                        Toggle::make('is_bestseller')->label(__('labels.show_in_bestsellers')),
                     ]),
-                Section::make(__('Name'))
+                Section::make(__('labels.name'))
                     ->schema([
                         Grid::make(3)->schema([
                             TextInput::make('name.pl')->label(__('PL'))->required(),
@@ -54,43 +54,43 @@ class MenuItemForm
                             TextInput::make('name.en')->label(__('EN'))->required(),
                         ]),
                         TextInput::make('slug')
-                            ->label(__('SEO slug'))
+                            ->label(__('labels.seo_slug'))
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
                     ]),
-                Section::make(__('Description'))
+                Section::make(__('labels.description'))
                     ->columnSpanFull()
                     ->schema([
                         TranslationTabs::make('dish-description', fn (string $locale) => [
-                            Textarea::make('description.'.$locale)->label(__('Description'))->rows(8)->autosize(),
+                            Textarea::make('description.'.$locale)->label(__('labels.description'))->rows(8)->autosize(),
                         ]),
                     ]),
-                Section::make(__('Appetizing SEO description'))
+                Section::make(__('labels.appetizing_seo_description'))
                     ->columnSpanFull()
                     ->schema([
                         TranslationTabs::make('dish-marketing', fn (string $locale) => [
-                            Textarea::make('marketing_description.'.$locale)->label(__('Appetizing SEO description'))->rows(8)->autosize(),
+                            Textarea::make('marketing_description.'.$locale)->label(__('labels.appetizing_seo_description'))->rows(8)->autosize(),
                         ]),
                     ]),
-                Section::make(__('SEO meta tags'))
+                Section::make(__('labels.seo_meta_tags'))
                     ->columnSpanFull()
                     ->schema([
                         TranslationTabs::make('dish-seo', fn (string $locale) => [
-                            TextInput::make('seo_title.'.$locale)->label(__('Meta title '.($locale === 'uk' ? 'UA' : strtoupper($locale))))->maxLength(70),
-                            Textarea::make('seo_description.'.$locale)->label(__('Meta description '.($locale === 'uk' ? 'UA' : strtoupper($locale))))->rows(4)->autosize()->maxLength(170),
+                            TextInput::make('seo_title.'.$locale)->label(__('labels.meta_title_'.($locale === 'uk' ? 'ua' : $locale)))->maxLength(70),
+                            Textarea::make('seo_description.'.$locale)->label(__('labels.meta_description_'.($locale === 'uk' ? 'ua' : $locale)))->rows(4)->autosize()->maxLength(170),
                         ]),
                     ]),
-                Section::make(__('Images'))
+                Section::make(__('labels.images'))
                     ->schema([
                         FileUpload::make('image')
-                            ->label(__('Photo'))
+                            ->label(__('labels.photo'))
                             ->disk('public')
                             ->directory('umami/menu')
                             ->visibility('public')
                             ->image()
                             ->maxSize(4096),
-                        TextInput::make('source_image')->label(__('Source image URL'))->maxLength(255),
+                        TextInput::make('source_image')->label(__('labels.source_image_url'))->maxLength(255),
                     ]),
             ]);
     }

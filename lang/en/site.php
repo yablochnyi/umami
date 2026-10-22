@@ -24,6 +24,7 @@ return [
         'ordering_unavailable' => 'Next preparation time: :day, :open - :close',
         'day_today' => 'today',
         'day_tomorrow' => 'tomorrow',
+        'opening_hours' => 'Available: today, :open - :close',
     ],
     'legal' => [
         'privacy' => 'Privacy policy',

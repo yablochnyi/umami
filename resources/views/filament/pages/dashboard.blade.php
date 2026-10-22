@@ -18,12 +18,12 @@
                 <div class="umami-section-heading"><h2>{{ __('admin.latest_orders') }}</h2><a href="{{ \App\Filament\Resources\Orders\OrderResource::getUrl() }}">{{ __('admin.resources.orders') }} <x-heroicon-o-arrow-right /></a></div>
                 <div class="umami-table-scroll">
                     <table class="umami-orders-table">
-                        <thead><tr><th>{{ __('Numer wewnętrzny') }}</th><th>{{ __('Data') }}</th><th>{{ __('Typ') }}</th><th>{{ __('Status') }}</th><th>{{ __('Razem') }}</th><th><span class="sr-only">{{ __('Podgląd') }}</span></th></tr></thead>
+                        <thead><tr><th>{{ __('labels.internal_number') }}</th><th>{{ __('labels.date') }}</th><th>{{ __('labels.type') }}</th><th>{{ __('labels.status') }}</th><th>{{ __('labels.total') }}</th><th><span class="sr-only">{{ __('labels.preview') }}</span></th></tr></thead>
                         <tbody>
                         @forelse ($latestOrders as $order)
-                            <tr><td class="umami-order-number"><span title="{{ $order->number }}">{{ $order->number }}</span></td><td>{{ $order->created_at->timezone('Europe/Warsaw')->format('d.m H:i') }}</td><td>{{ __($order->delivery_type) }}</td>
-                                <td><span class="umami-status">{{ match ($order->status) { 'waiting_gopos_acceptance' => __('Czeka w GoPOS'), 'sent_to_gopos' => __('Wysłane'), 'gopos_error' => __('Błąd GoPOS'), default => __('tracking.states.'.$order->status) } }}</span></td>
-                                <td>{{ number_format($order->total, 2, ',', ' ') }} zł</td><td><a href="{{ \App\Filament\Resources\Orders\OrderResource::getUrl('view', ['record' => $order]) }}" aria-label="{{ __('Podgląd') }} {{ $order->number }}" title="{{ __('Podgląd') }}"><x-heroicon-o-arrow-up-right /></a></td></tr>
+                            <tr><td class="umami-order-number"><span title="{{ $order->number }}">{{ $order->number }}</span></td><td>{{ $order->created_at->timezone('Europe/Warsaw')->format('d.m H:i') }}</td><td>{{ __('labels')[$order->delivery_type] ?? $order->delivery_type }}</td>
+                                <td><span class="umami-status">{{ match ($order->status) { 'waiting_gopos_acceptance' => __('labels.waiting_in_gopos'), 'sent_to_gopos' => __('labels.sent'), 'gopos_error' => __('labels.gopos_error'), default => __('tracking.states.'.$order->status) } }}</span></td>
+                                <td>{{ number_format($order->total, 2, ',', ' ') }} zł</td><td><a href="{{ \App\Filament\Resources\Orders\OrderResource::getUrl('view', ['record' => $order]) }}" aria-label="{{ __('labels.preview') }} {{ $order->number }}" title="{{ __('labels.preview') }}"><x-heroicon-o-arrow-up-right /></a></td></tr>
                         @empty
                             <tr><td colspan="6" class="umami-empty">{{ __('filament-tables::table.empty.heading', ['model' => __('admin.resources.orders')]) }}</td></tr>
                         @endforelse

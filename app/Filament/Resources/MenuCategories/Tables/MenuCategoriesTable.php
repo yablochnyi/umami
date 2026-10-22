@@ -17,21 +17,21 @@ class MenuCategoriesTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label(__('Name'))
+                    ->label(__('labels.name'))
                     ->getStateUsing(fn ($record) => $record->getTranslation('name', app()->getLocale()))
                     ->searchable(),
-                TextColumn::make('slug')->label(__('Slug'))
+                TextColumn::make('slug')->label(__('labels.slug'))
                     ->searchable(),
-                TextColumn::make('sort_order')->label(__('Sort'))
+                TextColumn::make('sort_order')->label(__('labels.sort'))
                     ->numeric()
                     ->sortable(),
-                IconColumn::make('is_active')->label(__('Active'))
+                IconColumn::make('is_active')->label(__('labels.active'))
                     ->boolean(),
-                TextColumn::make('created_at')->label(__('Created at'))
+                TextColumn::make('created_at')->label(__('labels.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')->label(__('Updated at'))
+                TextColumn::make('updated_at')->label(__('labels.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
