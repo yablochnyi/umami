@@ -53,6 +53,14 @@
     @if($womensDayEnabled)
         <link rel="stylesheet" href="/assets/umami/womens-day/womens-day.css?v={{ filemtime(public_path('assets/umami/womens-day/womens-day.css')) }}">
     @endif
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QRW6REEHD7"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QRW6REEHD7');
+    </script>
 </head>
 <body
     @if($halloweenEnabled) data-halloween="true" @endif
