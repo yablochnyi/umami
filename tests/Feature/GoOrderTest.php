@@ -178,7 +178,10 @@ class GoOrderTest extends TestCase
         $this->assertSame($first['expected_ready_at'], $second['expected_ready_at']);
         $this->assertNotSame($first['server_now'], $second['server_now']);
         $this->get($order->trackingUrl())->assertOk()->assertHeader('Referrer-Policy', 'no-referrer')
-            ->assertDontSee('private-remote-token')->assertDontSee('test@example.com')->assertDontSee('googletagmanager.com')
+            ->assertDontSee('private-remote-token')->assertDontSee('test@example.com')
+            // The separately committed marketing tag is intentionally unchanged.
+            ->assertSee('G-QRW6REEHD7')->assertSee('data-google-analytics-id=""', false)
+            ->assertDontSee('website-analytics.js')->assertDontSee('data-website-analytics-url')
             ->assertDontSee('widget.wenetasystent.ai');
     }
 

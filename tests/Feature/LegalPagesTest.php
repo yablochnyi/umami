@@ -32,13 +32,15 @@ class LegalPagesTest extends TestCase
             ->assertSee('<a class="legal-back" href="'.($locale === 'pl' ? '/' : '/'.$locale).'">', false)
             ->assertSee(trans('legal.'.$page.'.title', [], $locale))
             ->assertSee(trans('legal.updated_label', [], $locale))
-            ->assertSee('datetime="'.($page === 'terms' ? '2026-09-29' : '2026-10-13').'"', false)
+            ->assertSee('datetime="'.($page === 'terms' ? '2026-09-29' : '2026-10-24').'"', false)
             ->assertSee('data-cookie-settings', false)
             ->assertSee('id="cookieConsent"', false)
             ->assertSee('/assets/umami/privacy.js', false)
             ->assertSee('/assets/umami/privacy.css', false)
             ->assertSee('<script async src="https://widget.wenetasystent.ai/?code=rBAad0rd"></script>', false)
-            ->assertDontSee('<script async src="https://www.googletagmanager.com', false);
+            // The owner explicitly retained this marketing integration unchanged.
+            ->assertSee('<script async src="https://www.googletagmanager.com/gtag/js?id=G-QRW6REEHD7"></script>', false)
+            ->assertSee('/assets/umami/website-analytics.js', false);
 
         foreach ($urls as $language => $alternate) {
             $response->assertSee('hreflang="'.$language.'" href="https://umamisushifood.pl'.$alternate.'"', false);

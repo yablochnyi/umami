@@ -7,6 +7,7 @@ use App\Http\Controllers\LegalPageController;
 use App\Http\Controllers\MenuAvailabilityController;
 use App\Http\Controllers\MenuPageController;
 use App\Http\Controllers\OrderTrackingController;
+use App\Http\Controllers\WebsiteEventController;
 use App\Http\Middleware\AuditAdminActivity;
 use App\Models\SiteSetting;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -20,6 +21,9 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 Route::post('/admin/language', AdminLocaleController::class)
     ->middleware(['throttle:30,1', AuditAdminActivity::class])->name('admin.language');
+
+Route::post('/api/site-events', WebsiteEventController::class)
+    ->middleware('throttle:120,1')->name('website.events');
 
 Route::get('/robots.txt', function () {
     $siteUrl = rtrim(

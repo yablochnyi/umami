@@ -9,7 +9,7 @@ return [
     'empty' => 'Brak działań dla wybranych filtrów',
     'notice' => 'Logowania, odwiedzane sekcje i zmiany w panelu są rejestrowane dla bezpieczeństwa. Dziennik jest dostępny wyłącznie administratorowi.',
     'actions' => ['login' => 'Logowanie', 'logout' => 'Wylogowanie', 'viewed' => 'Przeglądanie', 'created' => 'Utworzenie', 'updated' => 'Zmiana', 'deleted' => 'Usunięcie', 'exported' => 'Eksport', 'sync_requested' => 'Zlecenie synchronizacji'],
-    'resources' => ['auth' => 'Dostęp do panelu', 'dashboard' => 'Przegląd', 'profile' => 'Profil', 'sales_analytics' => 'Analityka sprzedaży', 'activity_log' => 'Dziennik aktywności', 'restaurant_settings' => 'Godziny i dostawa'],
+    'resources' => ['website_traffic' => 'Ruch na stronie', 'auth' => 'Dostęp do panelu', 'dashboard' => 'Przegląd', 'profile' => 'Profil', 'sales_analytics' => 'Analityka sprzedaży', 'activity_log' => 'Dziennik aktywności', 'restaurant_settings' => 'Godziny i dostawa'],
     'pages' => ['index' => 'Otwarcie sekcji', 'view' => 'Podgląd rekordu', 'edit' => 'Otwarcie edycji', 'create' => 'Otwarcie formularza tworzenia'],
     'fields' => [
         'name' => 'Nazwa', 'email' => 'E-mail', 'password' => 'Hasło', 'role_id' => 'Rola (ID)', 'admin_locale' => 'Język panelu',

@@ -40,6 +40,7 @@ class AuditAdminActivity
                     'ustawienia-strony' => 'restaurant_settings',
                     'holiday-decorations' => 'holiday_decorations',
                     'sales-analytics' => 'sales_analytics',
+                    'website-traffic' => 'website_traffic',
                     'activity-log' => 'activity_log',
                     default => 'profile',
                 }, ['page' => 'index']);

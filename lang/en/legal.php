@@ -9,8 +9,8 @@ return [
     'cookie_settings' => 'Cookie settings',
     'map_title' => 'Umami Sushi & Food on the map - Gen. Andersa 72, Toruń',
     'privacy' => [
-        'updated' => '13 October 2026',
-        'updated_iso' => '2026-10-13',
+        'updated' => '24 October 2026',
+        'updated_iso' => '2026-10-24',
         'title' => 'Privacy policy',
         'description' => 'How we use data when you browse the menu, place an order or contact Umami Sushi & Food in Toruń.',
         'sections' => [
@@ -39,11 +39,15 @@ return [
                 'Under the GDPR you can request access, a copy, rectification, erasure or restriction, and where applicable portability, and object to processing based on legitimate interests. Legal obligations may limit erasure. We may request information needed to verify your identity.',
                 'Withdraw analytics consent through “Cookie settings” in the footer. Withdrawal does not affect the lawfulness of earlier processing. You may complain to Poland’s supervisory authority, UODO: https://uodo.gov.pl. Providing order data is voluntary, but we cannot fulfil an order without the required information. You can browse the menu without ordering or consenting to analytics.',
             ]],
+            ['heading' => '7. Umami first-party statistics', 'body' => [
+                'After analytics consent, our own database stores a pseudonymous browser identifier, event time, public page path, device category, referring domain or campaign label, and menu, basket and order-submission actions. This database does not store names, email addresses, phone numbers, full IP addresses, URL parameters or private order links. Recognised bots and signed-in admin accounts are excluded.',
+                'Events are retained for 365 days; older events are removed daily. Withdrawing consent stops new events and deletes the umami_visitor_id cookie, but does not automatically erase previously collected data. These statistics are separate from Google Analytics. The additional Google tag G-QRW6REEHD7, installed by the marketing team, currently loads independently of consent settings, including on the order tracking page; consent controls for our own counter do not block this tag.',
+            ]],
         ],
     ],
     'cookies' => [
-        'updated' => '13 October 2026',
-        'updated_iso' => '2026-10-13',
+        'updated' => '24 October 2026',
+        'updated_iso' => '2026-10-24',
         'title' => 'Cookie policy',
         'description' => 'What we store in your browser, why we use it and how to change your choice.',
         'sections' => [
@@ -66,6 +70,10 @@ return [
             ['heading' => '5. Maps and external websites', 'body' => [
                 'The Google map in the contact section loads automatically, without a separate button. Your browser may defer loading until you approach that section. Loading the map sends your IP address and browser data to Google; the map may use cookies under Google’s policy: https://policies.google.com/privacy. Analytics preferences do not control the map. Declining or withdrawing analytics consent does not block the map or remove data already sent to Google.',
                 'External links open services with their own cookie rules. Our privacy policy explains personal data processing and how to contact the restaurant.',
+            ]],
+            ['heading' => '6. First-party visitor counter', 'body' => [
+                'The umami_visitor_id cookie is created only after analytics consent and contains a random browser identifier lasting up to 365 days. It distinguishes repeat page views from new visitors. The server stores a hash rather than the original identifier. A new visit begins after 30 minutes of inactivity; another browser may be counted separately. Withdrawing consent deletes this cookie and stops our counter.',
+                'Consent settings control our own counter and the original Google Analytics integration. The additional G-QRW6REEHD7 tag is an exception to the Google blocking described above: it is currently embedded directly in the template and is not blocked by this choice. First-party statistics are not sent to Google.',
             ]],
         ],
     ],

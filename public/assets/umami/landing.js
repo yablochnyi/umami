@@ -87,6 +87,7 @@ function setCartItem(control, quantity) {
     if (!id) return;
 
     const nextQuantity = Math.max(0, Number(quantity || 0));
+    const previousQuantity = Number(cart[id]?.quantity || 0);
     if (nextQuantity > 0) {
         cart[id] = {
             ...cart[id],
@@ -102,6 +103,7 @@ function setCartItem(control, quantity) {
 
     writeCart();
     updateCartUi();
+    if (nextQuantity > previousQuantity) window.umamiAnalytics?.track('add_to_cart', id);
 }
 
 function updateCartUi() {
@@ -480,6 +482,7 @@ function openModalCard(card) {
 
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
+    if (card.dataset.cartId) window.umamiAnalytics?.track('product_view', card.dataset.cartId);
     updateCartUi();
 }
 

@@ -47,7 +47,7 @@
         const labels = location.hostname.split('.');
         const domains = ['', ...labels.map((_, index) => labels.slice(index).join('.'))];
         const names = document.cookie.split('; ').map(value => value.split('=')[0]);
-        for (const name of names.filter(name => /^_ga($|_)/.test(name))) {
+        for (const name of names.filter(name => /^_ga($|_)/.test(name) || name === 'umami_visitor_id')) {
             for (const domain of domains) {
                 document.cookie = name + '=; Max-Age=0; Path=/' + (domain ? '; Domain=' + domain : '');
             }
@@ -55,6 +55,7 @@
     }
 
     function applyConsent(value) {
+        window.umamiAnalytics?.consent(value);
         if (banner) banner.hidden = ['accepted', 'declined'].includes(value);
         if (value === 'accepted') {
             loadAnalytics();

@@ -142,6 +142,19 @@
 
 .umami-setting-preview { display: grid; gap: 12px; }
 .umami-analytics-meta { display: flex; flex-wrap: wrap; gap: 8px 24px; color: #70767b; font-size: 12px; }
+.umami-traffic-periods { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.umami-traffic-periods > span { margin-inline-start: auto; color: #70767b; font-size: 12px; }
+.umami-traffic-filters { display: grid; gap: 16px; border-block: 1px solid var(--umami-line); padding-block: 20px; }
+.umami-traffic-filters > button { justify-self: end; }
+.umami-traffic-filters + div { display: grid; gap: 32px; min-width: 0; }
+.umami-traffic-delta { display: block; margin-top: 8px; color: #70767b; font-size: 12px; }
+.umami-traffic-empty { padding: 32px 0; display: grid; gap: 8px; border-bottom: 1px solid var(--umami-line); }
+.umami-traffic-empty svg { width: 28px; height: 28px; color: #649284; }
+.umami-traffic-empty h2 { font-size: 18px; font-weight: 600; }
+.umami-traffic-empty p { max-width: 640px; font-size: 13px; color: #70767b; }
+.umami-traffic-chart { min-height: 214px; }
+.umami-orders-table .umami-traffic-path { white-space: normal; overflow-wrap: anywhere; max-width: 320px; min-width: 120px; }
+@media (max-width: 640px) { .umami-traffic-periods > span { flex-basis: 100%; margin-inline-start: 0; } }
 .umami-analytics-meta strong { color: #a3322b; }
 .umami-analytics-filters { border-block: 1px solid var(--umami-line); padding-block: 16px; }
 .umami-analytics-filters summary { cursor: pointer; font-size: 14px; font-weight: 600; }

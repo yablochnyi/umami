@@ -9,8 +9,8 @@ return [
     'cookie_settings' => 'Ustawienia cookies',
     'map_title' => 'Umami Sushi & Food na mapie - ul. Gen. Andersa 72, Toruń',
     'privacy' => [
-        'updated' => '13 października 2026',
-        'updated_iso' => '2026-10-13',
+        'updated' => '24 października 2026',
+        'updated_iso' => '2026-10-24',
         'title' => 'Polityka prywatności',
         'description' => 'Jak korzystamy z danych podczas przeglądania menu, składania zamówień i kontaktu z Umami Sushi & Food w Toruniu.',
         'sections' => [
@@ -39,11 +39,15 @@ return [
                 'Na zasadach RODO możesz żądać dostępu, kopii, sprostowania, usunięcia lub ograniczenia przetwarzania danych, a w odpowiednich przypadkach przeniesienia danych i wnieść sprzeciw wobec przetwarzania opartego na uzasadnionym interesie. Usunięcie może być ograniczone obowiązkami prawnymi. Możemy poprosić o informacje niezbędne do potwierdzenia tożsamości.',
                 'Zgodę na analitykę wycofasz w „Ustawieniach cookies” w stopce. Nie wpływa to na zgodność z prawem wcześniejszego przetwarzania. Masz prawo skargi do Prezesa UODO: https://uodo.gov.pl. Dane zamówienia podajesz dobrowolnie, ale bez wymaganych danych nie możemy go obsłużyć. Menu można przeglądać bez zamawiania i bez zgody na analitykę.',
             ]],
+            ['heading' => '7. Statystyki własne Umami', 'body' => [
+                'Po zgodzie na analitykę zapisujemy we własnej bazie pseudonimowy identyfikator przeglądarki, czas zdarzenia, publiczną ścieżkę strony, rodzaj urządzenia, domenę źródła lub oznaczenie kampanii oraz działania dotyczące menu, koszyka i wysłania zamówienia. Nie zapisujemy w tej bazie imienia, e-maila, telefonu, pełnego adresu IP, parametrów URL ani prywatnego linku do zamówienia. Znany ruch botów i zalogowane konta panelu są pomijane.',
+                'Zdarzenia przechowujemy przez 365 dni, a starsze usuwamy codziennie. Wycofanie zgody zatrzymuje nowe zdarzenia i usuwa cookie umami_visitor_id; nie usuwa automatycznie wcześniej zebranych danych. Ta statystyka jest oddzielna od Google Analytics. Dodatkowy tag Google G-QRW6REEHD7, dodany przez obsługę marketingową, ładuje się obecnie niezależnie od ustawień zgody, również na stronie śledzenia zamówienia; opis zgody na licznik własny nie oznacza zablokowania tego tagu.',
+            ]],
         ],
     ],
     'cookies' => [
-        'updated' => '13 października 2026',
-        'updated_iso' => '2026-10-13',
+        'updated' => '24 października 2026',
+        'updated_iso' => '2026-10-24',
         'title' => 'Polityka plików cookie',
         'description' => 'Co zapisujemy w przeglądarce, do czego służą te dane i jak zmienić swoją decyzję.',
         'sections' => [
@@ -66,6 +70,10 @@ return [
             ['heading' => '5. Mapy i zewnętrzne strony', 'body' => [
                 'Mapa Google w sekcji kontaktowej ładuje się automatycznie, bez osobnego przycisku. Przeglądarka może odroczyć jej pobranie do momentu zbliżenia się do tej sekcji. Załadowanie mapy przekazuje Google adres IP i dane przeglądarki; mapa może korzystać z cookies zgodnie z polityką Google: https://policies.google.com/privacy. Wybór dotyczący analityki nie steruje mapą. Odrzucenie lub wycofanie zgody na analitykę nie blokuje mapy ani nie usuwa danych już przekazanych Google.',
                 'Linki do innych stron otwierają usługi z własnymi zasadami cookies. Szczegóły przetwarzania danych i kontakt do restauracji podajemy w polityce prywatności.',
+            ]],
+            ['heading' => '6. Własny licznik odwiedzin', 'body' => [
+                'Cookie umami_visitor_id powstaje wyłącznie po zgodzie na analitykę i zawiera losowy identyfikator przeglądarki, ważny do 365 dni. Pomaga odróżniać kolejne wyświetlenia od nowych odwiedzających. Na serwerze zapisujemy jego skrót, nie surowy identyfikator. Po 30 minutach bez aktywności rozpoczyna się nowa wizyta; inna przeglądarka może zostać policzona osobno. Wycofanie zgody usuwa to cookie i zatrzymuje nasz licznik.',
+                'Ustawienie zgody steruje licznikiem własnym i pierwotnym podłączeniem Google Analytics. Wyjątkiem od opisanej wyżej blokady Google jest dodatkowy tag G-QRW6REEHD7: obecnie jest osadzony bezpośrednio w szablonie i nie jest blokowany przez ten wybór. Statystyki własne nie są przesyłane do Google.',
             ]],
         ],
     ],

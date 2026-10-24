@@ -9,7 +9,7 @@ return [
     'empty' => 'Немає дій за обраними фільтрами',
     'notice' => 'Входи, переглянуті розділи та зміни в панелі записуються для безпеки. Журнал доступний лише адміністратору.',
     'actions' => ['login' => 'Вхід', 'logout' => 'Вихід', 'viewed' => 'Перегляд', 'created' => 'Створення', 'updated' => 'Зміна', 'deleted' => 'Видалення', 'exported' => 'Експорт', 'sync_requested' => 'Запит синхронізації'],
-    'resources' => ['auth' => 'Доступ до панелі', 'dashboard' => 'Огляд', 'profile' => 'Профіль', 'sales_analytics' => 'Аналітика продажів', 'activity_log' => 'Журнал дій', 'restaurant_settings' => 'Графік і доставка'],
+    'resources' => ['website_traffic' => 'Відвідуваність сайту', 'auth' => 'Доступ до панелі', 'dashboard' => 'Огляд', 'profile' => 'Профіль', 'sales_analytics' => 'Аналітика продажів', 'activity_log' => 'Журнал дій', 'restaurant_settings' => 'Графік і доставка'],
     'pages' => ['index' => 'Відкриття розділу', 'view' => 'Перегляд запису', 'edit' => 'Відкриття редагування', 'create' => 'Відкриття форми створення'],
     'fields' => [
         'name' => 'Назва', 'email' => 'Email', 'password' => 'Пароль', 'role_id' => 'Роль (ID)', 'admin_locale' => 'Мова панелі',

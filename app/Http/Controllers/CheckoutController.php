@@ -14,6 +14,7 @@ use App\Services\GoOrder\GoOrderModifiers;
 use App\Services\GoOrder\GoOrderService;
 use App\Services\GoOrder\MenuAvailability;
 use App\Services\GoPos\GoPosOrderSender;
+use App\Services\WebsiteAnalytics;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -174,6 +175,7 @@ class CheckoutController extends Controller
 
         if (config('goorder.enabled')) {
             app(GoOrderService::class)->send($order);
+            app(WebsiteAnalytics::class)->orderSubmitted($request, $order);
 
             return redirect($order->trackingUrl());
         }
@@ -193,6 +195,7 @@ class CheckoutController extends Controller
         }
 
         $order->loadMissing('items');
+        app(WebsiteAnalytics::class)->orderSubmitted($request, $order);
 
         return redirect($this->checkoutUrl($locale))
             ->with('checkout_success', str_replace(':number', $this->publicOrderNumber($order), $copy['success']))

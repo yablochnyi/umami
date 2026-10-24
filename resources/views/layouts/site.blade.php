@@ -3,9 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    @hasSection('csrf')
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-    @endif
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $metaTitle }}</title>
     @isset($metaDescription)
         <meta name="description" content="{{ $metaDescription }}">
@@ -65,6 +63,11 @@
 <body
     @if($halloweenEnabled) data-halloween="true" @endif
     data-google-analytics-id="{{ ($privatePage ?? false) ? '' : $siteLayout['settings']['googleAnalyticsId'] }}"
+    @if(config('website_analytics.enabled') && !($privatePage ?? false) && !auth()->check())
+        data-website-analytics-url="{{ route('website.events', [], false) }}"
+        data-website-page="{{ request()->routeIs('checkout*') ? 'checkout' : (request()->routeIs('menu.item*') ? 'item' : (request()->routeIs('menu.category*') ? 'menu' : 'page')) }}"
+        @if(request()->routeIs('menu.item*')) data-website-item-id="{{ $item->id }}" @endif
+    @endif
     @if($showCart ?? true)
         data-ordering-open="{{ $siteLayout['cart']['isOrderingOpen'] ? '1' : '0' }}"
         data-ordering-unavailable-message="{{ $siteLayout['cart']['orderingUnavailableMessage'] }}"
@@ -108,6 +111,9 @@
 
     <script id="menuAvailabilityData" type="application/json">{!! \Illuminate\Support\Js::encode($menuAvailability) !!}</script>
     <script src="/assets/umami/menu-availability.js?v={{ filemtime(public_path('assets/umami/menu-availability.js')) }}" defer></script>
+    @if(config('website_analytics.enabled') && !($privatePage ?? false) && !auth()->check())
+        <script src="/assets/umami/website-analytics.js?v={{ filemtime(public_path('assets/umami/website-analytics.js')) }}" defer></script>
+    @endif
     <script src="/assets/umami/privacy.js?v={{ filemtime(public_path('assets/umami/privacy.js')) }}" defer></script>
     <script src="{{ $siteLayout['assets']['js'] }}" defer></script>
     <script src="/assets/umami/active-order.js" defer></script>

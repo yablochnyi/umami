@@ -5,6 +5,8 @@ use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
 
+Schedule::command('website-analytics:prune')->dailyAt('04:10')->timezone('Europe/Warsaw')->withoutOverlapping();
+
 Schedule::command('analytics:sync')->dailyAt(config('analytics.time', '03:40'))->timezone('Europe/Warsaw')
     ->when(fn () => config('analytics.enabled', true))->withoutOverlapping(120)
     ->appendOutputTo(storage_path('logs/analytics-sync.log'));

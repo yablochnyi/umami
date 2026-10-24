@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ConfirmOrderRequest;
 use App\Models\Order;
 use App\Services\GoOrder\GoOrderService;
+use App\Services\WebsiteAnalytics;
 
 class OrderTrackingController extends Controller
 {
@@ -43,6 +44,7 @@ class OrderTrackingController extends Controller
         $order = $request->order();
         $data = $request->validated();
         $service->confirm($order, $data['quote_hash']);
+        app(WebsiteAnalytics::class)->orderSubmitted($request, $order);
 
         return redirect($order->trackingUrl())->withHeaders(self::HEADERS);
     }
